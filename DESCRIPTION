@@ -10,7 +10,7 @@ Imports: circlize, GetoptLong, GenomicRanges
 Suggests: knitr
 VignetteBuilder: knitr
 Description: Trellis genomic layout
-URL: https://github.com/jokergoo/pheatmap2
+URL: https://github.com/jokergoo/gtrellis
 License: GPL (>= 2)
 Packaged: 2014-10-6 00:00:00 UTC; Administrator
 Repository: CRAN
