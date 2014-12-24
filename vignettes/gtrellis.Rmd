@@ -8,7 +8,7 @@ Make genome-level plots in Trellis style
 
 **Author**: Zuguang Gu ( z.gu@dkfz.de )
 
-**Date**: `r Sys.time()`
+**Date**: `r Sys.Date()`
 
 
 ```{r, echo = FALSE, message = FALSE}
@@ -488,7 +488,7 @@ you do need to make intersection of your full data to the sub-region, which mean
 can use same graphics codes with different regions. 
 
 ```{r, fig.width = 10, fig.height = 8}
-zoom = function() {
+zoom = function(df) {
 	initialize_layout(data = df, track_number = 3, nrow = 2,
     track_ylim = c(cov_range, cov_range, ratio_range),
     track_ylab = c("tumor, log10(cov)", "normal, log10(cov)", "ratio, log2(ratio)"), 
@@ -513,12 +513,12 @@ zoom = function() {
 df = data.frame(chr = c("chr1", "chr2"),
                 start = c(1e7, 1e7),
                 end = c(2e7, 2e7))
-zoom()
+zoom(df)
 
 df = data.frame(chr = c("chr11", "chr12"),
                 start = c(4e7, 4e7),
                 end = c(8e7, 8e7))
-zoom()
+zoom(df)
 ```
 
 If x-ranges for two genomic categories are different (e.g. 0~100000 for the first one
