@@ -158,7 +158,8 @@ initialize_layout(track_number = 3, track_ylim = c(0, 3, -4, 4, 0, 1000000))
 Set y-labels, value of `''` means there is no such y-lab.
 
 ```{r, fig.width = 10, fig.height = 6}
-initialize_layout(track_number = 3, main = "xxxxxx", track_ylab = c("", "bbbbbb", "ccccccc"))
+initialize_layout(track_number = 3, main = "xxxxxx", track_axis = c(TRUE, FALSE, TRUE),
+  track_ylab = c("", "bbbbbb", "ccccccc"))
 ```
 
 Multiple columns and multiple tracks
