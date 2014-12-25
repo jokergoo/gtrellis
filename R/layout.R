@@ -76,6 +76,11 @@ initialize_layout = function(data = NULL, chromosome = NULL,
         x2 = tapply(data[[3]], data[[1]], max)[fa]
         xlim = cbind(x1, x2)
     }
+    if(is.null(xlab)) xlab = ""
+    if(is.na(xlab)) xlab = ""
+
+    if(is.null(main)) main = ""
+    if(is.na(main)) main = ""
 
     axis_tick_height = unit(1, "mm")
     axis_label_gap = unit(1, "mm")
@@ -205,8 +210,11 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     } else {
         xaxis_bottom_height = unit(0, "null")
     }
-    
-    xlabel_height = grobHeight(textGrob(xlab, gp = gpar(lab_fontsize)))*2
+    if(xlab = "") {
+        xlabel_height = unit(2, "mm")
+    } else {
+        xlabel_height = grobHeight(textGrob(xlab, gp = gpar(lab_fontsize)))*2
+    }
 
     # which tracks will have anno on left
     lstr = ""
@@ -259,10 +267,8 @@ initialize_layout = function(data = NULL, chromosome = NULL,
         ylabel_right_width = grobHeight(textGrob(lstr_ylab, gp = gpar(fontsize = lab_fontsize)))*2
     }
 
-    if(is.null(main)) {
-        main_height = unit(0, "cm")
-    } else if(main == "") {
-        main_height = unit(0, "cm")
+    if(main == "") {
+        main_height = unit(2, "mm")
     } else {
         main_height = grobHeight(textGrob(main, gp = gpar(fontface = "bold", fontsize = main_fontsize)))*1.5
     }
