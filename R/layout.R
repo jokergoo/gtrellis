@@ -213,15 +213,13 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     lstr_ylab = ""
     for(i in seq_len(nrow)) {
         for(k in seq_len(track_number)) {
-            if(is_on_left(k, i, 1, nrow, ncol, track_number, track_axis)) {
+            if(is_on_left(k, i, 1, nrow, ncol, track_number, track_axis | track_ylab != "")) {
                 if(track_axis[k]) {
                     range = track_ylim[k, ]
                     axis_label= as.character(grid.pretty(range))
                     lstr = longest_string(c(lstr, axis_label))
                 }
-                if(!is.na(track_ylab[k])) {
-                    lstr_ylab = highest_string(c(lstr_ylab, track_ylab[k]))
-                }
+                lstr_ylab = highest_string(c(lstr_ylab, track_ylab[k]))
             }
         }
     }
@@ -240,15 +238,13 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     lstr_ylab = ""
     for(i in seq_len(nrow)) {
         for(k in seq_len(track_number)) {
-            if(is_on_right(k, i, ncol, nrow, ncol, track_number, track_axis)) {
+            if(is_on_right(k, i, ncol, nrow, ncol, track_number, track_axis | track_ylab != "")) {
                 if(track_axis[k]) {
                     range = track_ylim[k, ]
                     axis_label= as.character(grid.pretty(range))
                     lstr = longest_string(c(lstr, axis_label))
                 }
-                if(!is.na(track_ylab[k])) {
-                    lstr_ylab = highest_string(c(lstr_ylab, track_ylab[k]))
-                }
+                lstr_ylab = highest_string(c(lstr_ylab, track_ylab[k]))
             }
         }
     }
@@ -369,7 +365,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
         for(k in seq_len(track_number)) {
                 
             pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_left_track_@{k}")))
-            if(is_on_left(k, i, 1, nrow, ncol, track_number, track_axis) && is_visible(i, 1)) {
+            if(is_on_left(k, i, 1, nrow, ncol, track_number, track_axis | track_ylab != "") && is_visible(i, 1)) {
                 if(track_ylab[k] != "") {
                     grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
                 }
@@ -392,7 +388,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
         for(k in seq_len(track_number)) {
                 
             pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_right_track_@{k}")))
-            if(is_on_right(k, i, ncol, nrow, ncol, track_number, track_axis) && is_visible(i, ncol)) {
+            if(is_on_right(k, i, ncol, nrow, ncol, track_number, track_axis | track_ylab != "") && is_visible(i, ncol)) {
                 if(track_ylab[k] != "") {
                     grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
                 }
@@ -504,7 +500,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                                   unit(0, "npc"), ybreaks, default.units = "native")
                 }
 
-                if(is_on_left(k, i, j, nrow, ncol, track_number, track_axis)) {
+                if(is_on_left(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
                     label = as.character(ybreaks)
                     pre_end_pos = -Inf
                     for(b in seq_along(label)) {
@@ -534,7 +530,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                                   unit(1, "npc"), ybreaks, default.units = "native")
                 }
 
-                if(is_on_right(k, i, j, nrow, ncol, track_number, track_axis)) {
+                if(is_on_right(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
                     
                     label = as.character(ybreaks)
                     pre_end_pos = -Inf
