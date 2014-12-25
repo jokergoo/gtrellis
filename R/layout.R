@@ -267,7 +267,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
         main_height = grobHeight(textGrob(main, gp = gpar(fontface = "bold", fontsize = main_fontsize)))*1.5
     }
 
-    if(newpage) grid.newpage()
+    if(newpage) grid.newpage(recording = FALSE)
     layout = grid.layout(nrow = 5, ncol = 5, widths = unit.c(ylabel_left_width, yaxis_left_width, unit(1, "null"), yaxis_right_width, ylabel_right_width),
                                              heights = unit.c(main_height, xaxis_top_height, unit(1, "null"), xaxis_bottom_height, xlabel_height))
     pushViewport(viewport(layout = layout, name = "global_layout"))
