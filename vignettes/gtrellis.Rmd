@@ -144,7 +144,7 @@ Whether show y-axes. If certain value is set to `FALSE`, corresponding track y-a
 will not be added.
 
 ```{r, fig.width = 10, fig.height = 6}
-initialize_layout(track_number = 3, track_axis = c(FALSE, FALSE, FALSE), xaxis = FALSE)
+initialize_layout(track_number = 3, track_axis = c(FALSE, FALSE, FALSE), xaxis = FALSE, xlab = "")
 ```
 
 Set y-lim. It should be a two-column matrix, but to make it easy, it can

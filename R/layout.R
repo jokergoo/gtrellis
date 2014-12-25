@@ -500,7 +500,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                                   unit(0, "npc"), ybreaks, default.units = "native")
                 }
 
-                if(is_on_left(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
+                if(is_on_left(k, i, j, nrow, ncol, track_number, track_axis)) {
                     label = as.character(ybreaks)
                     pre_end_pos = -Inf
                     for(b in seq_along(label)) {
@@ -530,7 +530,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                                   unit(1, "npc"), ybreaks, default.units = "native")
                 }
 
-                if(is_on_right(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
+                if(is_on_right(k, i, j, nrow, ncol, track_number, track_axis)) {
                     
                     label = as.character(ybreaks)
                     pre_end_pos = -Inf
