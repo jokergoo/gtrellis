@@ -667,14 +667,17 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
             seekViewport(name = vp)
             panel.fun(NULL)
         } else {
+            extended_xlim = get_current_cell_meta_data("extended_xlim")
             if(inherits(gr, "GenomicRanges")) {
                 sub_gr = gr[seqnames(gr) == chr]
+                sub_gr = sub_gr[is_intersected(start(sub_gr), end(sub_gr), extended_xlim[1], extended_xlim[2])]
                 if(length(sub_gr)) {
                     seekViewport(name = vp)
                     panel.fun(sub_gr)
                 }
             } else {
                 sub_gr = gr[gr[[1]] == chr, , drop = FALSE]
+                sub_gr = sub_gr[is_intersected(sub_gr[[2]], sub_gr[[3]], extended_xlim[1], extended_xlim[2]), , drop = FALSE]
                 if(nrow(sub_gr)) {
                     seekViewport(name = vp)
                     panel.fun(sub_gr)
@@ -808,4 +811,12 @@ is_visible = function(i_row, i_col) {
     fa = .GENOMIC_LAYOUT$fa
     ncol = .GENOMIC_LAYOUT$ncol
     !grepl("^\\.invisible_", fa[i_col + (i_row-1)*ncol])
+}
+
+
+is_intersected = function(start, end, lim_start, lim_end) {
+    l = (lim_start >= start & lim_start <= end) |
+        (lim_end >= start & lim_end <= end) | 
+        (lim_start <= start & lim_end >= end)
+    return(l)
 }
