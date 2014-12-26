@@ -133,7 +133,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     track_ylab[is.na(track_ylab)] = ""
 
     if(add_name_track) {
-        track_height = unit.c(1.5*grobHeight(textGrob(highest_string(fa), gp = gpar(fontsize = name_fontsize))), track_height)
+        track_height = unit.c(1.5*max(grobHeight(textGrob(fa, gp = gpar(fontsize = name_fontsize)))), track_height)
         track_number = track_number + 1
         track_ylim = rbind(c(0, 1), track_ylim)
         track_axis = c(FALSE, track_axis)
@@ -210,7 +210,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     } else {
         xaxis_bottom_height = unit(0, "null")
     }
-    if(xlab = "") {
+    if(xlab == "") {
         xlabel_height = unit(2, "mm")
     } else {
         xlabel_height = grobHeight(textGrob(xlab, gp = gpar(lab_fontsize)))*2
@@ -219,52 +219,64 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     # which tracks will have anno on left
     lstr = ""
     lstr_ylab = ""
+    lstr_width = unit(0, "mm")
+    lstr_ylab_height = unit(0, "mm")
     for(i in seq_len(nrow)) {
         for(k in seq_len(track_number)) {
             if(is_on_left(k, i, 1, nrow, ncol, track_number, track_axis | track_ylab != "")) {
                 if(track_axis[k]) {
                     range = track_ylim[k, ]
                     axis_label= as.character(grid.pretty(range))
-                    lstr = longest_string(c(lstr, axis_label))
+                    for(ax in axis_label) {
+                        lstr_width = max(unit.c(lstr_width, grobWidth(textGrob(ax, gp = gpar(fontsize = axis_label_fontsize)))))
+                    }
+                    if(any(axis_label != "")) lstr = "a"
                 }
-                lstr_ylab = highest_string(c(lstr_ylab, track_ylab[k]))
+                lstr_ylab_height = max(unit.c(lstr_ylab_height, grobHeight(textGrob(track_ylab[k], gp = gpar(fontsize = lab_fontsize)))))
+                if(track_ylab[k] != "") lstr_ylab = "a"
             }
         }
     }
     if(lstr == "") {
         yaxis_left_width = unit(0, "null")
     } else {
-        yaxis_left_width = grobWidth(textGrob(lstr, gp = gpar(fontsize = axis_label_fontsize))) + axis_tick_height + axis_label_gap
+        yaxis_left_width = lstr_width + axis_tick_height + axis_label_gap
     }
     if(lstr_ylab == "") {
         ylabel_left_width = unit(2, "mm")
     } else {
-        ylabel_left_width = grobHeight(textGrob(lstr_ylab, gp = gpar(fontsize = lab_fontsize)))*2
+        ylabel_left_width = lstr_ylab_height*2
     }
 
     lstr = ""
     lstr_ylab = ""
+    lstr_width = unit(0, "mm")
+    lstr_ylab_height = unit(0, "mm")
     for(i in seq_len(nrow)) {
         for(k in seq_len(track_number)) {
             if(is_on_right(k, i, ncol, nrow, ncol, track_number, track_axis | track_ylab != "")) {
                 if(track_axis[k]) {
                     range = track_ylim[k, ]
                     axis_label= as.character(grid.pretty(range))
-                    lstr = longest_string(c(lstr, axis_label))
+                    for(ax in axis_label) {
+                        lstr_width = max(unit.c(lstr_width, grobWidth(textGrob(ax, gp = gpar(fontsize = axis_label_fontsize)))))
+                    }
+                    if(any(axis_label != "")) lstr = "a"
                 }
-                lstr_ylab = highest_string(c(lstr_ylab, track_ylab[k]))
+                lstr_ylab_height = max(unit.c(lstr_ylab_height, grobHeight(textGrob(track_ylab[k], gp = gpar(fontsize = lab_fontsize)))))
+                if(track_ylab[k] != "") lstr_ylab = "a"
             }
         }
     }
     if(lstr == "") {
         yaxis_right_width = unit(0, "null")
     } else {
-        yaxis_right_width = grobWidth(textGrob(lstr, gp = gpar(fontsize = axis_label_fontsize))) + axis_tick_height + axis_label_gap
+        yaxis_right_width = lstr_width + axis_tick_height + axis_label_gap
     }
     if(lstr_ylab == "") {
         ylabel_right_width = unit(2, "mm")
     } else {
-        ylabel_right_width = grobHeight(textGrob(lstr_ylab, gp = gpar(fontsize = lab_fontsize)))*2
+        ylabel_right_width = lstr_ylab_height*2
     }
 
     if(main == "") {
@@ -744,16 +756,6 @@ add_cell_info = function() {
             grid.text(qq("@{nm}\ntrack:@{i}"), unit(0.5, "npc"), unit(0.5, "npc"))
         })
     }
-}
-
-longest_string = function(x) {
-    x[which.max(sapply(x, function(str) as.numeric(convertUnit(grobWidth(textGrob(str)), "cm"))))][1]
-}
-
-highest_string = function(x) {
-    x = x[x != "" ]
-    if(length(x) == 0) return("")
-    x[which.max(sapply(x, function(str) as.numeric(convertUnit(grobHeight(textGrob(str)), "cm"))))][1]
 }
 
 re_calculate_xlim = function(xlim, nrow, ncol, equal_width = FALSE) {
