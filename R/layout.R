@@ -518,17 +518,19 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                                   unit(0, "npc"), ybreaks, default.units = "native")
                 }
 
-                if(is_on_left(k, i, j, nrow, ncol, track_number, track_axis)) {
-                    label = as.character(ybreaks)
-                    pre_end_pos = -Inf
-                    for(b in seq_along(label)) {
-                        cur_start_pos = unit(ybreaks[b], "native") - grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
-                        cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm", axisFrom = "y"))
-                        if(b == 1 || cur_start_pos > pre_end_pos) {
-                            grid.text(label[b], unit(0, "npc") - axis_tick_height - axis_label_gap, ybreaks[b],
-                                default.units = "native", just = "right", gp = gpar(fontsize = axis_label_fontsize))
-                            pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
-                            pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
+                if(is_on_left(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
+                    if(track_axis[k]) {
+                        label = as.character(ybreaks)
+                        pre_end_pos = -Inf
+                        for(b in seq_along(label)) {
+                            cur_start_pos = unit(ybreaks[b], "native") - grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
+                            cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm", axisFrom = "y"))
+                            if(b == 1 || cur_start_pos > pre_end_pos) {
+                                grid.text(label[b], unit(0, "npc") - axis_tick_height - axis_label_gap, ybreaks[b],
+                                    default.units = "native", just = "right", gp = gpar(fontsize = axis_label_fontsize))
+                                pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
+                                pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
+                            }
                         }
                     }
                 }
@@ -548,18 +550,19 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                                   unit(1, "npc"), ybreaks, default.units = "native")
                 }
 
-                if(is_on_right(k, i, j, nrow, ncol, track_number, track_axis)) {
-                    
-                    label = as.character(ybreaks)
-                    pre_end_pos = -Inf
-                    for(b in seq_along(label)) {
-                        cur_start_pos = unit(ybreaks[b], "native") - grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
-                        cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm", axisFrom = "y"))
-                        if(b == 1 || cur_start_pos > pre_end_pos) {
-                            grid.text(label[b], unit(1, "npc") + axis_tick_height + axis_label_gap, ybreaks[b],
-                                default.units = "native", just = "left", gp = gpar(fontsize = axis_label_fontsize))
-                            pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
-                            pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
+                if(is_on_right(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
+                    if(track_axis[k]) {
+                        label = as.character(ybreaks)
+                        pre_end_pos = -Inf
+                        for(b in seq_along(label)) {
+                            cur_start_pos = unit(ybreaks[b], "native") - grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
+                            cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm", axisFrom = "y"))
+                            if(b == 1 || cur_start_pos > pre_end_pos) {
+                                grid.text(label[b], unit(1, "npc") + axis_tick_height + axis_label_gap, ybreaks[b],
+                                    default.units = "native", just = "left", gp = gpar(fontsize = axis_label_fontsize))
+                                pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
+                                pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
+                            }
                         }
                     }
                 }
