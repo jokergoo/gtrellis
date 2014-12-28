@@ -1,23 +1,26 @@
 <!--
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{Analyze genomic regions}
+%\VignetteIndexEntry{Make genome-level plots in Trellis style}
 -->
 
 Make genome-level plots in Trellis style
-======================================
+========================================
 
 **Author**: Zuguang Gu ( z.gu@dkfz.de )
 
 **Date**: `r Sys.Date()`
 
-
 ```{r, echo = FALSE, message = FALSE}
+library(markdown)
+options(markdown.HTML.options = c(options('markdown.HTML.options')[[1]], "toc"))
+
 library(knitr)
 knitr::opts_chunk$set(
     error = FALSE,
     tidy  = FALSE,
     message = FALSE,
     fig.align = "center")
+options(markdown.HTML.stylesheet = "custom.css")
 
 options(width = 100)
 ```
@@ -34,11 +37,16 @@ however, specially for whole genome plot, they are limited in:
 - Genomic data are more multiple dimensional, which means, there are always more 
   than one tracks for chromosomes that to be compared.
 - **ggbio** also supports trellis visualizatioin for the whole genome, but still,
-  only one track is supported. (for continuous region, multiple tracks are supported
-  in **ggbio**.) 
+  only one track is supported. (For continuous region, multiple tracks are supported
+  in **ggbio**. Anyway, you can use `grid.layout` to arrange multiple continuous regions,
+  but for large number of chromosomes, still a lot of space is wasted.) 
 
 Here, **gtrellis** aims to arrange chromosomes as trellis style and support multiple
-tracks for visualization. **gtrellis** is implemented in **grid** graphic system.
+tracks for visualization. **gtrellis** is implemented in **grid** graphic system. In order
+to add graphics in **gtrellis**, you only need to use low-level graphic functions 
+(`grid.points`, `grid.lines`, `grid.rect`, ...) which are quite similar as those in 
+classic graphic system. There is only one thing you need to take care of is the unit
+in **grid** system.
 
 ## Initialize the layout
 
@@ -58,7 +66,7 @@ initialize_layout()
 Select subset of chromosomes and use `add_cell_info()` to add the information of each cell.
 
 ```{r, fig.width = 6, fig.height = 6}
-initialize_layout(chromosome = c("chr1", "chr3"))
+initialize_layout(chromosome = c("chr3", "chr1"))
 add_cell_info()
 ```
 
@@ -325,9 +333,9 @@ upViewport()
 ```
 
 Following code plot coverage for a tumor, its companion normal sample
-and the ratio of coverage.
+and the ratio of coverage. Frist prepare the data
 
-```{r, fig.width = 14, fig.height = 14}
+```{r}
 tumor_df = read.table("/icgc/dkfzlsdf/analysis/hipo/hipo_047/whole_genome_sequencing/H047-AV6G/coverage/tumor_H047-AV6G_1kb_windows_sorted.txt.gz")
 tumor_df = data.frame(chr = paste0("chr", tumor_df[[1]]),
                       start = tumor_df[[2]],
@@ -349,7 +357,14 @@ ratio_df[[4]] = log2( (tumor_df$cov+q01) / (normal_df$cov+q01) )
 names(ratio_df) = c("chr", "start", "end", "ratio")
 tumor_df[[4]] = log10(tumor_df[[4]])
 normal_df[[4]] = log10(normal_df[[4]])
+head(tumor_df)
+head(normal_df)
+head(ratio_df)
+```
 
+Then, make the plot
+
+```{r, fig.width = 14, fig.height = 14}
 cov_range = range(c(tumor_df[[4]], normal_df[[4]]))
 ratio_range = range(ratio_df[[4]])
 ratio_range = c(-max(abs(ratio_range)), max(abs(ratio_range)))
@@ -378,6 +393,9 @@ add_track(ratio_df, panel.fun = function(gr) {
 Following figure is kind of karyogram view of genomic regions. We arrange the layout as 
 one column and create two tracks, one for genomic regions and one for ideogram.
 Different values are mapped to continuous colors.
+
+We specified `track_number` to 1, but we also specify `ideogram_track_height`, so actually
+there are two tracks. We manually add text in the second track by specifying `i_track`. 
 
 ```{r, fig.width = 8, fig.height = 8}
 bed = generateRandomBed(nr = 10000)
@@ -420,6 +438,7 @@ load(paste0(system.file(package = "circlize"), "/extdata/tp_family.RData"))
 df = data.frame(gene = names(tp_family),
     start = sapply(tp_family, function(x) min(unlist(x))),
     end = sapply(tp_family, function(x) max(unlist(x))))
+df
 n = max(sapply(tp_family, length))
 initialize_layout(data = df, track_number = 1, track_ylim = c(0.5, n+0.5), 
     track_axis = FALSE, add_name_track = TRUE, xpadding = c(0.05, 0.05), ypadding = c(0.05, 0.05))
@@ -463,6 +482,7 @@ Then similar code as previous one.
 df = data.frame(gene = names(tp_family),
     start = sapply(tp_family, function(x) min(unlist(x))),
     end = sapply(tp_family, function(x) max(unlist(x))))
+df
 n = max(sapply(tp_family, length))
 initialize_layout(data = df, track_number = 1, ncol = 1, track_ylim = c(0.5, n+0.5), 
     track_axis = FALSE, add_name_track = TRUE, 
@@ -485,8 +505,8 @@ add_track(panel.fun = function(gr) {
 
 Also you can create layout with self-defined regions. `clip` argument controls whether
 data points out of the cell need to be added. Since by default `clip` is `TRUE`, 
-you do need to make intersection of your full data to the sub-region, which means, you
-can use same graphics codes with different regions. 
+you do not need to make intersection of your full data to the sub-region, which means, you
+can use same code to deal with different regions. 
 
 ```{r, fig.width = 10, fig.height = 8}
 zoom = function(df) {
