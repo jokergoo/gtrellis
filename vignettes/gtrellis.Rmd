@@ -10,6 +10,8 @@ Make genome-level plots in Trellis style
 
 **Date**: `r Sys.Date()`
 
+-------------------------------------------------------------
+
 ```{r, echo = FALSE, message = FALSE}
 library(markdown)
 options(markdown.HTML.options = c(options('markdown.HTML.options')[[1]], "toc"))
