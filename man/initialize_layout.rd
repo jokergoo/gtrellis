@@ -28,8 +28,8 @@ initialize_layout(data = NULL, chromosome = NULL,
   \item{data}{a data frame, same rule as \code{data} argument in \code{\link[circlize]{circos.genomicInitialize}}.}
   \item{chromosome}{chromosome}
   \item{species}{species}
-  \item{nrow}{nrow of the layout}
-  \item{ncol}{ncol of the layout}
+  \item{nrow}{nrow in the layout}
+  \item{ncol}{ncol in the layout}
   \item{track_number}{how many tracks}
   \item{track_height}{height of tracks, should be numeric which means the value is relative or \code{\link[grid]{unit}} class}
   \item{track_ylim}{track ylim, can be a vector of length two, or a vector of length 2*track_number or a matrix}
@@ -44,7 +44,7 @@ initialize_layout(data = NULL, chromosome = NULL,
   \item{ypadding}{ypadding, only numeric value}
   \item{gap}{0 or a \code{\link[grid]{unit}} class. If it is length 2, the first one corresponds to the gaps between rows and the seond corresponds to the gaps between columns}
   \item{byrow}{arrange categories (e.g. chromosomes) by rows ?}
-  \item{newpage}{whether call \code{\link[grid]{grid.newpage}} to initialize on a new graphic devide}
+  \item{newpage}{whether call \code{\link[grid]{grid.newpage}} to initialize on a new graphic device}
   \item{add_name_track}{whether add a pre-defined name track (insert before the first track)}
   \item{name_fontsize}{font size for cell names, the font size also controls the height of name track}
   \item{name_track_fill}{filled color for name track}

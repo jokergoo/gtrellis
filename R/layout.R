@@ -9,8 +9,8 @@
 # -data a data frame, same rule as ``data`` argument in `circlize::circos.genomicInitialize`.
 # -chromosome chromosome
 # -species species
-# -nrow nrow of the layout
-# -ncol ncol of the layout
+# -nrow nrow in the layout
+# -ncol ncol in the layout
 # -track_number how many tracks
 # -track_height height of tracks, should be numeric which means the value is relative
 #               or `grid::unit` class
@@ -28,7 +28,7 @@
 # -gap 0 or a `grid::unit` class. If it is length 2, the first one corresponds to the gaps between rows and
 #      the seond corresponds to the gaps between columns
 # -byrow arrange categories (e.g. chromosomes) by rows ?
-# -newpage whether call `grid::grid.newpage` to initialize on a new graphic devide
+# -newpage whether call `grid::grid.newpage` to initialize on a new graphic device
 # -add_name_track whether add a pre-defined name track (insert before the first track)
 # -name_fontsize font size for cell names, the font size also controls the height of name track
 # -name_track_fill filled color for name track
