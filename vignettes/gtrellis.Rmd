@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Make genome-level plots in Trellis style}
 -->
 
-Make genome-level plots in Trellis style
+Make Genome-level Plots in Trellis Style
 ========================================
 
 **Author**: Zuguang Gu ( z.gu@dkfz.de )
@@ -39,13 +39,13 @@ however, specially for whole genome plot, they are limited in:
 - Genomic data are more multiple dimensional, which means, there are always more 
   than one tracks for chromosomes that to be compared.
 - **ggbio** also supports trellis visualizatioin for the whole genome, but still,
-  only one track is supported. (For continuous region, multiple tracks are supported
+  only one track is supported. (Only for continuous region, multiple tracks are supported
   in **ggbio**. Anyway, you can use `grid.layout` to arrange multiple continuous regions,
-  but for large number of chromosomes, still a lot of space is wasted.) 
+  but the solution is not so straightforward.) 
 
-Here, **gtrellis** aims to arrange chromosomes as trellis style and support multiple
-tracks for visualization. **gtrellis** is implemented in **grid** graphic system. In order
-to add graphics in **gtrellis**, you only need to use low-level graphic functions 
+Here, **gtrellis** aims to arrange chromosomes as trellis style and supports multiple
+tracks for visualization. **gtrellis** is implemented in **grid** graphic system, so, in order
+to add graphics in each panel, you only need to use low-level graphic functions 
 (`grid.points`, `grid.lines`, `grid.rect`, ...) which are quite similar as those in 
 classic graphic system. There is only one thing you need to take care of is the unit
 in **grid** system.
@@ -65,7 +65,7 @@ library(gtrellis)
 initialize_layout()
 ```
 
-Select subset of chromosomes and use `add_cell_info()` to add the information of each cell.
+Select subset of chromosomes and use `add_cell_info()` to add the information to each cell.
 
 ```{r, fig.width = 6, fig.height = 6}
 initialize_layout(chromosome = c("chr3", "chr1"))
@@ -188,6 +188,9 @@ add_cell_info()
 
 ## Add graphics track by track
 
+After the initialization of the layout, each cell can be thought as a coordinate
+system. Then graphics can be added in cell by cell.
+
 Graphics are added by self-defined function `panel.fun`. Similar as **circlize** 
 package, `panel.fun` will be applied in every cell in the current track.
 The first argument of `add_track` can be either a `GRanges` object or a data frame,
@@ -236,12 +239,26 @@ In following, we make rainfall plot as well as the density
 distribution of genomic regions. Also, we manually add a name track
 and an ideogram track.
 
+Density for genomic regions is defined as the percent of a genomic
+window that is covered by genomic regions.
+
 ```{r, fig.width = 8, fig.height = 12}
 x = lapply(split(bed, bed[[1]]), function(gr) {
     gr2 = genomicDensity(gr[2:3], window.size = 1e7)
     cbind(rep(gr[1,1], nrow(gr2)), gr2)
 })
 gd = do.call("rbind", x)
+head(gd)
+```
+
+Initialize the layout and add four tracks which are
+
+- chromosome names
+- rainfall plot
+- genomic density
+- ideogram
+
+```{r, fig.width = 8, fig.height = 12}
 initialize_layout(track_number = 4, ncol = 3,
     track_axis = c(FALSE, TRUE, TRUE, FALSE), 
     track_height = unit.c(1.5*grobHeight(textGrob("chr1")), 
@@ -271,16 +288,16 @@ cytoband_df = read.cytoband()$df
 add_track(cytoband_df, panel.fun = function(gr) {
     cytoband_chr = gr
     grid.rect( cytoband_chr[[2]], unit(0, "npc"),
-                width = cytoband_chr[[3]] - cytoband_chr[[2]], height = unit(1, "npc"),
-                default.units = "native", hjust = 0, vjust = 0,
-                gp = gpar(fill = cytoband.col(cytoband_chr[[5]])) )
+               width = cytoband_chr[[3]] - cytoband_chr[[2]], height = unit(1, "npc"),
+               default.units = "native", hjust = 0, vjust = 0,
+               gp = gpar(fill = cytoband.col(cytoband_chr[[5]])) )
     grid.rect(min(cytoband_chr[[2]]), unit(0, "npc"),
               width = max(cytoband_chr[[3]]) - min(cytoband_chr[[2]]), height = unit(1, "npc"),
               default.units = "native", hjust = 0, vjust = 0)
 })
 ```
 
-Name track and ideogram track can be added by `add_name_track` and `add_ideogram_track`.
+Name track and ideogram track can be added by `add_name_track` and `add_ideogram_track` arguments.
 Name track will be inserted before the first track and ideogram track will be 
 inserted after the last track.
 
@@ -294,8 +311,8 @@ add_track(bed, panel.fun = function(bed) {
 })
 ```
 
-You can also add graphics in specified chromosomes and tracks by specifying `cate`
-and `i_track`.
+By default, tracks are added from the first one to the last one. You can also add graphics 
+in specified chromosomes and tracks by specifying `cate` and `i_track`.
 
 ```{r, fig.width = 8, fig.height = 8}
 all_chr = paste0("chr", 1:22)
@@ -309,7 +326,7 @@ for(i in seq_along(letter)) {
 ```
 
 Adding legend is not so straightforward. But you can first create a global viewport
-which contains a layout, then put trellis plot in one part and put legend in the
+which contains a two-column layout, then put trellis plot in one part and put legend in the
 other part. Remember to set `newpage` to `FALSE` so that trellis plot will be
 added on the current graphic device.
 
@@ -334,7 +351,7 @@ upViewport()
 
 ```
 
-Following code plot coverage for a tumor, its companion normal sample
+As a real application, following codes plot coverage for a tumor, its companion normal sample
 and the ratio of coverage. Frist prepare the data
 
 ```{r}
@@ -354,6 +371,8 @@ ind = which(tumor_df$cov > 0 & normal_df$cov > 0)
 tumor_df = tumor_df[ind, , drop = FALSE]
 normal_df = normal_df[ind, , drop = FALSE]
 ratio_df = tumor_df
+
+# get rid of small value dividing small value resulting large value
 q01 = quantile(c(tumor_df$cov, normal_df$cov), 0.01)
 ratio_df[[4]] = log2( (tumor_df$cov+q01) / (normal_df$cov+q01) )
 names(ratio_df) = c("chr", "start", "end", "ratio")
@@ -364,7 +383,7 @@ head(normal_df)
 head(ratio_df)
 ```
 
-Then, make the plot
+Then, initialize the layout and add three tracks.
 
 ```{r, fig.width = 14, fig.height = 14}
 cov_range = range(c(tumor_df[[4]], normal_df[[4]]))
@@ -396,7 +415,7 @@ Following figure is kind of karyogram view of genomic regions. We arrange the la
 one column and create two tracks, one for genomic regions and one for ideogram.
 Different values are mapped to continuous colors.
 
-We specified `track_number` to 1, but we also specify `ideogram_track_height`, so actually
+We specified `track_number` to 1, but we also specify `add_ideogram_track`, so actually
 there are two tracks. We manually add text in the second track by specifying `i_track`. 
 
 ```{r, fig.width = 8, fig.height = 8}
@@ -406,7 +425,7 @@ col_fun = colorRamp2(c(-1, 0, 1), c("green", "yellow", "red"))
 initialize_layout(track_number = 1, ncol = 1, track_axis = FALSE, xpadding = c(0.1, 0),
     gap = unit(4, "mm"), border = FALSE, add_ideogram_track = TRUE, 
     ideogram_track_height = unit(2, "mm"))
-add_track(bed, clip = FALSE, panel.fun = function(gr) {
+add_track(bed, panel.fun = function(gr) {
     grid.rect((gr[[2]] + gr[[3]])/2, unit(0.2, "npc"), unit(1, "mm"), unit(0.8, "npc"), 
         hjust = 0, vjust = 0, default.units = "native", 
         gp = gpar(fill = col_fun(gr[[4]]), col = NA))    
@@ -428,8 +447,8 @@ upViewport()
 
 ## General genomic categories
 
-Genomic categoris are not restricted in chromosomes, it can be any kind
-such as genes. Similar as `circos.genomicInitialize`, you can also specify
+Genomic categoris are not restricted in chromosomes, it can be any kind,
+such as genes. Similar as `circlize::circos.genomicInitialize`, you can also specify
 genomic categories as well as their ranges as a data frame when you 
 initialize the layout. 
 
