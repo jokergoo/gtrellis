@@ -17,7 +17,7 @@ initialize_layout(data = NULL, chromosome = NULL,
     track_ylim = do.call("rbind", rep(list(0:1), track_number)),
     track_axis = rep(TRUE, track_number), track_ylab = "",
     main = NULL, xlab = "Position", xaxis = TRUE,
-    equal_width = FALSE, border = TRUE,
+    equal_width = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE,
     name_fontsize = 10, name_track_fill = "#EEEEEE",
@@ -40,6 +40,7 @@ initialize_layout(data = NULL, chromosome = NULL,
   \item{xaxis}{whether add x-axis}
   \item{equal_width}{whether all columns hava the same width}
   \item{border}{draw border}
+  \item{asist_ticks}{if axes ticks and labels are added on one side in rows or columns, whether to add ticks on the other side}
   \item{xpadding}{xpadding, numeric value means relative ratio to the cell width. use \code{\link[base]{I}} to set it as absolute value which is measured in the datavp.}
   \item{ypadding}{ypadding, only numeric value}
   \item{gap}{0 or a \code{\link[grid]{unit}} class. If it is length 2, the first one corresponds to the gaps between rows and the seond corresponds to the gaps between columns}
