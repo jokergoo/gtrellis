@@ -681,7 +681,11 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
             fa = fa
         } else {
             if(inherits(gr, "GenomicRanges")) {
-                fa = unique(seqnames(gr))
+            	if(requireNamespaces("GenomicRanges")) {
+                	fa = unique(GenomicRanges::seqnames(gr))
+                } else {
+                	stop("Cannot load `GenomicRanges` package.")
+                }
             } else {
                 fa = unique(as.character(gr[[1]]))
             }
@@ -706,7 +710,11 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
         } else {
             extended_xlim = get_current_cell_meta_data("extended_xlim")
             if(inherits(gr, "GenomicRanges")) {
-                sub_gr = gr[seqnames(gr) == chr]
+            	if(requrieNamespaces("GenomicRanges")) {
+                	sub_gr = GenomicRanges::subset(gr, GenomicRanges::seqnames(gr) == chr)
+                } else {
+                	stop("Cannot load `GenomicRanges` package.")
+                }
                 sub_gr = sub_gr[is_intersected(start(sub_gr), end(sub_gr), extended_xlim[1], extended_xlim[2])]
                 if(length(sub_gr)) {
                     seekViewport(name = vp)
