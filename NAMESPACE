@@ -7,7 +7,6 @@ export(
 )
 
 import(grid)
-import(GenomicRanges)
 importFrom("circlize", read.cytoband)
 importFrom("circlize", cytoband.col)
 importFrom("GetoptLong", qq)
