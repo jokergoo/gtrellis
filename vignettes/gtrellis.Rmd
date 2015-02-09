@@ -362,59 +362,57 @@ As a real application, following codes plot coverage for a tumor, its companion 
 and the ratio of coverage. Frist prepare the data
 
 ```{r}
-tumor_df = read.table("/icgc/dkfzlsdf/analysis/hipo/hipo_047/whole_genome_sequencing/H047-AV6G/coverage/tumor_H047-AV6G_1kb_windows_sorted.txt.gz")
-tumor_df = data.frame(chr = paste0("chr", tumor_df[[1]]),
-                      start = tumor_df[[2]],
-                      end = tumor_df[[2]] + 1000,
-                      cov = tumor_df[[3]])
-normal_df = read.table("/icgc/dkfzlsdf/analysis/hipo/hipo_047/whole_genome_sequencing/H047-AV6G/coverage/control_H047-AV6G_1kb_windows_sorted.txt.gz")
-normal_df = data.frame(chr = paste0("chr", normal_df[[1]]),
-                      start = normal_df[[2]],
-                      end = normal_df[[2]] + 1000,
-                      cov = normal_df[[3]])
+tumor_df = readRDS(paste0(system.file("extdata", package = "gtrellis"), "/df_tumor.rds"))
+control_df = readRDS(paste0(system.file("extdata", package = "gtrellis"), "/df_control.rds"))
 
 # remove regions that have zero coverage
-ind = which(tumor_df$cov > 0 & normal_df$cov > 0)
+ind = which(tumor_df$cov > 0 & control_df$cov > 0)
 tumor_df = tumor_df[ind, , drop = FALSE]
-normal_df = normal_df[ind, , drop = FALSE]
+control_df = control_df[ind, , drop = FALSE]
 ratio_df = tumor_df
 
 # get rid of small value dividing small value resulting large value
-q01 = quantile(c(tumor_df$cov, normal_df$cov), 0.01)
-ratio_df[[4]] = log2( (tumor_df$cov+q01) / (normal_df$cov+q01) )
+q01 = quantile(c(tumor_df$cov, control_df$cov), 0.01)
+ratio_df[[4]] = log2( (tumor_df$cov+q01) / (control_df$cov+q01) * 
+                       sum(control_df$cov) / sum(tumor_df$cov) )
 names(ratio_df) = c("chr", "start", "end", "ratio")
 tumor_df[[4]] = log10(tumor_df[[4]])
-normal_df[[4]] = log10(normal_df[[4]])
+control_df[[4]] = log10(control_df[[4]])
 head(tumor_df)
-head(normal_df)
+head(control_df)
 head(ratio_df)
 ```
 
 Then, initialize the layout and add three tracks.
 
 ```{r, fig.width = 14, fig.height = 14}
-cov_range = range(c(tumor_df[[4]], normal_df[[4]]))
+cov_range = range(c(tumor_df[[4]], control_df[[4]]))
 ratio_range = range(ratio_df[[4]])
 ratio_range = c(-max(abs(ratio_range)), max(abs(ratio_range)))
 
+library(circlize)
+library(RColorBrewer)
 initialize_layout(track_number = 3, nrow = 2, byrow = FALSE, gap = unit(c(4, 1), "mm"),
     track_ylim = c(cov_range, cov_range, ratio_range),
-    track_ylab = c("tumor, log10(cov)", "normal, log10(cov)", "ratio, log2(ratio)"), 
+    track_ylab = c("tumor, log10(cov)", "control, log10(cov)", "ratio, log2(ratio)"), 
     add_name_track = TRUE, add_ideogram_track = TRUE)
 add_track(tumor_df, panel.fun = function(gr) {
     x = (gr[[2]] + gr[[3]])/2
     y = gr[[4]]
     grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000020"))
 })
-add_track(normal_df, panel.fun = function(gr) {
+add_track(control_df, panel.fun = function(gr) {
     x = (gr[[2]] + gr[[3]])/2
     y = gr[[4]]
     grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000020"))
 })
+col_fun = colorRamp2(seq(-0.5, 0.5, length = 11), rev(brewer.pal(11, "RdYlBu")), 
+  transparency = 0.5)
 add_track(ratio_df, panel.fun = function(gr) {
     x = (gr[[2]] + gr[[3]])/2
     y = gr[[4]]
-    grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#FF000020"))
+    grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = col_fun(y)))
+    grid.lines(unit(c(0, 1), "npc"), unit(c(0, 0), "native"), gp = gpar(col = "#0000FF80"))
 })
 ```
 
@@ -446,7 +444,7 @@ add_track(i_track = 2, clip = FALSE, panel.fun = function(gr) {
     grid.text(chr, x = 0, y = 0, just = c("left", "bottom"))
 })
 breaks = seq(-1, 1, by = 0.5)
-lg = legendGrob(breaks, pch = 15, vgap = -0.25, gp = gpar(col = col_fun(breaks)))
+lg = legendGrob(breaks, pch = 15, vgap = 0, gp = gpar(col = col_fun(breaks)))
 pushViewport(viewport(0.9, 0.1, width = grobWidth(lg), height = grobHeight(lg), just = c(1, 0)))
 grid.draw(lg)
 upViewport()
@@ -540,14 +538,14 @@ can use same code to deal with different regions.
 zoom = function(df) {
 	initialize_layout(data = df, track_number = 3, nrow = 2,
     track_ylim = c(cov_range, cov_range, ratio_range),
-    track_ylab = c("tumor, log10(cov)", "normal, log10(cov)", "ratio, log2(ratio)"), 
+    track_ylab = c("tumor, log10(cov)", "control, log10(cov)", "ratio, log2(ratio)"), 
     add_name_track = TRUE, add_ideogram_track = TRUE)
 	add_track(tumor_df, panel.fun = function(gr) {
 	    x = (gr[[2]] + gr[[3]])/2
 	    y = gr[[4]]
 	    grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000080"))
 	})
-	add_track(normal_df, panel.fun = function(gr) {
+	add_track(control_df, panel.fun = function(gr) {
 	    x = (gr[[2]] + gr[[3]])/2
 	    y = gr[[4]]
 	    grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000080"))
@@ -560,13 +558,13 @@ zoom = function(df) {
 }
 
 df = data.frame(chr = c("chr1", "chr2"),
-                start = c(1e7, 1e7),
-                end = c(2e7, 2e7))
+                start = c(1e8, 1e8),
+                end = c(2e8, 2e8))
 zoom(df)
 
 df = data.frame(chr = c("chr11", "chr12"),
-                start = c(4e7, 4e7),
-                end = c(8e7, 8e7))
+                start = c(4e8, 4e8),
+                end = c(8e8, 8e8))
 zoom(df)
 ```
 
