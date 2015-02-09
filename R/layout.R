@@ -56,7 +56,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 
     ## start from xlim
     if(is.null(data)) {
-        cytoband = read.cytoband(species = species)
+        cytoband = read.chromInfo(species = species)
         df = cytoband$df
         if(is.null(chromosome)) chromosome = cytoband$chromosome
         chromosome = unique(chromosome)

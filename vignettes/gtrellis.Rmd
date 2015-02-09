@@ -355,7 +355,7 @@ tumor_df = tumor_df[ind, , drop = FALSE]
 normal_df = normal_df[ind, , drop = FALSE]
 ratio_df = tumor_df
 q01 = quantile(c(tumor_df$cov, normal_df$cov), 0.01)
-ratio_df[[4]] = log2( (tumor_df$cov+q01) / (normal_df$cov+q01) )
+ratio_df[[4]] = log2( (tumor_df$cov+q01) / (normal_df$cov+q01) * sum(normal_df$cov) / sum(tumor_df$cov))
 names(ratio_df) = c("chr", "start", "end", "ratio")
 tumor_df[[4]] = log10(tumor_df[[4]])
 normal_df[[4]] = log10(normal_df[[4]])
