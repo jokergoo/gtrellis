@@ -9,8 +9,8 @@
 # -data a data frame, same rule as ``data`` argument in `circlize::circos.genomicInitialize`.
 # -chromosome chromosome
 # -species species
-# -nrow nrow of the layout
-# -ncol ncol of the layout
+# -nrow nrow in the layout
+# -ncol ncol in the layout
 # -track_number how many tracks
 # -track_height height of tracks, should be numeric which means the value is relative
 #               or `grid::unit` class
@@ -22,13 +22,14 @@
 # -xaxis whether add x-axis
 # -equal_width whether all columns hava the same width
 # -border draw border
+# -asist_ticks if axes ticks and labels are added on one side in rows or columns, whether to add ticks on the other side
 # -xpadding xpadding, numeric value means relative ratio to the cell width. use `base::I` to set it as absolute
 #           value which is measured in the datavp.
 # -ypadding ypadding, only numeric value
 # -gap 0 or a `grid::unit` class. If it is length 2, the first one corresponds to the gaps between rows and
 #      the seond corresponds to the gaps between columns
 # -byrow arrange categories (e.g. chromosomes) by rows ?
-# -newpage whether call `grid::grid.newpage` to initialize on a new graphic devide
+# -newpage whether call `grid::grid.newpage` to initialize on a new graphic device
 # -add_name_track whether add a pre-defined name track (insert before the first track)
 # -name_fontsize font size for cell names, the font size also controls the height of name track
 # -name_track_fill filled color for name track
@@ -46,7 +47,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     track_ylim = do.call("rbind", rep(list(0:1), track_number)),
     track_axis = rep(TRUE, track_number), track_ylab = "", 
     main = NULL, xlab = "Position", xaxis = TRUE,
-    equal_width = FALSE, border = TRUE,
+    equal_width = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE, 
     name_fontsize = 10, name_track_fill = "#EEEEEE",
@@ -56,7 +57,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 
     ## start from xlim
     if(is.null(data)) {
-        cytoband = read.chromInfo(species = species)
+        cytoband = read.cytoband(species = species)
         df = cytoband$df
         if(is.null(chromosome)) chromosome = cytoband$chromosome
         chromosome = unique(chromosome)
@@ -440,8 +441,6 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                 xbreaks = seq(grid.pretty(xlim2[j, ])[1], xlim2[j, 2], by = breaks[2]-breaks[1])
                 if(length(xbreaks) == 0) xbreaks = grid.pretty(xlim2[j, 1])[1]
                 #xbreaks = grid.pretty(xlim2[j, ])
-                grid.segments(xbreaks, unit(1, "npc") + axis_tick_height,
-                              xbreaks, unit(1, "npc"), default.units = "native")
                     
                 if(is_on_top(1, i, j, nrow, ncol, track_number)) {
                     label = basepair_unit(xbreaks)
@@ -459,6 +458,11 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                             pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm"))
                         }
                     }
+                    grid.segments(xbreaks, unit(1, "npc") + axis_tick_height,
+                              xbreaks, unit(1, "npc"), default.units = "native")
+                } else if(asist_ticks) {
+                    grid.segments(xbreaks, unit(1, "npc") + axis_tick_height,
+                              xbreaks, unit(1, "npc"), default.units = "native")
                 }
             }
         }
@@ -470,8 +474,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                 seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{track_number}_datavp"))
                 xbreaks = seq(grid.pretty(xlim2[j, ])[1], xlim2[j, 2], by = breaks[2]-breaks[1])
                 #xbreaks = grid.pretty(xlim2[j, ])
-                grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
-                              xbreaks, unit(0, "npc"), default.units = "native")
+                
                 if(is_on_bottom(track_number, i, j, nrow, ncol, track_number)) {
                     label = basepair_unit(xbreaks)
 
@@ -488,8 +491,13 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                             pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm"))
                         }
                     }
+                    grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
+                              xbreaks, unit(0, "npc"), default.units = "native")
+                } else if(asist_ticks) {
+                    grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
+                              xbreaks, unit(0, "npc"), default.units = "native")
                 }
-            } else {
+            } else if(asist_ticks) {
                 while(1) {
                     i2 = i - 1
                     if(is_visible(i2, j) || i2 == 1) {
@@ -513,10 +521,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
             if(is_visible(i, j)) {
                 seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp"))
                     ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
-                if(track_axis[k]) {
-                    grid.segments(unit(0, "npc") - axis_tick_height, ybreaks,
-                                  unit(0, "npc"), ybreaks, default.units = "native")
-                }
+                
 
                 if(is_on_left(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
                     if(track_axis[k]) {
@@ -533,6 +538,15 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                             }
                         }
                     }
+                    if(track_axis[k]) {
+                        grid.segments(unit(0, "npc") - axis_tick_height, ybreaks,
+                                      unit(0, "npc"), ybreaks, default.units = "native")
+                    }
+                } else if(asist_ticks) {
+                    if(track_axis[k]) {
+                        grid.segments(unit(0, "npc") - axis_tick_height, ybreaks,
+                                      unit(0, "npc"), ybreaks, default.units = "native")
+                    }
                 }
             }
         }
@@ -545,10 +559,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
             if(is_visible(i, j)) {
                 seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp"))
                 ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
-                if(track_axis[k]) {
-                    grid.segments(unit(1, "npc") + axis_tick_height, ybreaks,
-                                  unit(1, "npc"), ybreaks, default.units = "native")
-                }
+                
 
                 if(is_on_right(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
                     if(track_axis[k]) {
@@ -565,8 +576,17 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                             }
                         }
                     }
+                    if(track_axis[k]) {
+                        grid.segments(unit(1, "npc") + axis_tick_height, ybreaks,
+                                      unit(1, "npc"), ybreaks, default.units = "native")
+                    }
+                } else if(asist_ticks) {
+                    if(track_axis[k]) {
+                        grid.segments(unit(1, "npc") + axis_tick_height, ybreaks,
+                                      unit(1, "npc"), ybreaks, default.units = "native")
+                    }
                 }
-            } else {
+            } else if(asist_ticks) {
                 while(1) {
                     j2 = j - 1
                     if(is_visible(i, j2) || j2 == 1) {
@@ -661,7 +681,11 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
             fa = fa
         } else {
             if(inherits(gr, "GenomicRanges")) {
-                fa = unique(seqnames(gr))
+            	if(requireNamespace("GenomicRanges")) {
+                	fa = unique(GenomicRanges::seqnames(gr))
+                } else {
+                	stop("Cannot load `GenomicRanges` package.")
+                }
             } else {
                 fa = unique(as.character(gr[[1]]))
             }
@@ -686,7 +710,11 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
         } else {
             extended_xlim = get_current_cell_meta_data("extended_xlim")
             if(inherits(gr, "GenomicRanges")) {
-                sub_gr = gr[seqnames(gr) == chr]
+            	if(requireNamespace("GenomicRanges")) {
+                	sub_gr = GenomicRanges::subset(gr, GenomicRanges::seqnames(gr) == chr)
+                } else {
+                	stop("Cannot load `GenomicRanges` package.")
+                }
                 sub_gr = sub_gr[is_intersected(start(sub_gr), end(sub_gr), extended_xlim[1], extended_xlim[2])]
                 if(length(sub_gr)) {
                     seekViewport(name = vp)
