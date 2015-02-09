@@ -681,7 +681,7 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
             fa = fa
         } else {
             if(inherits(gr, "GenomicRanges")) {
-            	if(requireNamespaces("GenomicRanges")) {
+            	if(requireNamespace("GenomicRanges")) {
                 	fa = unique(GenomicRanges::seqnames(gr))
                 } else {
                 	stop("Cannot load `GenomicRanges` package.")
@@ -710,7 +710,7 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
         } else {
             extended_xlim = get_current_cell_meta_data("extended_xlim")
             if(inherits(gr, "GenomicRanges")) {
-            	if(requrieNamespaces("GenomicRanges")) {
+            	if(requireNamespace("GenomicRanges")) {
                 	sub_gr = GenomicRanges::subset(gr, GenomicRanges::seqnames(gr) == chr)
                 } else {
                 	stop("Cannot load `GenomicRanges` package.")
