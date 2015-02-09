@@ -51,7 +51,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE, 
     name_fontsize = 10, name_track_fill = "#EEEEEE",
-    add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
+    add_ideogram_track = FALSE, ideogram_track_height = unit(3, "mm"), 
     axis_label_fontsize = 6, lab_fontsize = 10, main_fontsize = 16) {
 
 

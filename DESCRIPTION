@@ -7,7 +7,7 @@ Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
 Depends: R (>= 3.1.0), grid
 Imports: circlize (>= 0.2.3), GetoptLong
-Suggests: knitr, GenomicRanges, RColorBrewer
+Suggests: knitr, GenomicRanges, RColorBrewer, markdown
 VignetteBuilder: knitr
 Description: Trellis genomic layout
 URL: https://github.com/jokergoo/gtrellis
