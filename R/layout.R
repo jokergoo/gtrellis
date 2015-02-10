@@ -647,7 +647,8 @@ add_ideogram_track = function(species = NULL, i_track = get_current_cell_meta_da
                    gp = gpar(fill = cytoband.col(cytoband_chr[[5]])) )
         grid.rect(min(cytoband_chr[[2]]), unit(0, "npc"),
                   width = max(cytoband_chr[[3]]) - min(cytoband_chr[[2]]), height = unit(1, "npc"),
-                  default.units = "native", hjust = 0, vjust = 0)
+                  default.units = "native", hjust = 0, vjust = 0,
+                  gp = gpar(fill = "transparent"))
     })
 }
 
