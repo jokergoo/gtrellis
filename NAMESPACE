@@ -1,7 +1,7 @@
 export(add_cell_info)
 export(add_ideogram_track)
 export(add_track)
-export(get_current_cell_meta_data)
+export(get_cell_meta_data)
 export(initialize_layout)
 
 import(grid)

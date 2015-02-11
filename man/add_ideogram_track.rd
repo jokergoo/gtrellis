@@ -11,7 +11,7 @@ add ideogram track
 
 }
 \usage{
-add_ideogram_track(species = NULL, i_track = get_current_cell_meta_data("i_track")+1)
+add_ideogram_track(species = NULL, i_track = get_cell_meta_data("i_track")+1)
 }
 \arguments{
 

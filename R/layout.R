@@ -11,10 +11,10 @@
 # -species species
 # -nrow nrow in the layout
 # -ncol ncol in the layout
-# -track_number how many tracks
+# -n_track how many tracks
 # -track_height height of tracks, should be numeric which means the value is relative
 #               or `grid::unit` class
-# -track_ylim track ylim, can be a vector of length two, or a vector of length 2*track_number or a matrix
+# -track_ylim track ylim, can be a vector of length two, or a vector of length 2*n_track or a matrix
 # -track_axis track axis, whether show y-axis for a track
 # -track_ylab track label, ``''`` means there is no label for the track
 # -main title
@@ -50,7 +50,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE, 
     name_fontsize = 10, name_track_fill = "#EEEEEE",
-    add_ideogram_track = FALSE, ideogram_track_height = unit(3, "mm"), 
+    add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
     axis_label_fontsize = 6, lab_fontsize = 10, main_fontsize = 16) {
 
     if(length(track_height) == 1) {
@@ -67,13 +67,23 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 
     ## start from xlim
     if(is.null(data)) {
-        cytoband = read.cytoband(species = species)
-        df = cytoband$df
-        if(is.null(chromosome)) chromosome = cytoband$chromosome
-        chromosome = unique(chromosome)
-        x1 = tapply(df[[2]], df[[1]], min)[chromosome]
-        x2 = tapply(df[[3]], df[[1]], max)[chromosome]
-        xlim = cbind(x1, x2)
+        if(is.null(chromosome)) {
+            chromInfo = read.chromInfo(species = species)
+            chr_len = sort(chromInfo$chr.len, decreasing = TRUE)
+
+            # sometimes there are small scaffold
+            i = which(chr_len[seq_len(length(chr_len)-1)] / chr_len[seq_len(length(chr_len)-1)+1] > 5)[1]
+            if(length(i)) {
+                chromosome = chromInfo$chromosome[chromInfo$chromosome %in% names(chr_len[chr_len >= chr_len[i]])]
+            } else {
+                chromosome = chromInfo$chromosome
+            }
+        }
+        chromInfo = read.chromInfo(species = species, chromosome.index = chromosome)
+        df = chromInfo$df
+        chromosome = chromInfo$chromosome
+  
+        xlim = df[2:3]
         fa = chromosome
     } else {
         if(is.factor(data[[1]])) {
@@ -98,14 +108,14 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 
     # check track*
     if(is.unit(track_height)) {
-        if(length(track_height) != track_number) {
-            stop(qq("Length of `track_height` should be @{track_number} if it is a `unit`\n"))
+        if(length(track_height) != n_track) {
+            stop(qq("Length of `track_height` should be @{n_track} if it is a `unit`\n"))
         }
     } else {
         if(length(track_height) == 1) {
-            track_height = rep(1, track_number)
-        } else if(length(track_height) != track_number) {
-            stop(qq("Length of `track_height` should be either 1 or @{track_number}\n"))
+            track_height = rep(1, n_track)
+        } else if(length(track_height) != n_track) {
+            stop(qq("Length of `track_height` should be either 1 or @{n_track}\n"))
         }
         if(add_name_track || add_ideogram_track) {
             track_height = unit(track_height/sum(track_height), "null")
@@ -115,44 +125,44 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     }
     if(any(inherits(track_ylim, c("matrix", "data.frame")))) {
         if(nrow(track_ylim) == 1) {
-            track_ylim = do.call("rbind", rep(list(c(track_ylim[1, 1], track_ylim[1, 2])), track_number))
+            track_ylim = do.call("rbind", rep(list(c(track_ylim[1, 1], track_ylim[1, 2])), n_track))
 
-        } else if(nrow(track_ylim) != track_number) {
-            stop(qq("nrow of `track_ylim` should be either 1 or @{track_number}\n"))
+        } else if(nrow(track_ylim) != n_track) {
+            stop(qq("nrow of `track_ylim` should be either 1 or @{n_track}\n"))
         }
     } else {
         if(length(track_ylim) == 2) {
-            track_ylim = do.call("rbind", rep(list(track_ylim[1:2]), track_number))
-        } else if(length(track_ylim) == 2*track_number) {
+            track_ylim = do.call("rbind", rep(list(track_ylim[1:2]), n_track))
+        } else if(length(track_ylim) == 2*n_track) {
             track_ylim = matrix(track_ylim, ncol = 2, byrow = TRUE)
         } else {
-            stop(qq("If `track_ylim` is atomic, the length should be either 2 or @{2*track_number}\n"))
+            stop(qq("If `track_ylim` is atomic, the length should be either 2 or @{2*n_track}\n"))
         }
     }
     track_axis = as.logical(track_axis)
     if(length(track_axis) == 1) {
-        track_axis = rep(track_axis, track_number)
-    } else if(length(track_axis) != track_number) {
-        stop(qq("Length of `track_axis` should be either 1 or @{track_number}\n"))
+        track_axis = rep(track_axis, n_track)
+    } else if(length(track_axis) != n_track) {
+        stop(qq("Length of `track_axis` should be either 1 or @{n_track}\n"))
     }
     if(is.null(track_ylab)) track_ylab = ""
     if(length(track_ylab) == 1) {
-        track_ylab = rep(track_ylab, track_number)
-    } else if(length(track_ylab) != track_number) {
-        stop(qq("Length of `track_ylab` should be either 1 or @{track_number}\n"))
+        track_ylab = rep(track_ylab, n_track)
+    } else if(length(track_ylab) != n_track) {
+        stop(qq("Length of `track_ylab` should be either 1 or @{n_track}\n"))
     }
     track_ylab[is.na(track_ylab)] = ""
 
     if(add_name_track) {
         track_height = unit.c(1.5*max(grobHeight(textGrob(fa, gp = gpar(fontsize = name_fontsize)))), track_height)
-        track_number = track_number + 1
+        n_track = n_track + 1
         track_ylim = rbind(c(0, 1), track_ylim)
         track_axis = c(FALSE, track_axis)
         track_ylab = c("", track_ylab)
     }
     if(add_ideogram_track) {
         track_height = unit.c(track_height, ideogram_track_height)
-        track_number = track_number + 1
+        n_track = n_track + 1
         track_ylim = rbind(track_ylim, c(0, 1))
         track_axis = c(track_axis, FALSE)
         track_ylab = c(track_ylab, "")
@@ -177,11 +187,15 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     rownames(xlim) = fa
     fa = as.vector(t(matrix(fa, nrow, ncol, byrow = byrow)))
     xlim = xlim[fa, , drop = FALSE]
+
+    if(!check_xlim(xlim, nrow, ncol)) {
+        stop("start base in the same column should be the same.")
+    }
     
     .GENOMIC_LAYOUT$fa = fa
     .GENOMIC_LAYOUT$nrow = nrow
     .GENOMIC_LAYOUT$ncol = ncol
-    .GENOMIC_LAYOUT$track_number = track_number
+    .GENOMIC_LAYOUT$n_track = n_track
     .GENOMIC_LAYOUT$track_axis_show = track_axis
     .GENOMIC_LAYOUT$current_fa = NULL
     .GENOMIC_LAYOUT$current_track = 0
@@ -211,12 +225,12 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     .GENOMIC_LAYOUT$extended_ylim = extended_track_ylim
     
     
-    if(any(sapply(1:ncol, function(x) is_on_top(1, 1, x, nrow, ncol, track_number)))) {
+    if(any(sapply(1:ncol, function(x) is_on_top(1, 1, x, nrow, ncol, n_track)))) {
         xaxis_top_height = grobHeight(textGrob("B", gp = gpar(axis_label_fontsize))) + axis_tick_height + axis_label_gap
     } else {
         xaxis_top_height = unit(0, "null")
     }
-    if(any(sapply(1:ncol, function(x) is_on_bottom(track_number, nrow, x, nrow, ncol, track_number)))) {
+    if(any(sapply(1:ncol, function(x) is_on_bottom(n_track, nrow, x, nrow, ncol, n_track)))) {
         xaxis_bottom_height = grobHeight(textGrob("B", gp = gpar(axis_label_fontsize))) + axis_tick_height + axis_label_gap
     } else {
         xaxis_bottom_height = unit(0, "null")
@@ -233,8 +247,8 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     lstr_width = unit(0, "mm")
     lstr_ylab_height = unit(0, "mm")
     for(i in seq_len(nrow)) {
-        for(k in seq_len(track_number)) {
-            if(is_on_left(k, i, 1, nrow, ncol, track_number, track_axis | track_ylab != "")) {
+        for(k in seq_len(n_track)) {
+            if(is_on_left(k, i, 1, nrow, ncol, n_track, track_axis | track_ylab != "")) {
                 if(track_axis[k]) {
                     range = track_ylim[k, ]
                     axis_label= as.character(grid.pretty(range))
@@ -264,8 +278,8 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     lstr_width = unit(0, "mm")
     lstr_ylab_height = unit(0, "mm")
     for(i in seq_len(nrow)) {
-        for(k in seq_len(track_number)) {
-            if(is_on_right(k, i, ncol, nrow, ncol, track_number, track_axis | track_ylab != "")) {
+        for(k in seq_len(n_track)) {
+            if(is_on_right(k, i, ncol, nrow, ncol, n_track, track_axis | track_ylab != "")) {
                 if(track_axis[k]) {
                     range = track_ylim[k, ]
                     axis_label= as.character(grid.pretty(range))
@@ -368,9 +382,9 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     for(i in seq_len(nrow)) {
         for(j in seq_len(ncol)) {
             seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_container"))
-            layout = grid.layout(nrow = track_number, ncol = 1, heights = track_height)
+            layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
             pushViewport(viewport(layout = layout, name = qq("@{fa[j + (i-1)*ncol]}_layout")))
-            for(k in seq_len(track_number)) {
+            for(k in seq_len(n_track)) {
                 
                 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}")))
                 pushViewport(plotViewport(margins = c(0, 0, 0, 0), name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_plotvp")))
@@ -389,12 +403,12 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     for(i in seq_len(nrow)) {
         pushViewport(viewport(y = chr_y[i], height = chr_height, name = qq("ylab_row_@{i}_left")))
         
-        layout = grid.layout(nrow = track_number, ncol = 1, heights = track_height)
+        layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
         pushViewport(viewport(layout = layout))
-        for(k in seq_len(track_number)) {
+        for(k in seq_len(n_track)) {
                 
             pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_left_track_@{k}")))
-            if(is_on_left(k, i, 1, nrow, ncol, track_number, track_axis | track_ylab != "") && is_visible(i, 1)) {
+            if(is_on_left(k, i, 1, nrow, ncol, n_track, track_axis | track_ylab != "") && is_visible(i, 1)) {
                 if(track_ylab[k] != "") {
                     grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
                 }
@@ -412,12 +426,12 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     for(i in seq_len(nrow)) {
         pushViewport(viewport(y = chr_y[i], height = chr_height, name = qq("ylab_row_@{i}_right")))
         
-        layout = grid.layout(nrow = track_number, ncol = 1, heights = track_height)
+        layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
         pushViewport(viewport(layout = layout))
-        for(k in seq_len(track_number)) {
+        for(k in seq_len(n_track)) {
                 
             pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_right_track_@{k}")))
-            if(is_on_right(k, i, ncol, nrow, ncol, track_number, track_axis | track_ylab != "") && is_visible(i, ncol)) {
+            if(is_on_right(k, i, ncol, nrow, ncol, n_track, track_axis | track_ylab != "") && is_visible(i, ncol)) {
                 if(track_ylab[k] != "") {
                     grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
                 }
@@ -436,7 +450,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
         } else if(max(x) > 1e3) {
             paste0(x/1e3, "MB")
         } else {
-            paste0(x, "B")
+            paste0(x, "bp")
         }
     }
 
@@ -452,7 +466,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                 if(length(xbreaks) == 0) xbreaks = grid.pretty(xlim2[j, 1])[1]
                 #xbreaks = grid.pretty(xlim2[j, ])
                     
-                if(is_on_top(1, i, j, nrow, ncol, track_number)) {
+                if(is_on_top(1, i, j, nrow, ncol, n_track)) {
                     label = basepair_unit(xbreaks)
 
                     pre_end_pos = -Inf
@@ -481,11 +495,11 @@ initialize_layout = function(data = NULL, chromosome = NULL,
         i = nrow
         for(j in seq_len(ncol)) {
             if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{track_number}_datavp"))
+                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{n_track}_datavp"))
                 xbreaks = seq(grid.pretty(xlim2[j, ])[1], xlim2[j, 2], by = breaks[2]-breaks[1])
                 #xbreaks = grid.pretty(xlim2[j, ])
                 
-                if(is_on_bottom(track_number, i, j, nrow, ncol, track_number)) {
+                if(is_on_bottom(n_track, i, j, nrow, ncol, n_track)) {
                     label = basepair_unit(xbreaks)
 
                     pre_end_pos = -Inf
@@ -514,7 +528,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
                         break
                     }
                 }
-                seekViewport(name = qq("@{fa[j + (i2-1)*ncol]}_track_@{track_number}_datavp"))
+                seekViewport(name = qq("@{fa[j + (i2-1)*ncol]}_track_@{n_track}_datavp"))
                 xbreaks = seq(0, xlim2[j, 2], by = 50000000)
                 xbreaks = xbreaks[xbreaks >= xlim2[j, 1] & xbreaks <= xlim2[j, 2]]
                 grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
@@ -527,13 +541,13 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     # y-axis on left
     j = 1
     for(i in seq_len(nrow)) {
-        for(k in seq_len(track_number)) {
+        for(k in seq_len(n_track)) {
             if(is_visible(i, j)) {
                 seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp"))
                     ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
                 
 
-                if(is_on_left(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
+                if(is_on_left(k, i, j, nrow, ncol, n_track, track_axis | track_ylab != "")) {
                     if(track_axis[k]) {
                         label = as.character(ybreaks)
                         pre_end_pos = -Inf
@@ -565,13 +579,13 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     # y-axis on right
     j = ncol
     for(i in seq_len(nrow)) {
-        for(k in seq_len(track_number)) {
+        for(k in seq_len(n_track)) {
             if(is_visible(i, j)) {
                 seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp"))
                 ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
                 
 
-                if(is_on_right(k, i, j, nrow, ncol, track_number, track_axis | track_ylab != "")) {
+                if(is_on_right(k, i, j, nrow, ncol, n_track, track_axis | track_ylab != "")) {
                     if(track_axis[k]) {
                         label = as.character(ybreaks)
                         pre_end_pos = -Inf
@@ -621,7 +635,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 
     if(add_name_track) {
         add_track(panel.fun = function(gr){
-            nm = get_current_cell_meta_data("name")
+            nm = get_cell_meta_data("name")
             grid.rect(gp = gpar(fill = name_track_fill, col = "#000000"))
             grid.text(nm, gp = gpar(fontsize = name_fontsize))
         })
@@ -630,7 +644,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 
     if(add_ideogram_track) {
         current_track = .GENOMIC_LAYOUT$current_track
-        add_ideogram_track(species, track_number)
+        add_ideogram_track(species, n_track)
         .GENOMIC_LAYOUT$current_track = current_track
     }
     
@@ -645,7 +659,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 #
 # == detail
 # add an ideogram track
-add_ideogram_track = function(species = NULL, i_track = get_current_cell_meta_data("i_track")+1) {
+add_ideogram_track = function(species = NULL, i_track = get_cell_meta_data("i_track")+1) {
 
 	cytoband = read.cytoband(species = species)
     cytoband_df = cytoband$df
@@ -667,7 +681,7 @@ add_ideogram_track = function(species = NULL, i_track = get_current_cell_meta_da
 #
 # == param
 # -gr a data frame in BED format or a ``GRanges`` object.
-# -cate categories (e.g. chromosome)
+# -category categories (e.g. chromosome)
 # -i_track which track, by default it is the next track
 # -clip whether graphics are restricted inside the cell
 # -panel.fun panel function to add graphics on each 'cell'
@@ -677,17 +691,17 @@ add_ideogram_track = function(species = NULL, i_track = get_current_cell_meta_da
 # will be applied on every cell in the current track. ``gr`` in ``panel.fun``
 # is a subset of the main ``gr`` which only contains data for the current
 # category.
-add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_data("i_track")+1, 
+add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i_track")+1, 
     clip = TRUE, panel.fun = function(gr) NULL) {
     
-    if(i_track > .GENOMIC_LAYOUT$track_number || i_track < 1) {
-        stop(qq("`i_track` should be between [1, @{.GENOMIC_LAYOUT$track_number}]\n"))
+    if(i_track > .GENOMIC_LAYOUT$n_track || i_track < 1) {
+        stop(qq("`i_track` should be between [1, @{.GENOMIC_LAYOUT$n_track}]\n"))
     }
 
     all_fa = .GENOMIC_LAYOUT$fa
     fa = all_fa[ !grepl("^\\.invisible_", all_fa) ]
 
-    if(is.null(cate)) {
+    if(is.null(category)) {
         if(is.null(gr)) {
             fa = fa
         } else {
@@ -703,7 +717,7 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
             fa = fa[fa %in% all_fa]
         }
     } else {
-        fa = cate[cate %in% all_fa]
+        fa = category[category %in% all_fa]
     }
     
     for(chr in fa) {
@@ -719,7 +733,7 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
             seekViewport(name = vp)
             panel.fun(NULL)
         } else {
-            extended_xlim = get_current_cell_meta_data("extended_xlim")
+            extended_xlim = get_cell_meta_data("extended_xlim")
             if(inherits(gr, "GenomicRanges")) {
             	if(requireNamespace("GenomicRanges")) {
                 	sub_gr = GenomicRanges::subset(gr, GenomicRanges::seqnames(gr) == chr)
@@ -753,6 +767,8 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
 #
 # == param
 # -name name
+# -i_category which category. e.g. chromosome, default is current category
+# -i_track which track, default is current track
 #
 # == detail
 # Following meta data can be retrieved:
@@ -768,21 +784,25 @@ add_track = function(gr = NULL, cate = NULL, i_track = get_current_cell_meta_dat
 # -i_row which row in the layout
 # -i_track which track in the layout
 #
-get_current_cell_meta_data = function(name) {
-    i_col = which(.GENOMIC_LAYOUT$fa == .GENOMIC_LAYOUT$current_fa) %% .GENOMIC_LAYOUT$ncol
+get_cell_meta_data = function(name, i_category, i_track) {
+
+    if(missing(i_category)) i_category = .GENOMIC_LAYOUT$current_fa
+    if(missing(i_track)) i_track = .GENOMIC_LAYOUT$current_track
+
+    i_col = which(.GENOMIC_LAYOUT$fa == i_category) %% .GENOMIC_LAYOUT$ncol
     if(i_col == 0) i_col = .GENOMIC_LAYOUT$ncol
     
     switch(name,
-           name = .GENOMIC_LAYOUT$current_fa,
+           name = i_category,
            xlim = .GENOMIC_LAYOUT$xlim[i_col, ],
-           ylim = .GENOMIC_LAYOUT$ylim[.GENOMIC_LAYOUT$current_track, ],
+           ylim = .GENOMIC_LAYOUT$ylim[i_track, ],
            extended_xlim = .GENOMIC_LAYOUT$extended_xlim[i_col, ],
-           extended_ylim = .GENOMIC_LAYOUT$extended_ylim[.GENOMIC_LAYOUT$current_track, ],
-           original_xlim = .GENOMIC_LAYOUT$original_xlim[.GENOMIC_LAYOUT$current_fa, ],
-           original_ylim = .GENOMIC_LAYOUT$original_ylim[.GENOMIC_LAYOUT$current_track, ],
+           extended_ylim = .GENOMIC_LAYOUT$extended_ylim[i_track, ],
+           original_xlim = .GENOMIC_LAYOUT$original_xlim[i_category, ],
+           original_ylim = .GENOMIC_LAYOUT$original_ylim[i_track, ],
            i_col = i_col,
-           i_row = ceiling(which(.GENOMIC_LAYOUT$fa == .GENOMIC_LAYOUT$current_fa) / (.GENOMIC_LAYOUT$ncol+0.5)),
-           i_track = .GENOMIC_LAYOUT$current_track)
+           i_row = ceiling(which(.GENOMIC_LAYOUT$fa == i_category) / (.GENOMIC_LAYOUT$ncol+0.5)),
+           i_track = i_track)
 }
 
 # == title
@@ -791,10 +811,10 @@ get_current_cell_meta_data = function(name) {
 # == detail
 # add the names and the index of the track on each cell
 add_cell_info = function() {
-    track = .GENOMIC_LAYOUT$track_number
+    track = .GENOMIC_LAYOUT$n_track
     for(i in seq_len(track)) {
         add_track(i_track = i, panel.fun = function(gr) {
-            nm = get_current_cell_meta_data("name")
+            nm = get_cell_meta_data("name")
             grid.text(qq("@{nm}\ntrack:@{i}"), unit(0.5, "npc"), unit(0.5, "npc"))
         })
     }
@@ -815,6 +835,22 @@ re_calculate_xlim = function(xlim, nrow, ncol, equal_width = FALSE) {
         xlim_end = rep(max(xlim_end), length(xlim_end))
     }
     return(cbind(xlim_start, xlim_end))
+}
+
+# fa is by row
+# xlim[1] in the same column should be the same
+check_xlim = function(xlim, nrow, ncol) {
+    xlim = xlim[!grepl(".invisible", rownames(xlim)), , drop = FALSE]
+    n = nrow(xlim)
+    all(sapply(seq_len(ncol), function(i_col) {
+        if(i_col == ncol) i_col = 0
+        i = seq_len(n)[seq_len(n) %% ncol == i_col]
+        almost_equal(xlim[i, 1])
+    }))
+}
+
+almost_equal = function(x) {
+    max(x) - min(x) < 1e-10
 }
 
 is_on_left = function(i_track, i_row, i_col, nrow, ncol, ntrack, track_show = rep(TRUE, ntrack)) {

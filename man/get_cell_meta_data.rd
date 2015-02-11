@@ -1,5 +1,5 @@
-\name{get_current_cell_meta_data}
-\alias{get_current_cell_meta_data}
+\name{get_cell_meta_data}
+\alias{get_cell_meta_data}
 \title{
 get current cell meta data  
 
@@ -11,11 +11,13 @@ get current cell meta data
 
 }
 \usage{
-get_current_cell_meta_data(name)
+get_cell_meta_data(name, i_category, i_track)
 }
 \arguments{
 
   \item{name}{name}
+  \item{i_category}{which category. e.g. chromosome, default is current category}
+  \item{i_track}{which track, default is current track}
 
 }
 \details{

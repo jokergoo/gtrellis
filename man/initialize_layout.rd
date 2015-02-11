@@ -13,15 +13,14 @@ initialize genomic trellis layout
 \usage{
 initialize_layout(data = NULL, chromosome = NULL,
     species = NULL, nrow = NULL, ncol = NULL,
-    track_number = 1, track_height =rep(1, track_number),
-    track_ylim = do.call("rbind", rep(list(0:1), track_number)),
-    track_axis = rep(TRUE, track_number), track_ylab = "",
-    main = NULL, xlab = "Position", xaxis = TRUE,
+    n_track = 1, track_height = 1, track_ylim = c(0, 1),
+    track_axis = TRUE, track_ylab = "",
+    main = NULL, xlab = "Genomic positions", xaxis = TRUE,
     equal_width = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE,
     name_fontsize = 10, name_track_fill = "#EEEEEE",
-    add_ideogram_track = FALSE, ideogram_track_height = unit(3, "mm"),
+    add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"),
     axis_label_fontsize = 6, lab_fontsize = 10, main_fontsize = 16)
 }
 \arguments{
@@ -31,9 +30,9 @@ initialize_layout(data = NULL, chromosome = NULL,
   \item{species}{species}
   \item{nrow}{nrow in the layout}
   \item{ncol}{ncol in the layout}
-  \item{track_number}{how many tracks}
+  \item{n_track}{how many tracks}
   \item{track_height}{height of tracks, should be numeric which means the value is relative or \code{\link[grid]{unit}} class}
-  \item{track_ylim}{track ylim, can be a vector of length two, or a vector of length 2*track_number or a matrix}
+  \item{track_ylim}{track ylim, can be a vector of length two, or a vector of length 2*n_track or a matrix}
   \item{track_axis}{track axis, whether show y-axis for a track}
   \item{track_ylab}{track label, \code{''} means there is no label for the track}
   \item{main}{title}

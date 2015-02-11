@@ -11,13 +11,13 @@ add graphics by track
 
 }
 \usage{
-add_track(gr = NULL, cate = NULL, i_track = get_current_cell_meta_data("i_track")+1,
+add_track(gr = NULL, category = NULL, i_track = get_cell_meta_data("i_track")+1,
     clip = TRUE, panel.fun = function(gr) NULL)
 }
 \arguments{
 
   \item{gr}{a data frame in BED format or a \code{GRanges} object.}
-  \item{cate}{categories (e.g. chromosome)}
+  \item{category}{categories (e.g. chromosome)}
   \item{i_track}{which track, by default it is the next track}
   \item{clip}{whether graphics are restricted inside the cell}
   \item{panel.fun}{panel function to add graphics on each 'cell'}
