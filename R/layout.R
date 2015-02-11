@@ -43,10 +43,9 @@
 # please go to the vignette.
 initialize_layout = function(data = NULL, chromosome = NULL, 
     species = NULL, nrow = NULL, ncol = NULL,
-    track_number = 1, track_height =rep(1, track_number),
-    track_ylim = do.call("rbind", rep(list(0:1), track_number)),
-    track_axis = rep(TRUE, track_number), track_ylab = "", 
-    main = NULL, xlab = "Position", xaxis = TRUE,
+    n_track = 1, track_height = 1, track_ylim = c(0, 1),
+    track_axis = TRUE, track_ylab = "", 
+    main = NULL, xlab = "Genomic positions", xaxis = TRUE,
     equal_width = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE, 
@@ -54,6 +53,17 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     add_ideogram_track = FALSE, ideogram_track_height = unit(3, "mm"), 
     axis_label_fontsize = 6, lab_fontsize = 10, main_fontsize = 16) {
 
+    if(length(track_height) == 1) {
+        track_height = rep(track_height, n_track)
+    }
+
+    if(length(track_ylim) == 2) {
+        track_ylim = do.call("rbind", rep(list(track_ylim), n_track))
+    }
+
+    if(length(track_axis) == 1) {
+        track_axis = rep(track_axis, n_track)
+    }
 
     ## start from xlim
     if(is.null(data)) {
