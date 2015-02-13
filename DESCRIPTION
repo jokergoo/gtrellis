@@ -9,7 +9,7 @@ Depends: R (>= 3.1.0), grid
 Imports: circlize (>= 0.2.3), GetoptLong
 Suggests: knitr, GenomicRanges, RColorBrewer, markdown
 VignetteBuilder: knitr
-Description: Trellis genomic layout
+Description: Flexibly making genome-level Trellis graph.
 URL: https://github.com/jokergoo/gtrellis
 License: GPL (>= 2)
 Packaged: 2014-10-6 00:00:00 UTC; Administrator

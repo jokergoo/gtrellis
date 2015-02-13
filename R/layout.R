@@ -1,47 +1,61 @@
 
-# use en environment to put global environment
+# use en environment to put global variables
 .GENOMIC_LAYOUT = new.env()
 
 # == title
-# initialize genomic trellis layout
+# Initialize genome-level Trellis layout
 #
 # == param
-# -data a data frame, same rule as ``data`` argument in `circlize::circos.genomicInitialize`.
-# -chromosome chromosome
-# -species species
-# -nrow nrow in the layout
-# -ncol ncol in the layout
-# -n_track how many tracks
-# -track_height height of tracks, should be numeric which means the value is relative
-#               or `grid::unit` class
-# -track_ylim track ylim, can be a vector of length two, or a vector of length 2*n_track or a matrix
-# -track_axis track axis, whether show y-axis for a track
+# -data a data frame with at least three columns. The first three columns are genomic categories (e.g. chromosomes), 
+#       start positions and end positions. This data frame is used to extract ranges for each genomic category.
+# -category subset of categories. It is also used for ordering.
+# -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
+#          value is specified, the function will download ``chromInfo.txt.gz`` from
+#          UCSC ftp automatically.
+# -nrow Number of rows in the layout
+# -ncol Number of columns in the layout
+# -n_track Number of tracks
+# -track_height height of tracks, it should be numeric which means the value is relative or `grid::unit` object
+# -track_ylim track ylim, can be a vector of length two, or a vector of length ``2*n_track`` or a matrix with two columns
+# -track_axis track axis, whether showing y-axes for tracks
 # -track_ylab track label, ``''`` means there is no label for the track
-# -main title
-# -xlab xlab
-# -xaxis whether add x-axis
-# -equal_width whether all columns hava the same width
-# -border draw border
-# -asist_ticks if axes ticks and labels are added on one side in rows or columns, whether to add ticks on the other side
+# -main title of the plot
+# -xlab labels on x-axis
+# -xaxis whether showing x-axis
+# -equal_width whether all columns have the same width
+# -border whether showing borders
+# -asist_ticks if axes ticks are added on one side in rows or columns, whether to add ticks on the other side
 # -xpadding xpadding, numeric value means relative ratio to the cell width. use `base::I` to set it as absolute
-#           value which is measured in the datavp.
+#           value which is measured in the datavp. Currnetly you cannot set it as a `grid::unit` object.
 # -ypadding ypadding, only numeric value
-# -gap 0 or a `grid::unit` class. If it is length 2, the first one corresponds to the gaps between rows and
+# -gap 0 or a `grid::unit` object. If it is length 2, the first one corresponds to the gaps between rows and
 #      the seond corresponds to the gaps between columns
-# -byrow arrange categories (e.g. chromosomes) by rows ?
-# -newpage whether call `grid::grid.newpage` to initialize on a new graphic device
+# -byrow arrange categories (e.g. chromosomes) by rows or by columns
+# -newpage whether to call `grid::grid.newpage` to create a new page
 # -add_name_track whether add a pre-defined name track (insert before the first track)
-# -name_fontsize font size for cell names, the font size also controls the height of name track
+# -name_fontsize font size for text in the name track. Note the font size also affects the height of name track
 # -name_track_fill filled color for name track
-# -add_ideogram_track whether add a pre-defined ideogram track (insert after the last track).
+# -add_ideogram_track whether to add a pre-defined ideogram track (insert after the last track).
 # -ideogram_track_height height of ideogram track
 # -axis_label_fontsize font size for axis labels
 # -lab_fontsize font size for x-labels and y-labels
 # -main_fontsize font size for title
 #
 # == detail
-# please go to the vignette.
-initialize_layout = function(data = NULL, chromosome = NULL, 
+# Genome-level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
+# For each chromosome, there would be multiple dimensional data which describe certain features in the chromosome from different
+# aspects. The `initialize_layout` function arranges chromosomes on the plot based on certain rules. Then users
+# can apply `add_track` to add self-defined graphics to the plot track by track.
+#
+# For more detailed demonstration of the function, please go to the vignette.
+#
+# == seealso
+# `add_track`, `add_ideogram_track`
+#
+# == authors
+# Zuguang Gu <z.gu@dkfz.de>
+#
+initialize_layout = function(data = NULL, category = NULL, 
     species = NULL, nrow = NULL, ncol = NULL,
     n_track = 1, track_height = 1, track_ylim = c(0, 1),
     track_axis = TRUE, track_ylab = "", 
@@ -54,6 +68,9 @@ initialize_layout = function(data = NULL, chromosome = NULL,
     axis_label_fontsize = 6, lab_fontsize = 10, main_fontsize = 16) {
 
     if(length(track_height) == 1) {
+        if(is.unit(track_height)) {
+            track_height = do.call("unit.c", lapply(seq_len(n_track), function(i) track_height))
+        }
         track_height = rep(track_height, n_track)
     }
 
@@ -67,7 +84,7 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 
     ## start from xlim
     if(is.null(data)) {
-        if(is.null(chromosome)) {
+        if(is.null(category)) {
             chromInfo = read.chromInfo(species = species)
             chr_len = sort(chromInfo$chr.len, decreasing = TRUE)
 
@@ -78,14 +95,17 @@ initialize_layout = function(data = NULL, chromosome = NULL,
             } else {
                 chromosome = chromInfo$chromosome
             }
+
+            category = chromosome
         }
-        chromInfo = read.chromInfo(species = species, chromosome.index = chromosome)
+        chromInfo = read.chromInfo(species = species, chromosome.index = category)
         df = chromInfo$df
-        chromosome = chromInfo$chromosome
+        category = chromInfo$chromosome
   
         xlim = df[2:3]
-        fa = chromosome
+        fa = category
     } else {
+        data = as.data.frame(data)
         if(is.factor(data[[1]])) {
             fa = levels(data[[1]])
         } else {
@@ -654,12 +674,19 @@ initialize_layout = function(data = NULL, chromosome = NULL,
 # add ideogram track
 #
 # == param
-# -species species
-# -i_track which track
+# -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
+#          value is specified, the function will download ``cytoBand.txt.gz`` from
+#          UCSC ftp automatically.
+# -i_track which track the ideogram is added. By default it is the next track in the layout.
 #
 # == detail
-# add an ideogram track
-add_ideogram_track = function(species = NULL, i_track = get_cell_meta_data("i_track")+1) {
+# The function tries to download cytoband file from UCSC ftp. If there is no cytoband file
+# for some species, there will be error.
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
+#
+add_ideogram_track = function(species = NULL, i_track = get_cell_meta_data("i_track") + 1) {
 
 	cytoband = read.cytoband(species = species)
     cytoband_df = cytoband$df
@@ -680,20 +707,31 @@ add_ideogram_track = function(species = NULL, i_track = get_cell_meta_data("i_tr
 # add graphics by track
 #
 # == param
-# -gr a data frame in BED format or a ``GRanges`` object.
-# -category categories (e.g. chromosome)
-# -i_track which track, by default it is the next track
+# -gr genomic regions. It should be a data frame in BED format or a `GenomicRanges::GRanges` object.
+# -category subset of categories (e.g. chromosomes)
+# -i_track which track the graphics will be added to. By default it is the next track
 # -clip whether graphics are restricted inside the cell
-# -panel.fun panel function to add graphics on each 'cell'
+# -panel.fun self-defined panel function to add graphics in each 'cell'
 #
 # == detail
-# As same as ``panel.fun`` in ``circlize`` package, ``panel.fun``
-# will be applied on every cell in the current track. ``gr`` in ``panel.fun``
-# is a subset of the main ``gr`` which only contains data for the current
-# category.
-add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i_track")+1, 
+# Initialization of the Trellis layout and adding graphics are two independent steps.
+# Once the initialization finished, each cell or panel is an independent plotting region.
+# As same as ``panel.fun`` in ``circlize`` package, the self-defined function ``panel.fun``
+# will be applied on every cell in the specified track (by default it is the 'current' track). 
+#
+# ``gr`` in ``panel.fun`` is a subset of the main ``gr`` which only contains data for the current category.
+#
+# Note ``category`` can be a vector with length larger than 2 while ``i_track`` can only be a scalar.
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
+#
+add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i_track") + 1, 
     clip = TRUE, panel.fun = function(gr) NULL) {
     
+    if(length(i_track) != 1) {
+        stop("`i_track` can only be length 1.\n")
+    }
     if(i_track > .GENOMIC_LAYOUT$n_track || i_track < 1) {
         stop(qq("`i_track` should be between [1, @{.GENOMIC_LAYOUT$n_track}]\n"))
     }
@@ -763,12 +801,12 @@ add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i
 }
 
 # == title
-# get current cell meta data
+# get meta data in cell
 #
 # == param
-# -name name
-# -i_category which category. e.g. chromosome, default is current category
-# -i_track which track, default is current track
+# -name name, see 'details' section
+# -i_category which category. By default it is the current category
+# -i_track which track. By default it is the current track
 #
 # == detail
 # Following meta data can be retrieved:
@@ -783,6 +821,11 @@ add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i
 # -i_col which column in the layout
 # -i_row which row in the layout
 # -i_track which track in the layout
+#
+# The vignette has a graphical explanation of all these meta data.
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
 #
 get_cell_meta_data = function(name, i_category, i_track) {
 
@@ -806,10 +849,14 @@ get_cell_meta_data = function(name, i_category, i_track) {
 }
 
 # == title
-# add annotation of each cell
+# add annotation on each cell
 #
 # == detail
-# add the names and the index of the track on each cell
+# add the names and the index of the track in each cell. This function is only for demonstration purpose.
+#
+# == author
+# Zuguang Gu <z.gu@dkfz.de>
+#
 add_cell_info = function() {
     track = .GENOMIC_LAYOUT$n_track
     for(i in seq_len(track)) {
