@@ -42,7 +42,7 @@
 # -main_fontsize font size for title
 #
 # == detail
-# Genome-level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
+# Genome level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
 # For each chromosome, there would be multiple dimensional data which describe certain features in the chromosome from different
 # aspects. The `initialize_layout` function arranges chromosomes on the plot based on certain rules. Then users
 # can apply `add_track` to add self-defined graphics to the plot track by track.

@@ -57,7 +57,7 @@ initialize_layout(data = NULL, category = NULL,
 
 }
 \details{
-Genome-level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes). For each chromosome, there would be multiple dimensional data which describe certain features in the chromosome from different aspects. The \code{\link{initialize_layout}} function arranges chromosomes on the plot based on certain rules. Then users can apply \code{\link{add_track}} to add self-defined graphics to the plot track by track.  
+Genome level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes). For each chromosome, there would be multiple dimensional data which describe certain features in the chromosome from different aspects. The \code{\link{initialize_layout}} function arranges chromosomes on the plot based on certain rules. Then users can apply \code{\link{add_track}} to add self-defined graphics to the plot track by track.  
 
 For more detailed demonstration of the function, please go to the vignette.  
 
