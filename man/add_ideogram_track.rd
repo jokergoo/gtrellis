@@ -24,6 +24,11 @@ The function tries to download cytoband file from UCSC ftp. If there is no cytob
 
 
 }
+\value{
+no value returned  
+
+
+}
 \author{
 Zuguang Gu <z.gu@dkfz.de>  
 

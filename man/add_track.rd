@@ -32,6 +32,11 @@ Note \code{category} can be a vector with length larger than 2 while \code{i_tra
 
 
 }
+\value{
+no value returned  
+
+
+}
 \author{
 Zuguang Gu <z.gu@dkfz.de>  
 

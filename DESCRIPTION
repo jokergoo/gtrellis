@@ -1,17 +1,18 @@
 Package: gtrellis
 Type: Package
-Title: Trellis genomic layout
+Title: Genome Level Trellis Layout
 Version: 0.99.0
 Date: 2014-10-6
 Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
 Depends: R (>= 3.1.0), grid
 Imports: circlize (>= 0.2.3), GetoptLong
-Suggests: knitr, GenomicRanges, RColorBrewer, markdown
+Suggests: testthat (>= 0.3), knitr, GenomicRanges, RColorBrewer, markdown
 VignetteBuilder: knitr
 Description: Flexibly making genome-level Trellis graph.
+biocViews: Software, Visualization, Sequencing
 URL: https://github.com/jokergoo/gtrellis
 License: GPL (>= 2)
 Packaged: 2014-10-6 00:00:00 UTC; Administrator
-Repository: CRAN
+Repository: Bioconductor
 Date/Publication: 2014-10-6 00:00:00

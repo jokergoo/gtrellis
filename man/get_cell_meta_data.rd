@@ -40,6 +40,11 @@ The vignette has a graphical explanation of all these meta data.
 
 
 }
+\value{
+Corresponding meta data thar user queried.  
+
+
+}
 \author{
 Zuguang Gu <z.gu@dkfz.de>  
 

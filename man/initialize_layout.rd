@@ -63,6 +63,11 @@ For more detailed demonstration of the function, please go to the vignette.
 
 
 }
+\value{
+no value returned  
+
+
+}
 \seealso{
 \code{\link{add_track}}, \code{\link{add_ideogram_track}}  
 

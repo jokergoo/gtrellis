@@ -49,6 +49,9 @@
 #
 # For more detailed demonstration of the function, please go to the vignette.
 #
+# == value
+# no value returned
+#
 # == seealso
 # `add_track`, `add_ideogram_track`
 #
@@ -66,6 +69,10 @@ initialize_layout = function(data = NULL, category = NULL,
     name_fontsize = 10, name_track_fill = "#EEEEEE",
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
     axis_label_fontsize = 6, lab_fontsize = 10, main_fontsize = 16) {
+
+    op = qq.options(READ.ONLY = FALSE)
+    on.exit(qq.options(op))
+    qq.options(code.pattern = "@\\{CODE\\}")
 
     if(length(track_height) == 1) {
         if(is.unit(track_height)) {
@@ -683,6 +690,9 @@ initialize_layout = function(data = NULL, category = NULL,
 # The function tries to download cytoband file from UCSC ftp. If there is no cytoband file
 # for some species, there will be error.
 #
+# == value
+# no value returned
+#
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
@@ -723,12 +733,19 @@ add_ideogram_track = function(species = NULL, i_track = get_cell_meta_data("i_tr
 #
 # Note ``category`` can be a vector with length larger than 2 while ``i_track`` can only be a scalar.
 #
+# == value
+# no value returned
+#
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
 add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i_track") + 1, 
     clip = TRUE, panel.fun = function(gr) NULL) {
     
+    op = qq.options(READ.ONLY = FALSE)
+    on.exit(qq.options(op))
+    qq.options(code.pattern = "@\\{CODE\\}")
+
     if(length(i_track) != 1) {
         stop("`i_track` can only be length 1.\n")
     }
@@ -824,6 +841,9 @@ add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i
 #
 # The vignette has a graphical explanation of all these meta data.
 #
+# == value
+# Corresponding meta data thar user queried.
+#
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
@@ -854,10 +874,18 @@ get_cell_meta_data = function(name, i_category, i_track) {
 # == detail
 # add the names and the index of the track in each cell. This function is only for demonstration purpose.
 #
+# == value
+# no value returned
+#
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
 add_cell_info = function() {
+
+    op = qq.options(READ.ONLY = FALSE)
+    on.exit(qq.options(op))
+    qq.options(code.pattern = "@\\{CODE\\}")
+
     track = .GENOMIC_LAYOUT$n_track
     for(i in seq_len(track)) {
         add_track(i_track = i, panel.fun = function(gr) {

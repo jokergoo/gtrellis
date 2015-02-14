@@ -9,4 +9,6 @@ importFrom("circlize", read.cytoband)
 importFrom("circlize", read.chromInfo)
 importFrom("circlize", cytoband.col)
 importFrom("GetoptLong", qq)
+importFrom("GetoptLong", qqcat)
+importFrom("GetoptLong", qq.options)
 
