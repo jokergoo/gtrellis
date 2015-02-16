@@ -1,14 +1,14 @@
-export(
-	add_cell_info,
-	add_ideogram_track,
-	add_track,
-	get_current_cell_meta_data,
-	initialize_layout
-)
+export(add_cell_info)
+export(add_ideogram_track)
+export(add_track)
+export(get_cell_meta_data)
+export(initialize_layout)
 
 import(grid)
 importFrom("circlize", read.cytoband)
 importFrom("circlize", read.chromInfo)
 importFrom("circlize", cytoband.col)
 importFrom("GetoptLong", qq)
+importFrom("GetoptLong", qqcat)
+importFrom("GetoptLong", qq.options)
 
