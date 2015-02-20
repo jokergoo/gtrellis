@@ -82,4 +82,6 @@ Zuguang Gu <z.gu@dkfz.de>
 initialize_layout()
 initialize_layout(ncol = 5)
 initialize_layout(n_track = 3, ncol = 4)
+
+# for more examples, please go to the vignette
 }

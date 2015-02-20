@@ -52,6 +52,7 @@ add_track(bed, panel.fun = function(bed) {
     grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
 })
 
+# you can add graphics in any cell by specifying `category` and `i_track`
 all_chr = paste0("chr", 1:22)
 letter = strsplit("MERRY CHRISTMAS!", "")[[1]]
 initialize_layout(nrow = 5)

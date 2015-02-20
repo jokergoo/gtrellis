@@ -258,7 +258,7 @@ Initialization and adding graphics are actually independent. Following example u
 same code to add graphics but with different layout.
 
 ```{r, fig.width = 8, fig.height = 8}
-initialize_layout(nrow = 5, track_ylim = range(bed[[4]]))
+initialize_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]))
 add_track(bed, panel.fun = function(bed) {
     x = (bed[[2]] + bed[[3]]) / 2
     y = bed[[4]]
@@ -294,7 +294,7 @@ Initialize the layout and add following four tracks which contains:
 4. ideogram, rectangles
 
 ```{r, fig.width = 10, fig.height = 12}
-initialize_layout(n_track = 4, ncol = 4,
+initialize_layout(n_track = 4, ncol = 4, byrow = FALSE,
     track_axis = c(FALSE, TRUE, TRUE, FALSE), 
     track_height = unit.c(1.5*grobHeight(textGrob("chr1")), 
                           unit(1, "null"), 
@@ -355,7 +355,7 @@ DMR_hypo_density = lapply(split(DMR_hypo, DMR_hypo[[1]]), function(gr) {
 })
 DMR_hypo_density = do.call("rbind", DMR_hypo_density)
 
-initialize_layout(n_track = 2, ncol = 4,
+initialize_layout(n_track = 2, ncol = 4, byrow = FALSE,
     track_axis = TRUE, 
     track_height = unit.c(unit(1, "null"), 
                           unit(0.5, "null")), 
@@ -414,7 +414,7 @@ grid.newpage()
 pushViewport(viewport(layout = layout))
 
 pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
-initialize_layout(nrow = 5, track_ylim = range(bed[[4]]), newpage = FALSE)
+initialize_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]), newpage = FALSE)
 add_track(bed, panel.fun = function(bed) {
     x = (bed[[2]] + bed[[3]]) / 2
     y = bed[[4]]

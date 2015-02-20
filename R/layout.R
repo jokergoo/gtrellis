@@ -1,9 +1,8 @@
 
-# use en environment to put global variables
 .GENOMIC_LAYOUT = new.env()
 
 # == title
-# Initialize genome-level Trellis layout
+# Initialize Genome-level Trellis layout
 #
 # == param
 # -data a data frame with at least three columns. The first three columns are genomic categories (e.g. chromosomes), 
@@ -50,7 +49,7 @@
 # For more detailed demonstration of the function, please go to the vignette.
 #
 # == value
-# no value returned
+# no value returned.
 #
 # == seealso
 # `add_track`, `add_ideogram_track`
@@ -691,7 +690,7 @@ initialize_layout = function(data = NULL, category = NULL,
 # for some species, there will be error.
 #
 # == value
-# no value returned
+# No value is returned.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
@@ -734,7 +733,7 @@ add_ideogram_track = function(species = NULL, i_track = get_cell_meta_data("i_tr
 # Note ``category`` can be a vector with length larger than 2 while ``i_track`` can only be a scalar.
 #
 # == value
-# no value returned
+# No value is returned.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
@@ -875,7 +874,7 @@ get_cell_meta_data = function(name, i_category, i_track) {
 # add the names and the index of the track in each cell. This function is only for demonstration purpose.
 #
 # == value
-# no value returned
+# No value is returned.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
