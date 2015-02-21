@@ -2,7 +2,7 @@
 .GENOMIC_LAYOUT = new.env()
 
 # == title
-# Initialize Genome-level Trellis layout
+# Initialize genome level Trellis layout
 #
 # == param
 # -data a data frame with at least three columns. The first three columns are genomic categories (e.g. chromosomes), 
@@ -10,46 +10,87 @@
 # -category subset of categories. It is also used for ordering.
 # -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
 #          value is specified, the function will download ``chromInfo.txt.gz`` from
-#          UCSC ftp automatically.
-# -nrow Number of rows in the layout
-# -ncol Number of columns in the layout
-# -n_track Number of tracks
-# -track_height height of tracks, it should be numeric which means the value is relative or `grid::unit` object
-# -track_ylim track ylim, can be a vector of length two, or a vector of length ``2*n_track`` or a matrix with two columns
-# -track_axis track axis, whether showing y-axes for tracks
-# -track_ylab track label, ``''`` means there is no label for the track
-# -main title of the plot
-# -xlab labels on x-axis
-# -xaxis whether showing x-axis
-# -equal_width whether all columns have the same width
-# -border whether showing borders
-# -asist_ticks if axes ticks are added on one side in rows or columns, whether to add ticks on the other side
-# -xpadding xpadding, numeric value means relative ratio to the cell width. use `base::I` to set it as absolute
-#           value which is measured in the datavp. Currnetly you cannot set it as a `grid::unit` object.
-# -ypadding ypadding, only numeric value
-# -gap 0 or a `grid::unit` object. If it is length 2, the first one corresponds to the gaps between rows and
-#      the seond corresponds to the gaps between columns
-# -byrow arrange categories (e.g. chromosomes) by rows or by columns
-# -newpage whether to call `grid::grid.newpage` to create a new page
-# -add_name_track whether add a pre-defined name track (insert before the first track)
-# -name_fontsize font size for text in the name track. Note the font size also affects the height of name track
-# -name_track_fill filled color for name track
-# -add_ideogram_track whether to add a pre-defined ideogram track (insert after the last track).
-# -ideogram_track_height height of ideogram track
-# -axis_label_fontsize font size for axis labels
-# -lab_fontsize font size for x-labels and y-labels
-# -main_fontsize font size for title
+#          UCSC ftp automatically. Short scaffolds will be removed. Pass to `circlize::read.chromInfo`.
+# -nrow Number of rows in the layout.
+# -ncol Number of columns in the layout.
+# -n_track Number of tracks for each genomic category.
+# -track_height height of tracks. It should be numeric which means the value is relative or a `grid::unit` object.
+# -track_ylim ranges on y axes of tracks. The value can be a vector of length two which means all tracks share same
+#             y ranges, or a matrix with two columns or a vector of length ``2*n_track`` which will be transformed
+#             into the two-column matrix by rows.
+# -track_axis whether show y axes for tracks. The value is logical that can be either length one or number of tracks.
+# -track_ylab labels for tracks on y axes. The value can be either length one or number of tracks.
+# -title title of the plot.
+# -xlab labels on x axes.
+# -xaxis whether show x axes.
+# -equal_width whether all columns in the layout have the same width. If ``TRUE``, short categories will be extended
+#              according to the longest category.
+# -border whether show borders.
+# -asist_ticks if axes ticks are added on one side in rows or columns, whether add ticks on the other side.
+# -xpadding padding on x axes in each cell. Numeric value means relative ratio corresponding to the cell width. 
+#           Use `base::I` to set it as absolute value which is measured in the data viewport (the coordinate system corresponding
+#           to the real data). Currnetly you cannot set it as a `grid::unit` object.
+# -ypadding padding on y axes in each cell. Only numeric value is allowed currently.
+# -gap 0 or a `grid::unit` object. If it is length two, the first element corresponds to the gaps between rows and
+#      the seond corresponds to the gaps between columns.
+# -byrow arrange categories (e.g. chromosomes) by rows or by columns in the layout.
+# -newpage whether call `grid::grid.newpage` to create a new page.
+# -add_name_track whether add a pre-defined name track (insert before the first track). The name track is simply a track
+#                 which only contains text, implemented by `add_track`.
+# -name_fontsize font size for text in the name track. Note the font size also affects the height of name track.
+# -name_track_fill filled color for name track.
+# -add_ideogram_track whether to add a pre-defined ideogram track (insert after the last track). If the cytoband data for specified
+#                     species is not available, this argument is ignored. The ideogram track simply contains rectangels
+#                     with different colors, implemented by `add_track`.
+# -ideogram_track_height Height of ideogram track. The value should be a `grid::unit` object.
+# -axis_label_fontsize font size for axis labels.
+# -lab_fontsize font size for x-labels and y-labels.
+# -title_fontsize font size for title.
 #
 # == detail
 # Genome level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
-# For each chromosome, there would be multiple dimensional data which describe certain features in the chromosome from different
-# aspects. The `initialize_layout` function arranges chromosomes on the plot based on certain rules. Then users
-# can apply `add_track` to add self-defined graphics to the plot track by track.
+# For each genomic category, multiple dimensional data which are represented as tracks describe different features from different
+# aspects. The `gtrellis_layout` function arranges genomic categories on the plot in a quite flexible way. Then users
+# apply `add_track` to add self-defined graphics to the plot track by track.
 #
 # For more detailed demonstration of the function, please go to the vignette.
 #
+# == legend
+# Legend is not supported in this package. But it is easy to add legends based on the ``grid`` graphic system.
+# Following example shows adding a simple legend on the right of the Trellis plot.
+#
+# First create a `grid::viewport` or a `grid::grob` object that contains the legend. The most simple way is to 
+# use `grid::legendGrob` to construct a simple legend.
+#
+#     legd = legendGrob("label", pch = 16)
+#
+# Create a layout which contains two columns and we set the width for the second column to the width 
+# of the legend by `grid::grobWidth`.
+#
+#     layout = grid.layout(nrow = 1, ncol = 2, widths = unit.c(unit(1, "null"), grobWidth(legd)))
+#     grid.newpage()
+#     pushViewport(viewport(layout = layout))
+#
+# In the left column, we add Trellis plot. Here you need to specify ``newpage`` to ``FALSE`` so that
+# the plot is added into the current page which not creating a new one.
+#
+#     pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
+#     gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]), newpage = FALSE)
+#     add_track(bed, panel.fun = function(bed) {
+#         x = (bed[[2]] + bed[[3]]) / 2
+#         y = bed[[4]]
+#         grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+#     })
+#     upViewport()
+#
+# In the right column, add the legend.
+#
+#     pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+#     grid.draw(legd)
+#     upViewport()
+#
 # == value
-# no value returned.
+# No value is returned.
 #
 # == seealso
 # `add_track`, `add_ideogram_track`
@@ -57,17 +98,17 @@
 # == authors
 # Zuguang Gu <z.gu@dkfz.de>
 #
-initialize_layout = function(data = NULL, category = NULL, 
+gtrellis_layout = function(data = NULL, category = NULL, 
     species = NULL, nrow = NULL, ncol = NULL,
     n_track = 1, track_height = 1, track_ylim = c(0, 1),
     track_axis = TRUE, track_ylab = "", 
-    main = NULL, xlab = "Genomic positions", xaxis = TRUE,
+    title = NULL, xlab = "Genomic positions", xaxis = TRUE,
     equal_width = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE, 
     name_fontsize = 10, name_track_fill = "#EEEEEE",
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
-    axis_label_fontsize = 6, lab_fontsize = 10, main_fontsize = 16) {
+    axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16) {
 
     op = qq.options(READ.ONLY = FALSE)
     on.exit(qq.options(op))
@@ -126,8 +167,8 @@ initialize_layout = function(data = NULL, category = NULL,
     if(is.null(xlab)) xlab = ""
     if(is.na(xlab)) xlab = ""
 
-    if(is.null(main)) main = ""
-    if(is.na(main)) main = ""
+    if(is.null(title)) title = ""
+    if(is.na(title)) title = ""
 
     axis_tick_height = unit(1, "mm")
     axis_label_gap = unit(1, "mm")
@@ -330,20 +371,20 @@ initialize_layout = function(data = NULL, category = NULL,
         ylabel_right_width = lstr_ylab_height*2
     }
 
-    if(main == "") {
-        main_height = unit(2, "mm")
+    if(title == "") {
+        title_height = unit(2, "mm")
     } else {
-        main_height = grobHeight(textGrob(main, gp = gpar(fontface = "bold", fontsize = main_fontsize)))*1.5
+        title_height = grobHeight(textGrob(title, gp = gpar(fontface = "bold", fontsize = title_fontsize)))*1.5
     }
 
     if(newpage) grid.newpage(recording = FALSE)
     layout = grid.layout(nrow = 5, ncol = 5, widths = unit.c(ylabel_left_width, yaxis_left_width, unit(1, "null"), yaxis_right_width, ylabel_right_width),
-                                             heights = unit.c(main_height, xaxis_top_height, unit(1, "null"), xaxis_bottom_height, xlabel_height))
+                                             heights = unit.c(title_height, xaxis_top_height, unit(1, "null"), xaxis_bottom_height, xlabel_height))
     pushViewport(viewport(layout = layout, name = "global_layout"))
     
-    if(!is.null(main)) {
+    if(!is.null(title)) {
         pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 3))
-        grid.text(main, gp = gpar(fontface = "bold", fontsize = main_fontsize))
+        grid.text(title, gp = gpar(fontface = "bold", fontsize = title_fontsize))
         upViewport()
     }
     
@@ -372,7 +413,7 @@ initialize_layout = function(data = NULL, category = NULL,
     ygap = gap[1]
 
     # initialize each fa
-    pushViewport(viewport(layout.pos.col = 3, layout.pos.row = 3, name = "main_container"))
+    pushViewport(viewport(layout.pos.col = 3, layout.pos.row = 3, name = "title_container"))
     
     if(equal_width) {
         chr_width = unit(1, "npc")*(1/ncol) - (ncol - 1)*xgap*(1/ncol)
@@ -677,17 +718,17 @@ initialize_layout = function(data = NULL, category = NULL,
 }
 
 # == title
-# add ideogram track
+# Add ideogram track
 #
 # == param
 # -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
 #          value is specified, the function will download ``cytoBand.txt.gz`` from
-#          UCSC ftp automatically.
-# -i_track which track the ideogram is added. By default it is the next track in the layout.
+#          UCSC ftp automatically. Pass to `circlize::read.cytoband`.
+# -track which track the ideogram is added in. By default it is the next track in the layout.
 #
 # == detail
 # The function tries to download cytoband file from UCSC ftp. If there is no cytoband file
-# for some species, there will be error.
+# available for the species, there will be error.
 #
 # == value
 # No value is returned.
@@ -695,11 +736,11 @@ initialize_layout = function(data = NULL, category = NULL,
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-add_ideogram_track = function(species = NULL, i_track = get_cell_meta_data("i_track") + 1) {
+add_ideogram_track = function(species = NULL, track = get_cell_meta_data("track") + 1) {
 
 	cytoband = read.cytoband(species = species)
     cytoband_df = cytoband$df
-    add_track(cytoband_df, i_track = i_track, clip = TRUE, panel.fun = function(gr) {
+    add_track(cytoband_df, track = track, clip = TRUE, panel.fun = function(gr) {
         cytoband_chr = gr
         grid.rect( cytoband_chr[[2]], unit(0, "npc"),
                    width = cytoband_chr[[3]] - cytoband_chr[[2]], height = unit(1, "npc"),
@@ -713,43 +754,67 @@ add_ideogram_track = function(species = NULL, i_track = get_cell_meta_data("i_tr
 }
 
 # == title
-# add graphics by track
+# Add graphics by track
 #
 # == param
-# -gr genomic regions. It should be a data frame in BED format or a `GenomicRanges::GRanges` object.
-# -category subset of categories (e.g. chromosomes)
-# -i_track which track the graphics will be added to. By default it is the next track
-# -clip whether graphics are restricted inside the cell
-# -panel.fun self-defined panel function to add graphics in each 'cell'
+# -gr genomic regions. It should be a data frame in BED format or a ``GRanges`` object.
+# -category subset of categories (e.g. chromosomes). The value can be a vector which contains more than one category.
+# -track which track the graphics will be added to. By default it is the next track. The value should only be a scalar.
+# -clip whether graphics are restricted inside the cell.
+# -panel.fun self-defined panel function to add graphics in each 'cell'. THe argument ``gr`` in ``panel.fun`` 
+#            only contains data for the current category which is a subset of the main ``gr``.
 #
 # == detail
 # Initialization of the Trellis layout and adding graphics are two independent steps.
-# Once the initialization finished, each cell or panel is an independent plotting region.
-# As same as ``panel.fun`` in ``circlize`` package, the self-defined function ``panel.fun``
+# Once the layout initialization finished, cells or panels will be an independent plotting regions.
+# As same as ``panel.fun`` in `circlize::circlize-package`, the self-defined function ``panel.fun``
 # will be applied on every cell in the specified track (by default it is the 'current' track). 
 #
-# ``gr`` in ``panel.fun`` is a subset of the main ``gr`` which only contains data for the current category.
+# When adding graphics in each cell, `get_cell_meta_data` can return several meta data for the current cell.
 #
-# Note ``category`` can be a vector with length larger than 2 while ``i_track`` can only be a scalar.
+# Since this package is implemented by the ``grid`` graphic system, ``grid``-family functions
+# (such as `grid::grid.points`, `grid::grid.rect`, ...) should be used to add graphics. The usage
+# of ``grid`` functions is quite similar as the traditional graphic functions. 
+# Followings are several examples:
+#
+#     grid.points(x, y)
+#     grid.lines(x, y)
+#     grid.rect(x, y, width, height)
+#
+# Graphical parameters are usually passed by `grid::gpar`:
+#
+#     grid.points(x, y, gp = gpar(col = "red")
+#     grid.rect(x, y, width, height, gp = gpar(fill = "black", col = "red"))
+#
+# ``grid`` system also support a large number of coordinate systems by defining proper `grid::unit` object 
+# which provides high flexibility to place graphics on the plotting regions.
+#
+#     grid.points(x, y, default.units = "npc")
+#     grid.rect(x, y, width = unit(1, "cm"))
+#
+# You can refer to the documentations and vignettes of `grid::grid-package` to get a overview.
 #
 # == value
 # No value is returned.
 #
+# == seealso
+# `get_cell_meta_data`
+#
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i_track") + 1, 
+add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("track") + 1, 
     clip = TRUE, panel.fun = function(gr) NULL) {
     
     op = qq.options(READ.ONLY = FALSE)
     on.exit(qq.options(op))
     qq.options(code.pattern = "@\\{CODE\\}")
 
-    if(length(i_track) != 1) {
-        stop("`i_track` can only be length 1.\n")
+    if(length(track) != 1) {
+        stop("`track` can only be length 1.\n")
     }
-    if(i_track > .GENOMIC_LAYOUT$n_track || i_track < 1) {
-        stop(qq("`i_track` should be between [1, @{.GENOMIC_LAYOUT$n_track}]\n"))
+    if(track > .GENOMIC_LAYOUT$n_track || track < 1) {
+        stop(qq("`track` should be between [1, @{.GENOMIC_LAYOUT$n_track}]\n"))
     }
 
     all_fa = .GENOMIC_LAYOUT$fa
@@ -776,12 +841,12 @@ add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i
     
     for(chr in fa) {
         .GENOMIC_LAYOUT$current_fa = chr
-        .GENOMIC_LAYOUT$current_track = i_track
+        .GENOMIC_LAYOUT$current_track = track
         
         if(clip) {
-        	vp = qq("@{chr}_track_@{i_track}_datavp_clip")
+        	vp = qq("@{chr}_track_@{track}_datavp_clip")
         } else {
-        	vp = qq("@{chr}_track_@{i_track}_datavp")
+        	vp = qq("@{chr}_track_@{track}_datavp")
         }
         if(is.null(gr)) {
             seekViewport(name = vp)
@@ -817,61 +882,62 @@ add_track = function(gr = NULL, category = NULL, i_track = get_cell_meta_data("i
 }
 
 # == title
-# get meta data in cell
+# Get meta data in a cell
 #
 # == param
-# -name name, see 'details' section
-# -i_category which category. By default it is the current category
-# -i_track which track. By default it is the current track
+# -name name of the supported meta data, see 'details' section.
+# -category which category. By default it is the current category.
+# -track which track. By default it is the current track.
 #
 # == detail
 # Following meta data can be retrieved:
 #
-# -name  name
-# -xlim  xlim without including padding, cells in a same column shares the same ``xlim``
-# -ylim  yiim without including padding
-# -extended_xlim xlim with padding
-# -extended_ylim ylim with padding
-# -original_xlim xlim in original data
-# -original_ylim ylim in original data
-# -i_col which column in the layout
-# -i_row which row in the layout
-# -i_track which track in the layout
+# -name  name of the category.
+# -xlim  xlim without including padding. Cells in the same column share the same ``xlim``.
+# -ylim  yiim without including padding.
+# -extended_xlim xlim with padding.
+# -extended_ylim ylim with padding.
+# -original_xlim xlim in original data.
+# -original_ylim ylim in original data.
+# -column which column in the layout.
+# -row which row in the layout.
+# -track which track in the layout.
 #
 # The vignette has a graphical explanation of all these meta data.
 #
 # == value
-# Corresponding meta data thar user queried.
+# Corresponding meta data that user queried.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-get_cell_meta_data = function(name, i_category, i_track) {
+get_cell_meta_data = function(name, category, track) {
 
-    if(missing(i_category)) i_category = .GENOMIC_LAYOUT$current_fa
-    if(missing(i_track)) i_track = .GENOMIC_LAYOUT$current_track
+    if(missing(category)) category = .GENOMIC_LAYOUT$current_fa
+    if(missing(track)) track = .GENOMIC_LAYOUT$current_track
 
-    i_col = which(.GENOMIC_LAYOUT$fa == i_category) %% .GENOMIC_LAYOUT$ncol
-    if(i_col == 0) i_col = .GENOMIC_LAYOUT$ncol
+    column = which(.GENOMIC_LAYOUT$fa == category) %% .GENOMIC_LAYOUT$ncol
+    if(column == 0) column = .GENOMIC_LAYOUT$ncol
     
     switch(name,
-           name = i_category,
-           xlim = .GENOMIC_LAYOUT$xlim[i_col, ],
-           ylim = .GENOMIC_LAYOUT$ylim[i_track, ],
-           extended_xlim = .GENOMIC_LAYOUT$extended_xlim[i_col, ],
-           extended_ylim = .GENOMIC_LAYOUT$extended_ylim[i_track, ],
-           original_xlim = .GENOMIC_LAYOUT$original_xlim[i_category, ],
-           original_ylim = .GENOMIC_LAYOUT$original_ylim[i_track, ],
-           i_col = i_col,
-           i_row = ceiling(which(.GENOMIC_LAYOUT$fa == i_category) / (.GENOMIC_LAYOUT$ncol+0.5)),
-           i_track = i_track)
+           name = category,
+           xlim = .GENOMIC_LAYOUT$xlim[column, ],
+           ylim = .GENOMIC_LAYOUT$ylim[track, ],
+           extended_xlim = .GENOMIC_LAYOUT$extended_xlim[column, ],
+           extended_ylim = .GENOMIC_LAYOUT$extended_ylim[track, ],
+           original_xlim = .GENOMIC_LAYOUT$original_xlim[category, ],
+           original_ylim = .GENOMIC_LAYOUT$original_ylim[track, ],
+           column = column,
+           row = ceiling(which(.GENOMIC_LAYOUT$fa == category) / (.GENOMIC_LAYOUT$ncol+0.5)),
+           track = track)
 }
 
 # == title
-# add annotation on each cell
+# Add annotation on each cell
 #
 # == detail
-# add the names and the index of the track in each cell. This function is only for demonstration purpose.
+# The function adds name and index for each cell in the corresponding track. 
+# It is only for demonstration purpose.
 #
 # == value
 # No value is returned.
@@ -879,7 +945,7 @@ get_cell_meta_data = function(name, i_category, i_track) {
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-add_cell_info = function() {
+gtrellis_info = function() {
 
     op = qq.options(READ.ONLY = FALSE)
     on.exit(qq.options(op))
@@ -887,7 +953,7 @@ add_cell_info = function() {
 
     track = .GENOMIC_LAYOUT$n_track
     for(i in seq_len(track)) {
-        add_track(i_track = i, panel.fun = function(gr) {
+        add_track(track = i, panel.fun = function(gr) {
             nm = get_cell_meta_data("name")
             grid.text(qq("@{nm}\ntrack:@{i}"), unit(0.5, "npc"), unit(0.5, "npc"))
         })
@@ -916,9 +982,9 @@ re_calculate_xlim = function(xlim, nrow, ncol, equal_width = FALSE) {
 check_xlim = function(xlim, nrow, ncol) {
     xlim = xlim[!grepl(".invisible", rownames(xlim)), , drop = FALSE]
     n = nrow(xlim)
-    all(sapply(seq_len(ncol), function(i_col) {
-        if(i_col == ncol) i_col = 0
-        i = seq_len(n)[seq_len(n) %% ncol == i_col]
+    all(sapply(seq_len(ncol), function(column) {
+        if(column == ncol) column = 0
+        i = seq_len(n)[seq_len(n) %% ncol == column]
         almost_equal(xlim[i, 1])
     }))
 }
@@ -927,46 +993,46 @@ almost_equal = function(x) {
     max(x) - min(x) < 1e-10
 }
 
-is_on_left = function(i_track, i_row, i_col, nrow, ncol, ntrack, track_show = rep(TRUE, ntrack)) {
-    if(i_col != 1) return(FALSE)
-    if(!track_show[i_track]) return(FALSE)
-    i_track = length(which(track_show[1:i_track]))
+is_on_left = function(track, row, column, nrow, ncol, ntrack, track_show = rep(TRUE, ntrack)) {
+    if(column != 1) return(FALSE)
+    if(!track_show[track]) return(FALSE)
+    track = length(which(track_show[1:track]))
     ntrack = sum(track_show)
-    if((i_track + (i_row - 1)*ntrack) %% 2 == 1) return(TRUE)
+    if((track + (row - 1)*ntrack) %% 2 == 1) return(TRUE)
     return(FALSE)
 }
 
-is_on_right = function(i_track, i_row, i_col, nrow, ncol, ntrack, track_show = rep(TRUE, ntrack)) {
-    if(i_col != ncol) return(FALSE)
-    if(!track_show[i_track]) return(FALSE)
-    i_track = length(which(track_show[1:i_track]))
+is_on_right = function(track, row, column, nrow, ncol, ntrack, track_show = rep(TRUE, ntrack)) {
+    if(column != ncol) return(FALSE)
+    if(!track_show[track]) return(FALSE)
+    track = length(which(track_show[1:track]))
     ntrack = sum(track_show)
-    if((i_track+(i_row-1)*ntrack) %% 2 == 0) return(TRUE)
+    if((track+(row-1)*ntrack) %% 2 == 0) return(TRUE)
     return(FALSE)
 }
 
-is_on_top = function(i_track, i_row, i_col, nrow, ncol, ntrack) {
-    if(i_track == 1 && i_row == 1) {
-        if(i_col %% 2 == 0) return(TRUE)
+is_on_top = function(track, row, column, nrow, ncol, ntrack) {
+    if(track == 1 && row == 1) {
+        if(column %% 2 == 0) return(TRUE)
     } else {
         return(FALSE)
     }
     return(FALSE)
 }
 
-is_on_bottom = function(i_track, i_row, i_col, nrow, ncol, ntrack) {
-    if(i_track == ntrack && i_row == nrow) {
-        if(i_col %% 2 == 1) return(TRUE)
+is_on_bottom = function(track, row, column, nrow, ncol, ntrack) {
+    if(track == ntrack && row == nrow) {
+        if(column %% 2 == 1) return(TRUE)
     } else {
         return(FALSE)
     }
     return(FALSE)
 }
 
-is_visible = function(i_row, i_col) {
+is_visible = function(row, column) {
     fa = .GENOMIC_LAYOUT$fa
     ncol = .GENOMIC_LAYOUT$ncol
-    !grepl("^\\.invisible_", fa[i_col + (i_row-1)*ncol])
+    !grepl("^\\.invisible_", fa[column + (row-1)*ncol])
 }
 
 

@@ -1,8 +1,8 @@
-export(add_cell_info)
-export(add_ideogram_track)
-export(add_track)
+export(gtrellis_layout)
 export(get_cell_meta_data)
-export(initialize_layout)
+export(add_track)
+export(gtrellis_info)
+export(add_ideogram_track)
 
 import(grid)
 importFrom("circlize", read.cytoband)
