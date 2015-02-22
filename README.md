@@ -1,4 +1,24 @@
-**gtrellis** aims to arrange chromosomes as trellis style and support multiple tracks for visualization.
+Make Genome Level Trellis Graph
+===============================
+
+**gtrellis** aims to arrange chromosomes as Trellis style and support multiple tracks for visualization.
+
+Basic usage is:
+
+```r
+library(gtrellis)
+library(circlize)
+
+bed = generateRandomBed()
+gtrellis_layout(track_ylim = range(bed[[4]]))
+add_track(bed, panel.fun = function(bed) {
+    x = (bed[[2]] + bed[[3]]) / 2
+    y = bed[[4]]
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+})
+```
+
+Example figures are:
 
 ![1](https://cloud.githubusercontent.com/assets/449218/5553808/5d5859bc-8c30-11e4-9a58-77e28cf7fd8b.png)
 ![default](https://cloud.githubusercontent.com/assets/449218/6318159/bca7edf4-ba81-11e4-9cf7-e6bab5303ca0.png)
