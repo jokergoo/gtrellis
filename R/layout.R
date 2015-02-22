@@ -117,8 +117,9 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(length(track_height) == 1) {
         if(is.unit(track_height)) {
             track_height = do.call("unit.c", lapply(seq_len(n_track), function(i) track_height))
+        } else {
+            track_height = rep(track_height, n_track)
         }
-        track_height = rep(track_height, n_track)
     }
 
     if(length(track_ylim) == 2) {
