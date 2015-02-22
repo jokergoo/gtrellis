@@ -894,7 +894,7 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
 #
 # -name  name of the category.
 # -xlim  xlim without including padding. Cells in the same column share the same ``xlim``.
-# -ylim  yiim without including padding.
+# -ylim  ylim without including padding.
 # -extended_xlim xlim with padding.
 # -extended_ylim ylim with padding.
 # -original_xlim xlim in original data.
