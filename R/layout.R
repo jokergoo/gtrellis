@@ -2,21 +2,22 @@
 .GENOMIC_LAYOUT = new.env()
 
 # == title
-# Initialize genome level Trellis layout
+# Initialize genome-level Trellis layout
 #
 # == param
-# -data a data frame with at least three columns. The first three columns are genomic categories (e.g. chromosomes), 
+# -data a data frame with at least three columns. The first three columns should be genomic categories (e.g. chromosomes), 
 #       start positions and end positions. This data frame is used to extract ranges for each genomic category.
 # -category subset of categories. It is also used for ordering.
 # -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
 #          value is specified, the function will download ``chromInfo.txt.gz`` from
-#          UCSC ftp automatically. Short scaffolds will be removed. Pass to `circlize::read.chromInfo`.
+#          UCSC ftp automatically. Short scaffolds will be removed. The argument is passed
+#          to `circlize::read.chromInfo`.
 # -nrow Number of rows in the layout.
 # -ncol Number of columns in the layout.
 # -n_track Number of tracks for each genomic category.
 # -track_height height of tracks. It should be numeric which means the value is relative or a `grid::unit` object.
 # -track_ylim ranges on y axes of tracks. The value can be a vector of length two which means all tracks share same
-#             y ranges, or a matrix with two columns or a vector of length ``2*n_track`` which will be transformed
+#             y ranges, or a matrix with two columns, or a vector of length ``2*n_track`` which will be transformed
 #             into the two-column matrix by rows.
 # -track_axis whether show y axes for tracks. The value is logical that can be either length one or number of tracks.
 # -track_ylab labels for tracks on y axes. The value can be either length one or number of tracks.
@@ -29,18 +30,19 @@
 # -asist_ticks if axes ticks are added on one side in rows or columns, whether add ticks on the other side.
 # -xpadding padding on x axes in each cell. Numeric value means relative ratio corresponding to the cell width. 
 #           Use `base::I` to set it as absolute value which is measured in the data viewport (the coordinate system corresponding
-#           to the real data). Currnetly you cannot set it as a `grid::unit` object.
+#           to the real data). Currently you cannot set it as a `grid::unit` object.
 # -ypadding padding on y axes in each cell. Only numeric value is allowed currently.
 # -gap 0 or a `grid::unit` object. If it is length two, the first element corresponds to the gaps between rows and
-#      the seond corresponds to the gaps between columns.
+#      the second corresponds to the gaps between columns.
 # -byrow arrange categories (e.g. chromosomes) by rows or by columns in the layout.
 # -newpage whether call `grid::grid.newpage` to create a new page.
 # -add_name_track whether add a pre-defined name track (insert before the first track). The name track is simply a track
-#                 which only contains text, implemented by `add_track`.
+#                 which only contains text. The default style of the name track is simple, but users can
+#                 self define their own by `add_track`.
 # -name_fontsize font size for text in the name track. Note the font size also affects the height of name track.
 # -name_track_fill filled color for name track.
 # -add_ideogram_track whether to add a pre-defined ideogram track (insert after the last track). If the cytoband data for specified
-#                     species is not available, this argument is ignored. The ideogram track simply contains rectangels
+#                     species is not available, this argument is ignored. The ideogram track simply contains rectangles
 #                     with different colors, implemented by `add_track`.
 # -ideogram_track_height Height of ideogram track. The value should be a `grid::unit` object.
 # -axis_label_fontsize font size for axis labels.
@@ -48,7 +50,7 @@
 # -title_fontsize font size for title.
 #
 # == detail
-# Genome level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
+# Genome-level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
 # For each genomic category, multiple dimensional data which are represented as tracks describe different features from different
 # aspects. The `gtrellis_layout` function arranges genomic categories on the plot in a quite flexible way. Then users
 # apply `add_track` to add self-defined graphics to the plot track by track.
@@ -722,12 +724,15 @@ gtrellis_layout = function(data = NULL, category = NULL,
 # Add ideogram track
 #
 # == param
+# -cytoband Path of the cytoband file or a data frame that already contains cytoband data. Pass to `circlize::read.cytoband`.
 # -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
 #          value is specified, the function will download ``cytoBand.txt.gz`` from
 #          UCSC ftp automatically. Pass to `circlize::read.cytoband`.
 # -track which track the ideogram is added in. By default it is the next track in the layout.
 #
 # == detail
+# A track which contains ideograms will be added to the plot. 
+#
 # The function tries to download cytoband file from UCSC ftp. If there is no cytoband file
 # available for the species, there will be error.
 #
@@ -737,7 +742,8 @@ gtrellis_layout = function(data = NULL, category = NULL,
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-add_ideogram_track = function(species = NULL, track = get_cell_meta_data("track") + 1) {
+add_ideogram_track = function(cytoband = paste0(system.file(package = "circlize"),
+    "/extdata/cytoBand.txt"), species = NULL, track = get_cell_meta_data("track") + 1) {
 
 	cytoband = read.cytoband(species = species)
     cytoband_df = cytoband$df
@@ -755,7 +761,7 @@ add_ideogram_track = function(species = NULL, track = get_cell_meta_data("track"
 }
 
 # == title
-# Add graphics by track
+# Add self-defined graphics track by track
 #
 # == param
 # -gr genomic regions. It should be a data frame in BED format or a ``GRanges`` object.
@@ -767,7 +773,7 @@ add_ideogram_track = function(species = NULL, track = get_cell_meta_data("track"
 #
 # == detail
 # Initialization of the Trellis layout and adding graphics are two independent steps.
-# Once the layout initialization finished, cells or panels will be an independent plotting regions.
+# Once the layout initialization finished, each cell will be an independent plotting region.
 # As same as ``panel.fun`` in `circlize::circlize-package`, the self-defined function ``panel.fun``
 # will be applied on every cell in the specified track (by default it is the 'current' track). 
 #
@@ -787,7 +793,7 @@ add_ideogram_track = function(species = NULL, track = get_cell_meta_data("track"
 #     grid.points(x, y, gp = gpar(col = "red")
 #     grid.rect(x, y, width, height, gp = gpar(fill = "black", col = "red"))
 #
-# ``grid`` system also support a large number of coordinate systems by defining proper `grid::unit` object 
+# ``grid`` system also support a large number of coordinate measurement systems by defining proper `grid::unit` object 
 # which provides high flexibility to place graphics on the plotting regions.
 #
 #     grid.points(x, y, default.units = "npc")
@@ -946,7 +952,7 @@ get_cell_meta_data = function(name, category, track) {
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-gtrellis_info = function() {
+gtrellis_show_index = function() {
 
     op = qq.options(READ.ONLY = FALSE)
     on.exit(qq.options(op))

@@ -1,7 +1,7 @@
 export(gtrellis_layout)
 export(get_cell_meta_data)
 export(add_track)
-export(gtrellis_info)
+export(gtrellis_show_index)
 export(add_ideogram_track)
 
 import(grid)
