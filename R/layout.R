@@ -6,18 +6,19 @@
 #
 # == param
 # -data a data frame with at least three columns. The first three columns should be genomic categories (e.g. chromosomes), 
-#       start positions and end positions. This data frame is used to extract ranges for each genomic category.
+#       start positions and end positions. This data frame is used to extract ranges for each genomic category (minimal
+#       and maximal positions are taken as the range in the corresponding category).
 # -category subset of categories. It is also used for ordering.
 # -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
 #          value is specified, the function will download ``chromInfo.txt.gz`` from
-#          UCSC ftp automatically. Short scaffolds will be removed. The argument is passed
+#          UCSC ftp automatically. Short scaffolds will be removed if they have obvious different length as others. The argument is passed
 #          to `circlize::read.chromInfo`.
 # -nrow Number of rows in the layout.
 # -ncol Number of columns in the layout.
-# -n_track Number of tracks for each genomic category.
-# -track_height height of tracks. It should be numeric which means the value is relative or a `grid::unit` object.
+# -n_track Number of tracks in each genomic category.
+# -track_height height of tracks. It should be numeric which means the value is relative and will be scaled into percent, or a `grid::unit` object.
 # -track_ylim ranges on y axes of tracks. The value can be a vector of length two which means all tracks share same
-#             y ranges, or a matrix with two columns, or a vector of length ``2*n_track`` which will be transformed
+#             y ranges, or a matrix with two columns, or a vector of length ``2*n_track`` which will be coerced
 #             into the two-column matrix by rows.
 # -track_axis whether show y axes for tracks. The value is logical that can be either length one or number of tracks.
 # -track_ylab labels for tracks on y axes. The value can be either length one or number of tracks.
@@ -27,7 +28,7 @@
 # -equal_width whether all columns in the layout have the same width. If ``TRUE``, short categories will be extended
 #              according to the longest category.
 # -border whether show borders.
-# -asist_ticks if axes ticks are added on one side in rows or columns, whether add ticks on the other side.
+# -asist_ticks if axes ticks are added on one side in rows or columns, whether add ticks on the other sides.
 # -xpadding padding on x axes in each cell. Numeric value means relative ratio corresponding to the cell width. 
 #           Use `base::I` to set it as absolute value which is measured in the data viewport (the coordinate system corresponding
 #           to the real data). Currently you cannot set it as a `grid::unit` object.
@@ -61,7 +62,7 @@
 # Legend is not supported in this package. But it is easy to add legends based on the ``grid`` graphic system.
 # Following example shows adding a simple legend on the right of the Trellis plot.
 #
-# First create a `grid::viewport` or a `grid::grob` object that contains the legend. The most simple way is to 
+# First create a `grid::grob` object that contains the legend. The most simple way is to 
 # use `grid::legendGrob` to construct a simple legend.
 #
 #     legd = legendGrob("label", pch = 16)
@@ -224,7 +225,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     track_ylab[is.na(track_ylab)] = ""
 
     if(add_name_track) {
-        track_height = unit.c(1.5*max(grobHeight(textGrob(fa, gp = gpar(fontsize = name_fontsize)))), track_height)
+        track_height = unit.c(2*max(grobHeight(textGrob(fa, gp = gpar(fontsize = name_fontsize)))), track_height)
         n_track = n_track + 1
         track_ylim = rbind(c(0, 1), track_ylim)
         track_axis = c(FALSE, track_axis)
@@ -734,7 +735,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
 # A track which contains ideograms will be added to the plot. 
 #
 # The function tries to download cytoband file from UCSC ftp. If there is no cytoband file
-# available for the species, there will be error.
+# available for the species, there will be an error.
 #
 # == value
 # No value is returned.
@@ -765,7 +766,9 @@ add_ideogram_track = function(cytoband = paste0(system.file(package = "circlize"
 #
 # == param
 # -gr genomic regions. It should be a data frame in BED format or a ``GRanges`` object.
-# -category subset of categories (e.g. chromosomes). The value can be a vector which contains more than one category.
+# -category subset of categories (e.g. chromosomes) that users want to add graphics. 
+#           The value can be a vector which contains more than one category. By default it
+#           is all available categories.
 # -track which track the graphics will be added to. By default it is the next track. The value should only be a scalar.
 # -clip whether graphics are restricted inside the cell.
 # -panel.fun self-defined panel function to add graphics in each 'cell'. THe argument ``gr`` in ``panel.fun`` 
@@ -940,10 +943,10 @@ get_cell_meta_data = function(name, category, track) {
 }
 
 # == title
-# Add annotation on each cell
+# Show index on each cell
 #
 # == detail
-# The function adds name and index for each cell in the corresponding track. 
+# The function adds name and index of track for each cell. 
 # It is only for demonstration purpose.
 #
 # == value
