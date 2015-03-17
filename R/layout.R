@@ -715,7 +715,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
 
     if(add_ideogram_track) {
         current_track = .GENOMIC_LAYOUT$current_track
-        add_ideogram_track(species, n_track)
+        add_ideogram_track(species = species, track = n_track)
         .GENOMIC_LAYOUT$current_track = current_track
     }
     
