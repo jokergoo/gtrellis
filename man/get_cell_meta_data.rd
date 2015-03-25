@@ -26,7 +26,7 @@ Following meta data can be retrieved:
 \describe{
   \item{name}{name of the category.}
   \item{xlim}{xlim without including padding. Cells in the same column share the same \code{xlim}.}
-  \item{ylim}{yiim without including padding.}
+  \item{ylim}{ylim without including padding.}
   \item{extended_xlim}{xlim with padding.}
   \item{extended_ylim}{ylim with padding.}
   \item{original_xlim}{xlim in original data.}
