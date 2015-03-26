@@ -1,6 +1,6 @@
 CHANGES IN VERSION 0.99.3
 
-* no infinite loop when making asistent ticks
+* modified infinite loop when making asistant ticks
 
 ======================================================
 
