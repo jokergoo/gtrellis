@@ -1,3 +1,9 @@
+CHANGES IN VERSION 0.99.3
+
+* no infinite loop when making asistent ticks
+
+======================================================
+
 CHANGES IN VERSION 0.99.2
 
 * change `gtrellis_info` to `gtrellis_show_index`
