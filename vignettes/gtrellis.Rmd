@@ -755,7 +755,7 @@ start positions in the first place.
 
 The following code will generate an error.
 
-```{r}
+```{r, message = TRUE}
 df = data.frame(chr = c("chr1", "chr2"),
                 start = c(1e8, 2e8),
                 end = c(2e8, 3e8))
