@@ -1,0 +1,14 @@
+export(gtrellis_show_index)
+export(gtrellis_layout)
+export(get_cell_meta_data)
+export(add_track)
+export(add_ideogram_track)
+
+import(grid)
+importFrom("circlize", read.cytoband)
+importFrom("circlize", read.chromInfo)
+importFrom("circlize", cytoband.col)
+importFrom("GetoptLong", qq)
+importFrom("GetoptLong", qqcat)
+importFrom("GetoptLong", qq.options)
+

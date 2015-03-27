@@ -1,0 +1,765 @@
+<!--
+%\VignetteEngine{knitr}
+%\VignetteIndexEntry{Make Genome Level Trellis Graph}
+-->
+
+Make Genome Level Trellis Graph
+========================================
+
+**Author**: Zuguang Gu ( z.gu@dkfz.de )
+
+**Date**: `r Sys.Date()`
+
+-------------------------------------------------------------
+
+```{r, echo = FALSE, message = FALSE}
+library(markdown)
+options(markdown.HTML.options = c(options('markdown.HTML.options')[[1]], "toc"))
+
+library(knitr)
+knitr::opts_chunk$set(
+    error = FALSE,
+    tidy  = FALSE,
+    message = FALSE,
+    fig.align = "center")
+options(markdown.HTML.stylesheet = "custom.css")
+
+options(width = 100)
+```
+
+[Trellis graph](http://www.statmethods.net/advgraphs/trellis.html) 
+is a type of graph which splits data by certain conditions and visualizes 
+subset of data in each category parallel. The advantage of Trellis graph is that
+it can easily reveal multiple variable relationship behind the data. 
+For genomic data, chromosomes are always 
+the category variable. In R, **lattice** and **ggplot2** package can make Trellis graph, 
+however, specially for whole genome level plot, they are limited in:
+
+- Chromosomes have different length. But in **lattice**/**ggplot2**, panel width
+  for each chromosome are the same, so short chromosomes will be extended with 
+  empty areas which sometimes is a waste of space.
+- Genomic data are more multiple dimensional, which means, there are always more 
+  than one tracks for chromosomes that to be compared. Unfortunately, **lattice**/**ggplot2**
+  can only plot one track at one time.
+
+For single continuous region, multiple tracks are supported in **ggbio** and **Gviz**. 
+But if you want to compare more than one continuous regions, things will be complex.
+Anyway, you can use `grid.layout` to arrange multiple continuous regions on the plot with using **ggbio** and **Gviz**,
+but the solution is not so straightforward.
+
+Here, **gtrellis** provides a flexible way to arrange genomic categories
+and supports adding self-defined graphics on the plot.
+
+## Basic design
+
+**gtrellis** aims to arrange genomic categories as Trellis style and supports multiple
+tracks for visualization. In this package, initialization the layout and adding
+graphics are independent. After initialization of the layout, intersection between
+tracks and genomic categories are named cell or panel, and each cell is an independent
+plotting region (actually, each cell is a data viewport in **grid** system) 
+that self-defined graphics can be added afterwards.
+
+**gtrellis** is implemented in **grid** graphic system, so, in order
+to add graphics in each cell, you only need to use low-level graphic functions 
+(`grid.points`, `grid.lines`, `grid.rect`, ...) which are quite similar as those in 
+classic graphic system. There is only one thing you need to take care of is the use of `unit` object
+in **grid** system.
+
+## Initialize the layout
+
+`gtrellis_layout()` is used to create the global layout. By default, it initializes the layout
+with hg19 and puts all chromosomes in one row. Each chromosome has only one track and 
+range on y-axis is 0 to 1.
+
+```{r, fig.width = 10, fig.height = 6}
+library(gtrellis)
+gtrellis_layout()
+```
+
+`category` can be used to set subset of chromosomes as well as the order of chromosomes.
+`gtrellis_show_index()` here is an assistant function to add the information to each cell.
+
+```{r, fig.width = 6, fig.height = 6}
+gtrellis_layout(category = c("chr3", "chr1"))
+gtrellis_show_index()
+```
+
+Other species are also supported as long as corresponding chromInfo files exist on UCSC ftp.
+E.g. chromInfo file for mouse (mm10) is http://hgdownload.cse.ucsc.edu/goldenpath/mm10/database/chromInfo.txt.gz. 
+Since there may be many short scaffolds in chromInfo file, `gtrellis` will first remove these
+short scaffolds before making the plot.
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(species = "mm10")
+gtrellis_show_index()
+```
+
+You can put chromosomes on multiple rows by specifying `nrow` or/and `ncol` in case
+you feel the width for some chromosomes are too short. For chromosomes in the same column,
+the corresponding width is the width of the longest chromosome in that column and short
+chromosomes will be extended with empty areas.
+
+```{r, fig.width = 8, fig.height = 8}
+gtrellis_layout(nrow = 3)
+gtrellis_show_index()
+gtrellis_layout(ncol = 5)
+gtrellis_show_index()
+```
+
+You can set `byrow` argument to arrange chromosomes either by rows or by columns.
+As explained before, by default chromosomes in the same column will share
+the length of the longest one. It is better to put chromosomes with similar length 
+in a same column. 
+
+```{r, fig.width = 8, fig.height = 8}
+gtrellis_layout(ncol = 5, byrow = FALSE)
+gtrellis_show_index()
+```
+
+If `equal_width` is set to `TRUE`, the layout will be a 'standard' Trellis layout.
+All chromosomes will share the same range on x-axis (length of the longest chromosome) 
+and short chromosomes will be extended with empty areas.
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(equal_width = TRUE)
+gtrellis_show_index()
+```
+
+Make all columns having equal width and also set multiple rows.
+
+```{r, fig.width = 8, fig.height = 8}
+gtrellis_layout(ncol = 5, byrow = FALSE, equal_width = TRUE)
+gtrellis_show_index()
+```
+
+Set gaps between chromosomes. Note if it is set as a numeric value,
+it should only be 0 (no gap).
+
+```{r, fig.width = 10, fig.height = 6, fig.keep = "all"}
+gtrellis_layout(gap = 0)
+```
+
+Or `gap` can be a `unit` object.
+
+```{r, fig.width = 10, fig.height = 6, fig.keep = "all"}
+gtrellis_layout(gap = unit(5, "mm"))
+```
+
+When you arrange the layout with multiple rows, you can also set `gap` as length of two.
+In this case, the first element corresponds to the gaps between rows
+and the second corresponds to the gaps between columns.
+
+```{r, fig.width = 8, fig.height = 8}
+gtrellis_layout(ncol = 5, gap = unit(c(5, 2), "mm"))
+```
+
+There may be multiple tracks for chromosomes which describe multiple dimensional data.
+The tracks can be created by `n_track` argument.
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(n_track = 3)
+gtrellis_show_index()
+```
+
+By default, tracks share the same height. The height can be customized by `track_height` argument. 
+If it is set as numeric values, it will be normalized as percent to the sum.
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(n_track = 3, track_height = c(1, 2, 3))
+```
+
+`track_height` can also be a `unit` object.
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(n_track = 3, 
+    track_height = unit.c(unit(1, "cm"), unit(1, "null"), grobHeight(textGrob("chr1"))))
+```
+
+Whether to show y-axes by setting `track_axis`. If certain value is set to `FALSE`, 
+y-axis on corresponding track will not be drawn.
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(n_track = 3, track_axis = c(FALSE, TRUE, FALSE), xaxis = FALSE, xlab = "")
+```
+
+Set y-lim by `track_ylim`. It should be a two-column matrix. But to make things easy, it can
+also be a vector and it will be filled into a two-column matrix by rows. If it is a vector
+with length 2, it means all tracks share the same y-lim.
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(n_track = 3, track_ylim = c(0, 3, -4, 4, 0, 1000000))
+```
+
+Axis ticks are added on one side of rows or columns, `asist_ticks` controls
+whether to add axis ticks on the other sides. (You can compare following figure to the above one.)
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(n_track = 3, track_ylim = c(0, 3, -4, 4, 0, 1000000), asist_ticks = FALSE)
+```
+
+Set x-label by `xlab` and set y-labels by `track_ylab`.
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(n_track = 3, title = "title", track_ylab = c("", "bbbbbb", "ccccccc"), xlab = "xlab")
+```
+
+Since chromosomes can have more than one tracks, following shows a layout with multiple columns and multiple tracks.
+
+```{r, fig.width = 8, fig.height = 16}
+gtrellis_layout(n_track = 3, ncol = 4)
+gtrellis_show_index()
+```
+
+Set `border` to `FALSE` to remove borders.
+
+```{r, fig.width = 8, fig.height = 12}
+gtrellis_layout(n_track = 3, ncol = 4, border = FALSE, xaxis = FALSE, track_axis = FALSE, xlab = "")
+gtrellis_show_index()
+```
+
+## Add graphics track by track
+
+After the initialization of the layout, each cell can be thought as an ordinary coordinate
+system. Then graphics can be added in afterwards.
+
+Graphics are added by the self-defined function `panel.fun`. Similar as **circlize** 
+package, `panel.fun` will be applied in every cell in 'the current track'.
+The first argument of `add_track()` can be either a `GRanges` object or a data frame,
+and the argument in `panel.fun` is a subset of data in current chromosome.
+
+```{r, fig.width = 10, fig.height = 6}
+library(circlize)
+bed = generateRandomBed()
+gtrellis_layout(track_ylim = range(bed[[4]]))
+add_track(bed, panel.fun = function(bed) {
+    # `bed` inside `panel.fun` is a subset of the main `bed`
+    x = (bed[[2]] + bed[[3]]) / 2
+    y = bed[[4]]
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+})
+```
+
+The input data can be a `GRanges` object as well.
+
+```{r, fig.width = 10, fig.height = 6, message = FALSE}
+library(GenomicRanges)
+gr = GRanges(seqnames = bed[[1]],
+             ranges = IRanges(start = bed[[2]],
+                               end = bed[[3]]),
+             score = bed[[4]])
+gtrellis_layout(track_ylim = range(gr$score))
+add_track(gr, panel.fun = function(gr) {
+    x = (start(gr) + end(gr)) / 2
+    y = gr$score
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+})
+```
+
+Initialization and adding graphics are actually independent. Following example uses
+same code to add graphics but with different layout. (Compare to the first figure in this section.)
+
+```{r, fig.width = 8, fig.height = 8}
+gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]))
+add_track(bed, panel.fun = function(bed) {
+    x = (bed[[2]] + bed[[3]]) / 2
+    y = bed[[4]]
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+})
+```
+
+In following, we make rainfall plot as well as the density
+distribution of genomic regions (in the example below, `DMR_hyper` contains differentially
+methylated regions that show high methylation compared to control samples and 
+in `DMR_hypo` the methylation is lower than control samples). 
+Also, we manually add a track which contains chromosome names
+and a track which contains ideograms.
+
+Density for genomic regions is defined as the percent of a genomic
+window that is covered by the input genomic regions.
+
+```{r, fig.width = 8, fig.height = 12}
+load(paste0(system.file("extdata", package = "circlize"), "/DMR.RData"))
+DMR_hyper_density = lapply(split(DMR_hyper, DMR_hyper[[1]]), function(gr) {
+    gr2 = circlize::genomicDensity(gr[2:3], window.size = 5e6)
+    cbind(chr = rep(gr[1,1], nrow(gr2)), gr2)
+})
+DMR_hyper_density = do.call("rbind", DMR_hyper_density)
+head(DMR_hyper_density)
+```
+
+Initialize the layout and add following four tracks:
+
+1. chromosome names, simple text.
+2. rainfall plot, first apply rainfall transformation and then add points.
+3. genomic density, lines with area (actually it is polygons).
+4. ideogram, rectangles.
+
+```{r, fig.width = 10, fig.height = 12}
+gtrellis_layout(n_track = 4, ncol = 4, byrow = FALSE,
+    track_axis = c(FALSE, TRUE, TRUE, FALSE), 
+    track_height = unit.c(1.5*grobHeight(textGrob("chr1")), 
+                          unit(1, "null"), 
+                          unit(0.5, "null"), 
+                          unit(3, "mm")), 
+    track_ylim = c(0, 1, 0, 8, c(0, max(DMR_hyper_density[[4]])), 0, 1),
+    track_ylab = c("", "log10(inter_dist)", "density", ""))
+
+# track for chromosome names
+add_track(panel.fun = function(gr){
+    chr = get_cell_meta_data("name")
+    grid.rect(gp = gpar(fill = "#EEEEEE"))
+    grid.text(chr)
+})
+
+# track for rainfall plots
+add_track(DMR_hyper, panel.fun = function(gr) {
+    df = circlize::rainfallTransform(gr[2:3])
+    x = (df[[1]] + df[[2]])/2
+    y = log10(df[[3]])
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "red"))
+})
+
+# track for genomic density
+add_track(DMR_hyper_density, panel.fun = function(gr) {
+    x = (gr[[3]] + gr[[2]])/2
+    y = gr[[4]]
+    grid.polygon(c(x[1], x, x[length(x)]), 
+                 c(0, y, 0), default.units = "native", gp = gpar(fill = "pink"))
+})
+
+# track for ideogram
+cytoband_df = circlize::read.cytoband(species = "hg19")$df
+add_track(cytoband_df, panel.fun = function(gr) {
+    cytoband_chr = gr
+    grid.rect( cytoband_chr[[2]], unit(0, "npc"),
+               width = cytoband_chr[[3]] - cytoband_chr[[2]], height = unit(1, "npc"),
+               default.units = "native", hjust = 0, vjust = 0,
+               gp = gpar(fill = circlize::cytoband.col(cytoband_chr[[5]])) )
+    grid.rect( min(cytoband_chr[[2]]), unit(0, "npc"),
+               width = max(cytoband_chr[[3]]) - min(cytoband_chr[[2]]), height = unit(1, "npc"),
+               default.units = "native", hjust = 0, vjust = 0,
+               gp = gpar(fill = "transparent") )
+})
+```
+
+Actually, you don't need to add name track and ideogram track manually. 
+Name track and ideogram track can be added by `add_name_track` and `add_ideogram_track` arguments.
+Name track will be inserted before the first track and ideogram track will be 
+inserted after the last track. So in following example, although we only specified
+`n_track` to 2, but the name track and ideogram track are also added, thus, the
+final number of track is 4. 
+
+In following example, we additionally add graphics for hypo-DMR as well so that
+direct comparison between different methylation patterns can be applied.
+Since rainfall plot for both hyper-DMR and hypo-DMR is added in a same track, 
+we explicitly specify value of `track` argument to 2 in  `add_track()`.
+
+```{r, fig.width = 10, fig.height = 12}
+DMR_hypo_density = lapply(split(DMR_hypo, DMR_hypo[[1]]), function(gr) {
+    gr2 = genomicDensity(gr[2:3], window.size = 5e6)
+    cbind(chr = rep(gr[1,1], nrow(gr2)), gr2)
+})
+DMR_hypo_density = do.call("rbind", DMR_hypo_density)
+
+gtrellis_layout(n_track = 2, ncol = 4, byrow = FALSE,
+    track_axis = TRUE, 
+    track_height = unit.c(unit(1, "null"), 
+                          unit(0.5, "null")), 
+    track_ylim = c(0, 8, c(0, max(c(DMR_hyper_density[[4]], DMR_hypo_density[[4]])))),
+    track_ylab = c("log10(inter_dist)", "density"),
+    add_name_track = TRUE, add_ideogram_track = TRUE)
+add_track(DMR_hyper, track = 2, panel.fun = function(gr) {
+    df = rainfallTransform(gr[2:3])
+    x = (df[[1]] + df[[2]])/2
+    y = log10(df[[3]])
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "#FF000040"))
+})
+add_track(DMR_hypo, track = 2, panel.fun = function(gr) {
+    df = rainfallTransform(gr[2:3])
+    x = (df[[1]] + df[[2]])/2
+    y = log10(df[[3]])
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "#0000FF40"))
+})
+add_track(DMR_hyper_density, track = 3, panel.fun = function(gr) {
+    x = (gr[[3]] + gr[[2]])/2
+    y = gr[[4]]
+    grid.polygon(c(x[1], x, x[length(x)]), 
+                 c(0, y, 0), default.units = "native", gp = gpar(fill = "#FF000040"))
+})
+add_track(DMR_hypo_density, track = 3, panel.fun = function(gr) {
+    x = (gr[[3]] + gr[[2]])/2
+    y = gr[[4]]
+    grid.polygon(c(x[1], x, x[length(x)]), 
+                 c(0, y, 0), default.units = "native", gp = gpar(fill = "#0000FF40"))
+})
+```
+
+By default, tracks are added from the first track to the last one. You can also add graphics 
+in any specified chromosomes and tracks by specifying `category` and `track`.
+
+```{r, fig.width = 8, fig.height = 8}
+all_chr = paste0("chr", 1:22)
+letter = strsplit("MERRY CHRISTMAS!", "")[[1]]
+gtrellis_layout(nrow = 5)
+for(i in seq_along(letter)) {
+    add_track(category = all_chr[i], track = 1, panel.fun = function(gr) {
+        grid.text(letter[i], gp = gpar(fontsize = 30))
+    })
+}
+```
+
+Adding legend is not so straightforward, but it is not complex if you use functionality of the `grid` system.
+For example, you can first create a global viewport
+which contains a two-column layout, then put Trellis plot in one part and put legend in the
+other part. Remember to set `newpage` to `FALSE` so that Trellis plot will be
+added on the current graphic page.
+
+```{r, fig.width = 8, fig.height = 8}
+legd = legendGrob("label", pch = 16)
+layout = grid.layout(nrow = 1, ncol = 2, widths = unit.c(unit(1, "null"), grobWidth(legd)))
+grid.newpage()
+pushViewport(viewport(layout = layout))
+
+pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
+gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]), newpage = FALSE)
+add_track(bed, panel.fun = function(bed) {
+    x = (bed[[2]] + bed[[3]]) / 2
+    y = bed[[4]]
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+})
+upViewport()
+
+pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+grid.draw(legd)
+upViewport()
+
+```
+
+As a real application, following code plots coverage for a tumor sample, its companion normal sample
+and the ratio of coverage. First prepare the data:
+
+```{r}
+tumor_df = readRDS(paste0(system.file("extdata", package = "gtrellis"), "/df_tumor.rds"))
+control_df = readRDS(paste0(system.file("extdata", package = "gtrellis"), "/df_control.rds"))
+
+# remove regions that have zero coverage
+ind = which(tumor_df$cov > 0 & control_df$cov > 0)
+tumor_df = tumor_df[ind, , drop = FALSE]
+control_df = control_df[ind, , drop = FALSE]
+ratio_df = tumor_df
+
+# get rid of small value dividing small value resulting large value
+q01 = quantile(c(tumor_df$cov, control_df$cov), 0.01)
+ratio_df[[4]] = log2( (tumor_df$cov+q01) / (control_df$cov+q01) * 
+                       sum(control_df$cov) / sum(tumor_df$cov) )
+names(ratio_df) = c("chr", "start", "end", "ratio")
+tumor_df[[4]] = log10(tumor_df[[4]])
+control_df[[4]] = log10(control_df[[4]])
+```
+
+Then, initialize the layout and add three tracks.
+
+```{r, fig.width = 10, fig.height = 10}
+cov_range = range(c(tumor_df[[4]], control_df[[4]]))
+ratio_range = range(ratio_df[[4]])
+ratio_range = c(-max(abs(ratio_range)), max(abs(ratio_range)))
+
+gtrellis_layout(n_track = 3, nrow = 3, byrow = FALSE, gap = unit(c(4, 1), "mm"),
+    track_ylim = c(cov_range, cov_range, ratio_range),
+    track_ylab = c("tumor, log10(cov)", "control, log10(cov)", "ratio, log2(ratio)"), 
+    add_name_track = TRUE, add_ideogram_track = TRUE)
+
+# track for coverage in tumor
+add_track(tumor_df, panel.fun = function(gr) {
+    x = (gr[[2]] + gr[[3]])/2
+    y = gr[[4]]
+    grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000020"))
+})
+
+# track for coverage in control
+add_track(control_df, panel.fun = function(gr) {
+    x = (gr[[2]] + gr[[3]])/2
+    y = gr[[4]]
+    grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000020"))
+})
+
+# track for ratio between tumor and control
+library(RColorBrewer)
+col_fun = circlize::colorRamp2(seq(-0.5, 0.5, length = 11), rev(brewer.pal(11, "RdYlBu")),
+    transparency = 0.5)
+add_track(ratio_df, panel.fun = function(gr) {
+    x = (gr[[2]] + gr[[3]])/2
+    y = gr[[4]]
+    grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = col_fun(y)))
+    grid.lines(unit(c(0, 1), "npc"), unit(c(0, 0), "native"), gp = gpar(col = "#0000FF80"))
+})
+```
+
+Following example visualizes gene density (defined as how much a genomic window is covered by
+gene regions) on different chromosomes both by a line track and a heatmap track.
+
+```{r, fig.width = 10, fig.height = 8}
+gene = readRDS(paste0(system.file(package = "gtrellis"), 
+    "/extdata/gencode_v19_protein_coding_genes.rds"))
+gene_density = lapply(split(gene, gene[[1]]), function(gr) {
+    gr2 = genomicDensity(gr[2:3], window.size = 5e6)
+    cbind(chr = rep(gr[1,1], nrow(gr2)), gr2)
+})
+gene_density = do.call("rbind", gene_density)
+
+gtrellis_layout(byrow = FALSE, n_track = 2, ncol = 4, 
+    add_ideogram_track = TRUE, add_name_track = TRUE,
+    track_ylim = c(0, max(gene_density[[4]]), 0, 1), track_axis = c(TRUE, FALSE),
+    track_height = unit.c(unit(1, "null"), unit(4, "mm")),
+    track_ylab = c("density", ""))
+
+add_track(gene_density, panel.fun = function(gr) {
+    x = (gr[[3]] + gr[[2]])/2
+    y = gr[[4]]
+    grid.lines(x, y, default.unit = "native")
+})
+
+col_fun = circlize::colorRamp2(seq(0, max(gene_density[[4]]), length = 11), 
+                               rev(brewer.pal(11, "RdYlBu")))
+add_track(gene_density, panel.fun = function(gr) {
+    grid.rect(gr[[2]], 0, width = gr[[3]] - gr[[2]], height = 1, just = c(0, 0),
+        default.units = "native", gp = gpar(fill = col_fun(gr[[4]]), col = NA))
+})
+```
+
+Following figure is karyogram view of genomic regions (reproduced from http://www.tengfei.name/ggbio/docs/man/layout_karyogram-method.html). We arrange the layout as 
+one column and create two 'short' tracks, one for genomic regions and one for ideogram.
+Different values are mapped to continuous colors.
+
+We specified `n_track` to 1, but we also specify `add_ideogram_track` to `TRUE`, so actually
+there are two tracks. `xpadding` is specified to make some space on the left of the cells so that
+We can manually add chromosome names in the second track. 
+
+```{r, fig.width = 8, fig.height = 8}
+bed = generateRandomBed(nr = 10000)
+bed = bed[sample(10000, 100), ]
+col_fun = colorRamp2(c(-1, 0, 1), c("green", "yellow", "red"))
+
+gtrellis_layout(n_track = 1, ncol = 1, track_axis = FALSE, xpadding = c(0.1, 0),
+    gap = unit(4, "mm"), border = FALSE, asist_ticks = FALSE, add_ideogram_track = TRUE, 
+    ideogram_track_height = unit(2, "mm"))
+add_track(bed, panel.fun = function(gr) {
+    grid.rect((gr[[2]] + gr[[3]])/2, unit(0.2, "npc"), unit(1, "mm"), unit(0.8, "npc"), 
+        hjust = 0, vjust = 0, default.units = "native", 
+        gp = gpar(fill = col_fun(gr[[4]]), col = NA))    
+})
+add_track(track = 2, clip = FALSE, panel.fun = function(gr) {
+    chr = get_cell_meta_data("name")
+    if(chr == "chrY") {
+        grid.lines(get_cell_meta_data("xlim"), unit(c(0, 0), "npc"), 
+            default.units = "native")
+    }
+    grid.text(chr, x = 0, y = 0, just = c("left", "bottom"))
+})
+
+# add legend
+breaks = seq(-1, 1, by = 0.5)
+lg = legendGrob(breaks, pch = 15, vgap = 0, gp = gpar(col = col_fun(breaks)))
+pushViewport(viewport(0.9, 0.1, width = grobWidth(lg), height = grobHeight(lg), just = c(1, 0)))
+grid.draw(lg)
+upViewport()
+```
+
+## Get meta data for each cell
+
+For every cell in the plot, several meta data can be extracted by `get_cell_meta_data()`.
+`get_cell_meta_data()` is always used inside `panel.fun` to extract information about the 
+'current cell'. You can also use the function outside `panel.fun` by explicitly specifying
+`category` and `track`. Pseudo code are:
+
+```{r, eval = FALSE}
+gtrellis_layout()
+add_track(panel.fun(gr) {
+    # get xlim of current cell
+    xlim = get_cell_meta_data("xlim")
+})
+
+# get xlim of the specified cell
+xlim = get_cell_meta_data("xlim", category = "chr2", track = 1)
+```
+
+Following meta data can be retrieved by `get_cell_meta_data()`:
+
+- `name`: category name.
+- `xlim`: xlim without including padding, cells in a same column shares the same ``xlim``.
+- `ylim`: ylim without including padding.
+- `extended_xlim`: xlim with padding.
+- `extended_ylim`: ylim with padding.
+- `original_xlim`: xlim in original data.
+- `original_ylim`: ylim in original data.
+- `column`: which column in the layout.
+- `row`: which row in the layout.
+- `track`: which track in the layout.
+
+Following figure demonstrates difference between different cell meta data. The space between
+`extended_xlim` and `xlim` is the padding regions on x direction.
+
+```{r, echo = FALSE, fig.width = 8, fig.height = 8}
+library(GetoptLong)
+gtrellis_layout(category = c("chr1", "chr2", "chr21", "chr22"), equal_width = TRUE, add_name_track = TRUE, add_ideogram_track = TRUE, nrow = 2,
+  xpadding = c(0.1, 0.1), ypadding = c(0.1, 0.1))
+
+add_track(panel.fun = function(gr) {
+    xlim = get_cell_meta_data("xlim")
+    ylim = get_cell_meta_data("ylim")
+    extended_xlim = get_cell_meta_data("extended_xlim")
+    extended_ylim = get_cell_meta_data("extended_ylim")
+    original_xlim = get_cell_meta_data("original_xlim")
+    original_ylim = get_cell_meta_data("original_ylim")
+
+    grid.rect(xlim[1], ylim[1], width = xlim[2] - xlim[1], height = ylim[2] - ylim[1], default.unit = "native", just = c(0, 0), gp = gpar(col = "#FF000080", fill = "transparent", lwd = 3))
+    grid.rect(extended_xlim[1], extended_ylim[1], width = extended_xlim[2] - extended_xlim[1], height = extended_ylim[2] - extended_ylim[1], default.unit = "native", just = c(0, 0), gp = gpar(col = "#00FF0080", fill = "transparent", lwd = 3))
+    grid.rect(original_xlim[1], original_ylim[1], width = original_xlim[2] - original_xlim[1], height = original_ylim[2] - original_ylim[1], default.unit = "native", just = c(0, 0), gp = gpar(col = "#0000FF80", fill = "transparent", lwd = 3))
+
+    grid.text("xlim, ylim", xlim[2], ylim[1], default.unit = "native", just = c(1, 0), gp = gpar(col = "red"))
+    grid.text("extended_xlim, extended_ylim", extended_xlim[1], extended_ylim[2], default.unit = "native", just = c(0, 1), gp = gpar(col = "green"))
+    grid.text("original_xlim, original_ylim", original_xlim[1], original_ylim[2], default.unit = "native", just = c(0, 1), gp = gpar(col = "blue"))
+
+
+    name = get_cell_meta_data("name")
+    column = get_cell_meta_data("column")
+    row = get_cell_meta_data("row")
+    track = get_cell_meta_data("track")
+    grid.text(qq("name = '@{name}'\ncolumn = @{column}\nrow = @{row}\ntrack = @{track}"), 0.5, 0.5)
+})
+```
+
+## General genomic categories
+
+Genomic categories are not restricted in chromosomes. It can be any kind,
+such as genes. Similar as `circlize::circos.genomicInitialize()`, you can also specify
+genomic categories as well as their ranges as a data frame when 
+initializing the layout. 
+
+In following example, we put three genes in one row and add their transcripts afterwards.
+
+```{r, fig.width = 10, fig.height = 5}
+load(paste0(system.file(package = "circlize"), "/extdata/tp_family.RData"))
+df = data.frame(gene = names(tp_family),
+    start = sapply(tp_family, function(x) min(unlist(x))),
+    end = sapply(tp_family, function(x) max(unlist(x))))
+df
+# maximum number of transcripts
+n = max(sapply(tp_family, length))
+
+gtrellis_layout(data = df, n_track = 1, track_ylim = c(0.5, n+0.5), 
+    track_axis = FALSE, add_name_track = TRUE, xpadding = c(0.05, 0.05), ypadding = c(0.05, 0.05))
+add_track(panel.fun = function(gr) {
+    gn = get_cell_meta_data("name")
+    tr = tp_family[[gn]] # all transcripts for this gene
+    for(i in seq_along(tr)) {
+        # for each transcript
+        current_tr_start = min(tr[[i]]$start)
+        current_tr_end = max(tr[[i]]$end)
+        grid.lines(c(current_tr_start, current_tr_end), c(n - i + 1, n - i + 1), 
+            default.units = "native", gp = gpar(col = "#CCCCCC"))
+        grid.rect(tr[[i]][[1]], n - i + 1, tr[[i]][[2]] - tr[[i]][[1]], 0.8,
+            default.units = "native", just = "left", 
+            gp = gpar(fill = "orange", col = "orange"))
+    }
+})
+```
+
+If you want to put all genes on one column and align them by TSS, you need 
+to normalize the genomic coordinate first.
+
+```{r}
+tp_family$TP53 = lapply(tp_family$TP53, function(df) {
+        data.frame(start = 7590856 - df[[2]],
+                   end = 7590856 - df[[1]])
+    })
+tp_family$TP63 = lapply(tp_family$TP63, function(df) {
+        data.frame(start = df[[1]] - 189349205,
+                   end = df[[2]] - 189349205)
+    })
+tp_family$TP73 = lapply(tp_family$TP73, function(df) {
+        data.frame(start = df[[1]] - 3569084,
+                   end = df[[2]] - 3569084)
+    })
+```
+
+Then similar code as previous one.
+
+```{r, fig.width = 8, fig.height = 6}
+df = data.frame(gene = names(tp_family),
+    start = sapply(tp_family, function(x) min(unlist(x))),
+    end = sapply(tp_family, function(x) max(unlist(x))))
+df
+n = max(sapply(tp_family, length))
+gtrellis_layout(data = df, n_track = 1, ncol = 1, track_ylim = c(0.5, n+0.5), 
+    track_axis = FALSE, add_name_track = TRUE, 
+    xpadding = c(0.01, 0.01), ypadding = c(0.05, 0.05))
+add_track(panel.fun = function(gr) {
+    gn = get_cell_meta_data("name")
+    tr = tp_family[[gn]] # all transcripts for this gene
+    for(i in seq_along(tr)) {
+        # for each transcript
+        current_tr_start = min(tr[[i]]$start)
+        current_tr_end = max(tr[[i]]$end)
+        grid.lines(c(current_tr_start, current_tr_end), c(n - i + 1, n - i + 1), 
+            default.units = "native", gp = gpar(col = "#CCCCCC"))
+        grid.rect(tr[[i]][[1]], n - i + 1, tr[[i]][[2]] - tr[[i]][[1]], 0.8,
+            default.units = "native", just = "left", 
+            gp = gpar(fill = "orange", col = "orange"))
+    }
+})
+```
+
+You can create layout with self-defined regions. `clip` argument controls whether
+data points outside of the cell need to be added. Since by default `clip` is `TRUE`, 
+you do not need to make intersection of your full data to the sub-region, which means, you
+can use same code to deal with different regions. 
+
+```{r, fig.width = 10, fig.height = 8}
+zoom = function(df) {
+    gtrellis_layout(data = df, n_track = 3, nrow = 2,
+    track_ylim = c(cov_range, cov_range, ratio_range),
+    track_ylab = c("tumor, log10(cov)", "control, log10(cov)", "ratio, log2(ratio)"), 
+    add_name_track = TRUE, add_ideogram_track = TRUE)
+    add_track(tumor_df, panel.fun = function(gr) {
+        x = (gr[[2]] + gr[[3]])/2
+        y = gr[[4]]
+        grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000080"))
+    })
+    add_track(control_df, panel.fun = function(gr) {
+        x = (gr[[2]] + gr[[3]])/2
+        y = gr[[4]]
+        grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000080"))
+    })
+    add_track(ratio_df, panel.fun = function(gr) {
+        x = (gr[[2]] + gr[[3]])/2
+        y = gr[[4]]
+        grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#FF000080"))
+    })
+}
+
+df = data.frame(chr = c("chr1", "chr2"),
+                start = c(1e8, 1e8),
+                end = c(2e8, 2e8))
+zoom(df)
+
+df = data.frame(chr = c("chr11", "chr12"),
+                start = c(4e7, 4e7),
+                end = c(8e7, 8e7))
+zoom(df)
+```
+
+If start positions for two genomic categories are different (e.g. 0~100000 for the first one
+and 100000~200000 for the second one), you should not put them in a same column. You should normalize
+start positions in the first place.
+
+The following code will generate an error.
+
+```{r}
+df = data.frame(chr = c("chr1", "chr2"),
+                start = c(1e8, 2e8),
+                end = c(2e8, 3e8))
+try(gtrellis_layout(df, ncol = 1))
+```
+
+
