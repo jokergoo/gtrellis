@@ -593,8 +593,9 @@ gtrellis_layout = function(data = NULL, category = NULL,
                               xbreaks, unit(0, "npc"), default.units = "native")
                 }
             } else if(asist_ticks) {
+                i2 = i
                 while(1) {
-                    i2 = i - 1
+                    i2 = i2 - 1
                     if(is_visible(i2, j) || i2 == 1) {
                         break
                     }
@@ -682,8 +683,9 @@ gtrellis_layout = function(data = NULL, category = NULL,
                     }
                 }
             } else if(asist_ticks) {
+                j2 = j
                 while(1) {
-                    j2 = j - 1
+                    j2 = j2 - 1
                     if(is_visible(i, j2) || j2 == 1) {
                         break
                     }
