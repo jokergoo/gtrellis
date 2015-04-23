@@ -11,7 +11,7 @@ Make Genome Level Trellis Graph
 
 ```{r}
 source("http://bioconductor.org/biocLite.R")
-biocLite("gtrellis")
+biocLite("gtrellis") 
 ```
 
 ## Usage
