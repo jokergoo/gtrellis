@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jokergoo/GetoptLong.svg)](https://travis-ci.org/jokergoo/GetoptLong)
+
 Make Genome Level Trellis Graph
 ===============================
 
