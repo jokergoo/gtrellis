@@ -14,6 +14,13 @@ source("http://bioconductor.org/biocLite.R")
 biocLite("gtrellis") 
 ```
 
+If you want the latest version, install it directly from GitHub:
+
+```{r}
+library(devtools)
+install_github("jokergoo/gtrellis")
+```
+
 ## Usage
 
 Basic usage is:
