@@ -1,26 +1,46 @@
+[![Build Status](https://travis-ci.org/jokergoo/GetoptLong.svg)](https://travis-ci.org/jokergoo/GetoptLong)
+
 Make Genome Level Trellis Graph
 ===============================
 
 **gtrellis** aims to arrange chromosomes as Trellis style and support multiple tracks for visualization.
 
+## Install
+
+**gtrellis** is available on Bioconductor, you can install it by:
+
+```{r}
+source("http://bioconductor.org/biocLite.R")
+biocLite("gtrellis") 
+```
+
+If you want the latest version, install it directly from GitHub:
+
+```{r}
+library(devtools)
+install_github("jokergoo/gtrellis")
+```
+
+## Usage
+
 Basic usage is:
 
 ```r
 library(gtrellis)
-library(circlize)
 
-bed = generateRandomBed()
+bed = circlize::generateRandomBed()
 gtrellis_layout(track_ylim = range(bed[[4]]))
 add_track(bed, panel.fun = function(bed) {
     x = (bed[[2]] + bed[[3]]) / 2
     y = bed[[4]]
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+    grid.points(x, y, pch = 16, size = unit(1, "mm"))
 })
 ```
 
+## Example
+
 Example figures are:
 
-![1](https://cloud.githubusercontent.com/assets/449218/5553808/5d5859bc-8c30-11e4-9a58-77e28cf7fd8b.png)
 ![default](https://cloud.githubusercontent.com/assets/449218/6318159/bca7edf4-ba81-11e4-9cf7-e6bab5303ca0.png)
 ![1](https://cloud.githubusercontent.com/assets/449218/6318160/c061efc6-ba81-11e4-9b80-ab6ddb7377dc.png)
 ![4](https://cloud.githubusercontent.com/assets/449218/5553818/89527e8a-8c30-11e4-84fe-2d8b72ddcc2e.png)
