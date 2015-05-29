@@ -2,3 +2,4 @@
 README.*
 test/
 check.bat
+.travis.yml

@@ -1,0 +1,21 @@
+language: r
+
+sudo: required
+
+# Be strict when checking our package
+warnings_are_errors: true
+
+r-packages:
+- GetoptLong
+- testthat
+- circlize
+- knitr
+- markdown
+- RColorBrewer
+
+bioc_packages:
+- GenomicRanges
+
+bioc_required: true
+
+r_check_args: --no-build-vignettes --no-vignettes

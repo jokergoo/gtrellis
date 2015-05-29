@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jokergoo/GetoptLong.svg)](https://travis-ci.org/jokergoo/GetoptLong)
+
 Make Genome Level Trellis Graph
 ===============================
 
@@ -9,7 +11,14 @@ Make Genome Level Trellis Graph
 
 ```{r}
 source("http://bioconductor.org/biocLite.R")
-biocLite("gtrellis")
+biocLite("gtrellis") 
+```
+
+If you want the latest version, install it directly from GitHub:
+
+```{r}
+library(devtools)
+install_github("jokergoo/gtrellis")
 ```
 
 ## Usage
