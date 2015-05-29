@@ -113,6 +113,9 @@ gtrellis_layout = function(data = NULL, category = NULL,
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
     axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16) {
 
+    increase_plot_index()
+    i_plot = get_plot_index()
+
     op = qq.options(READ.ONLY = FALSE)
     on.exit(qq.options(op))
     qq.options(code.pattern = "@\\{CODE\\}")
@@ -384,7 +387,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(newpage) grid.newpage(recording = FALSE)
     layout = grid.layout(nrow = 5, ncol = 5, widths = unit.c(ylabel_left_width, yaxis_left_width, unit(1, "null"), yaxis_right_width, ylabel_right_width),
                                              heights = unit.c(title_height, xaxis_top_height, unit(1, "null"), xaxis_bottom_height, xlabel_height))
-    pushViewport(viewport(layout = layout, name = "global_layout"))
+    pushViewport(viewport(layout = layout, name = qq("global_layout_@{i_plot}")))
     
     if(!is.null(title)) {
         pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 3))
@@ -417,7 +420,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     ygap = gap[1]
 
     # initialize each fa
-    pushViewport(viewport(layout.pos.col = 3, layout.pos.row = 3, name = "title_container"))
+    pushViewport(viewport(layout.pos.col = 3, layout.pos.row = 3, name = qq("title_container_@{i_plot}")))
     
     if(equal_width) {
         chr_width = unit(1, "npc")*(1/ncol) - (ncol - 1)*xgap*(1/ncol)
@@ -442,7 +445,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     # arrange fas on the plot
     for(i in seq_len(nrow)) {
         for(j in seq_len(ncol)) {
-            pushViewport(viewport(x = chr_x[j], y = chr_y[i], width = chr_width[j], height = chr_height, name = qq("@{fa[j + (i-1)*ncol]}_container")))
+            pushViewport(viewport(x = chr_x[j], y = chr_y[i], width = chr_width[j], height = chr_height, name = qq("@{fa[j + (i-1)*ncol]}_container_@{i_plot}")))
             if(is_visible(i, j) && border) grid.rect()
             upViewport()
         }
@@ -452,33 +455,33 @@ gtrellis_layout = function(data = NULL, category = NULL,
     # add tracks
     for(i in seq_len(nrow)) {
         for(j in seq_len(ncol)) {
-            seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_container"))
+            seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_container_@{i_plot}"))
             layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
-            pushViewport(viewport(layout = layout, name = qq("@{fa[j + (i-1)*ncol]}_layout")))
+            pushViewport(viewport(layout = layout, name = qq("@{fa[j + (i-1)*ncol]}_layout_@{i_plot}")))
             for(k in seq_len(n_track)) {
                 
-                pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}")))
-                pushViewport(plotViewport(margins = c(0, 0, 0, 0), name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_plotvp")))
-                pushViewport(dataViewport(xscale = extended_xlim[j, ], yscale = extended_track_ylim[k, ], extension = 0, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp")))
-                pushViewport(dataViewport(xscale = extended_xlim[j, ], yscale = extended_track_ylim[k, ], extension = 0, clip = TRUE, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_clip")))
+                pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_@{i_plot}")))
+                pushViewport(plotViewport(margins = c(0, 0, 0, 0), name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_plotvp_@{i_plot}")))
+                pushViewport(dataViewport(xscale = extended_xlim[j, ], yscale = extended_track_ylim[k, ], extension = 0, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_@{i_plot}")))
+                pushViewport(dataViewport(xscale = extended_xlim[j, ], yscale = extended_track_ylim[k, ], extension = 0, clip = TRUE, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_clip_@{i_plot}")))
                 if(is_visible(i, j) && border && k > 1) grid.lines(c(0, 1), c(1, 1))
                 upViewport(4)
             }
             upViewport()
         }
     }
-    seekViewport(name = "global_layout")
+    seekViewport(name = qq("global_layout_@{i_plot}"))
 
     # y-labels on the left
     pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 1))
     for(i in seq_len(nrow)) {
-        pushViewport(viewport(y = chr_y[i], height = chr_height, name = qq("ylab_row_@{i}_left")))
+        pushViewport(viewport(y = chr_y[i], height = chr_height, name = qq("ylab_row_@{i}_left_@{i_plot}")))
         
         layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
         pushViewport(viewport(layout = layout))
         for(k in seq_len(n_track)) {
                 
-            pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_left_track_@{k}")))
+            pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_left_track_@{k}_@{i_plot}")))
             if(is_on_left(k, i, 1, nrow, ncol, n_track, track_axis | track_ylab != "") && is_visible(i, 1)) {
                 if(track_ylab[k] != "") {
                     grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
@@ -495,13 +498,13 @@ gtrellis_layout = function(data = NULL, category = NULL,
     # y-labels on the right
     pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 5))
     for(i in seq_len(nrow)) {
-        pushViewport(viewport(y = chr_y[i], height = chr_height, name = qq("ylab_row_@{i}_right")))
+        pushViewport(viewport(y = chr_y[i], height = chr_height, name = qq("ylab_row_@{i}_right_@{i_plot}")))
         
         layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
         pushViewport(viewport(layout = layout))
         for(k in seq_len(n_track)) {
                 
-            pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_right_track_@{k}")))
+            pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_right_track_@{k}_@{i_plot}")))
             if(is_on_right(k, i, ncol, nrow, ncol, n_track, track_axis | track_ylab != "") && is_visible(i, ncol)) {
                 if(track_ylab[k] != "") {
                     grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
@@ -532,7 +535,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         i = 1
         for(j in seq_len(ncol)) {
             if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_1_datavp"))
+                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_1_datavp_@{i_plot}"))
                 xbreaks = seq(grid.pretty(xlim2[j, ])[1], xlim2[j, 2], by = breaks[2]-breaks[1])
                 if(length(xbreaks) == 0) xbreaks = grid.pretty(xlim2[j, 1])[1]
                 #xbreaks = grid.pretty(xlim2[j, ])
@@ -566,7 +569,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         i = nrow
         for(j in seq_len(ncol)) {
             if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{n_track}_datavp"))
+                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{n_track}_datavp_@{i_plot}"))
                 xbreaks = seq(grid.pretty(xlim2[j, ])[1], xlim2[j, 2], by = breaks[2]-breaks[1])
                 #xbreaks = grid.pretty(xlim2[j, ])
                 
@@ -600,7 +603,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
                         break
                     }
                 }
-                seekViewport(name = qq("@{fa[j + (i2-1)*ncol]}_track_@{n_track}_datavp"))
+                seekViewport(name = qq("@{fa[j + (i2-1)*ncol]}_track_@{n_track}_datavp_@{i_plot}"))
                 xbreaks = seq(0, xlim2[j, 2], by = 50000000)
                 xbreaks = xbreaks[xbreaks >= xlim2[j, 1] & xbreaks <= xlim2[j, 2]]
                 grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
@@ -615,7 +618,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     for(i in seq_len(nrow)) {
         for(k in seq_len(n_track)) {
             if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp"))
+                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_@{i_plot}"))
                     ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
                 
 
@@ -653,7 +656,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     for(i in seq_len(nrow)) {
         for(k in seq_len(n_track)) {
             if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp"))
+                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_@{i_plot}"))
                 ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
                 
 
@@ -690,7 +693,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
                         break
                     }
                 }
-                seekViewport(name = qq("@{fa[j2 + (i-1)*ncol]}_track_@{k}_datavp"))
+                seekViewport(name = qq("@{fa[j2 + (i-1)*ncol]}_track_@{k}_datavp_@{i_plot}"))
                 ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
                 if(track_axis[k]) {
                     grid.segments(unit(1, "npc") + axis_tick_height, ybreaks,
@@ -700,7 +703,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         }
     }
     
-    seekViewport(name = "global_layout")
+    seekViewport(name = qq("global_layout_@{i_plot}"))
     upViewport()
 
     .GENOMIC_LAYOUT$current_fa = fa[1]
@@ -817,6 +820,8 @@ add_ideogram_track = function(cytoband = paste0(system.file(package = "circlize"
 #
 add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("track") + 1, 
     clip = TRUE, panel.fun = function(gr) NULL) {
+
+    i_plot = get_plot_index()
     
     op = qq.options(READ.ONLY = FALSE)
     on.exit(qq.options(op))
@@ -856,9 +861,9 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
         .GENOMIC_LAYOUT$current_track = track
         
         if(clip) {
-        	vp = qq("@{chr}_track_@{track}_datavp_clip")
+        	vp = qq("@{chr}_track_@{track}_datavp_clip_@{i_plot}")
         } else {
-        	vp = qq("@{chr}_track_@{track}_datavp")
+        	vp = qq("@{chr}_track_@{track}_datavp_@{i_plot}")
         }
         if(is.null(gr)) {
             seekViewport(name = vp)
@@ -888,7 +893,7 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
         }
 
         # go to the highest vp
-        seekViewport(name = "global_layout")
+        seekViewport(name = qq("global_layout_@{i_plot}"))
         upViewport()
     }
 }
