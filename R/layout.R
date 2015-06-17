@@ -850,7 +850,14 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
             } else {
                 fa = unique(as.character(gr[[1]]))
             }
+            if(sum(fa %in% all_fa) == 0) {
+                if(sum(grepl("^(\\d+|[xXyY])$", fa)) > 5) {
+                    cat("Guess your category are chromosomes and chromosome names should start with 'chr'.\n")
+                }
+            }
+
             fa = fa[fa %in% all_fa]
+
         }
     } else {
         fa = category[category %in% all_fa]
