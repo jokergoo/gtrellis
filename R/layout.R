@@ -883,7 +883,7 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
                 } else {
                 	stop("Cannot load `GenomicRanges` package.")
                 }
-                sub_gr = sub_gr[is_intersected(start(sub_gr), end(sub_gr), extended_xlim[1], extended_xlim[2])]
+                sub_gr = sub_gr[is_intersected(GenomicRanges::start(sub_gr), GenomicRanges::end(sub_gr), extended_xlim[1], extended_xlim[2])]
                 if(length(sub_gr)) {
                     seekViewport(name = vp)
                     panel.fun(sub_gr)

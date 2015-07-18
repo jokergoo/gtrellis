@@ -5,7 +5,7 @@ Version: 1.1.1
 Date: 2015-6-17
 Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
-Depends: R (>= 3.1.0), grid
+Depends: R (>= 3.2), grid
 Imports: circlize (>= 0.2.3), GetoptLong
 Suggests: testthat (>= 0.3), knitr, GenomicRanges, RColorBrewer, markdown
 VignetteBuilder: knitr
