@@ -2,6 +2,7 @@ CHANGES IN VERSION 1.1.1
 
 * print message if input chromosome names are without 'chr'
 * call `start()` and `end()` explictely with `GenomicRanges::`
+* unit of x-axis is correct now
 
 ======================================================
 

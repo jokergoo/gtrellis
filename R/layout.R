@@ -522,7 +522,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         if(max(x) > 1e6) {
             paste0(x/1e6, "MB")
         } else if(max(x) > 1e3) {
-            paste0(x/1e3, "MB")
+            paste0(x/1e3, "KB")
         } else {
             paste0(x, "bp")
         }
