@@ -522,7 +522,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         if(max(x) > 1e6) {
             paste0(x/1e6, "MB")
         } else if(max(x) > 1e3) {
-            paste0(x/1e3, "MB")
+            paste0(x/1e3, "KB")
         } else {
             paste0(x, "bp")
         }
@@ -850,7 +850,14 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
             } else {
                 fa = unique(as.character(gr[[1]]))
             }
+            if(sum(fa %in% all_fa) == 0) {
+                if(sum(grepl("^(\\d+|[xXyY])$", fa)) > 5) {
+                    cat("Guess your category are chromosomes and chromosome names should start with 'chr'.\n")
+                }
+            }
+
             fa = fa[fa %in% all_fa]
+
         }
     } else {
         fa = category[category %in% all_fa]
@@ -876,7 +883,7 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
                 } else {
                 	stop("Cannot load `GenomicRanges` package.")
                 }
-                sub_gr = sub_gr[is_intersected(start(sub_gr), end(sub_gr), extended_xlim[1], extended_xlim[2])]
+                sub_gr = sub_gr[is_intersected(GenomicRanges::start(sub_gr), GenomicRanges::end(sub_gr), extended_xlim[1], extended_xlim[2])]
                 if(length(sub_gr)) {
                     seekViewport(name = vp)
                     panel.fun(sub_gr)
