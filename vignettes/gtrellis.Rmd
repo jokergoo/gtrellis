@@ -408,33 +408,6 @@ for(i in seq_along(letter)) {
 }
 ```
 
-Adding legend is not so straightforward, but it is not complex if you use functionality of the `grid` system.
-For example, you can first create a global viewport
-which contains a two-column layout, then put Trellis plot in one part and put legend in the
-other part. Remember to set `newpage` to `FALSE` so that Trellis plot will be
-added on the current graphic page.
-
-```{r, fig.width = 8, fig.height = 8}
-legd = legendGrob("label", pch = 16)
-layout = grid.layout(nrow = 1, ncol = 2, widths = unit.c(unit(1, "null"), grobWidth(legd)))
-grid.newpage()
-pushViewport(viewport(layout = layout))
-
-pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
-gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]), newpage = FALSE)
-add_track(bed, panel.fun = function(bed) {
-    x = (bed[[2]] + bed[[3]]) / 2
-    y = bed[[4]]
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
-})
-upViewport()
-
-pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-grid.draw(legd)
-upViewport()
-
-```
-
 As a real application, following code plots coverage for a tumor sample, its companion normal sample
 and the ratio of coverage. First prepare the data:
 
@@ -556,13 +529,6 @@ add_track(track = 2, clip = FALSE, panel.fun = function(gr) {
     }
     grid.text(chr, x = 0, y = 0, just = c("left", "bottom"))
 })
-
-# add legend
-breaks = seq(-1, 1, by = 0.5)
-lg = legendGrob(breaks, pch = 15, vgap = 0, gp = gpar(col = col_fun(breaks)))
-pushViewport(viewport(0.9, 0.1, width = grobWidth(lg), height = grobHeight(lg), just = c(1, 0)))
-grid.draw(lg)
-upViewport()
 ```
 
 ## Get meta data for each cell
@@ -626,6 +592,52 @@ add_track(panel.fun = function(gr) {
     row = get_cell_meta_data("row")
     track = get_cell_meta_data("track")
     grid.text(qq("name = '@{name}'\ncolumn = @{column}\nrow = @{row}\ntrack = @{track}"), 0.5, 0.5)
+})
+```
+
+## Legend
+
+Legend can be added by `legend` argument. The value must be a `grob` object. `ColorMapping` class 
+in **ComplexHeatmap** package or `legendGrob()` in grid package can be used to create a legend grob. 
+Or you can consider to use `frameGrob()` and `packGrob()` to build a legend from ground.
+
+```{r, fig.width = 8, fig.height = 8}
+bed = generateRandomBed()
+lgd = legendGrob("label", pch = 16)
+gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]), legend = lgd)
+add_track(bed, panel.fun = function(bed) {
+    x = (bed[[2]] + bed[[3]]) / 2
+    y = bed[[4]]
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+})
+```
+
+The second example is already shown, but this time we add legend as well:
+
+```{r, fig.width = 8, fig.height = 8}
+library(ComplexHeatmap)
+
+bed = generateRandomBed(nr = 10000)
+bed = bed[sample(10000, 100), ]
+col_fun = colorRamp2(c(-1, 0, 1), c("green", "yellow", "red"))
+cm = ColorMapping(col_fun = col_fun)
+lgd = color_mapping_legend(cm, plot = FALSE, title = "Value")
+
+gtrellis_layout(n_track = 1, ncol = 1, track_axis = FALSE, xpadding = c(0.1, 0),
+    gap = unit(4, "mm"), border = FALSE, asist_ticks = FALSE, add_ideogram_track = TRUE, 
+    ideogram_track_height = unit(2, "mm"), legend = lgd)
+add_track(bed, panel.fun = function(gr) {
+    grid.rect((gr[[2]] + gr[[3]])/2, unit(0.2, "npc"), unit(1, "mm"), unit(0.8, "npc"), 
+        hjust = 0, vjust = 0, default.units = "native", 
+        gp = gpar(fill = col_fun(gr[[4]]), col = NA))    
+})
+add_track(track = 2, clip = FALSE, panel.fun = function(gr) {
+    chr = get_cell_meta_data("name")
+    if(chr == "chrY") {
+        grid.lines(get_cell_meta_data("xlim"), unit(c(0, 0), "npc"), 
+            default.units = "native")
+    }
+    grid.text(chr, x = 0, y = 0, just = c("left", "bottom"))
 })
 ```
 
@@ -755,11 +767,16 @@ start positions in the first place.
 
 The following code will generate an error.
 
-```{r, message = TRUE}
+```{r, message = TRUE, error = TRUE}
 df = data.frame(chr = c("chr1", "chr2"),
                 start = c(1e8, 2e8),
                 end = c(2e8, 3e8))
-try(gtrellis_layout(df, ncol = 1))
+gtrellis_layout(df, ncol = 1)
 ```
 
+## Session info
+
+```{r}
+sessionInfo()
+```
 
