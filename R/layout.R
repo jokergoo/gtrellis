@@ -49,6 +49,8 @@
 # -axis_label_fontsize font size for axis labels.
 # -lab_fontsize font size for x-labels and y-labels.
 # -title_fontsize font size for title.
+# -legend a `grid::grob` object
+# -legend_side side of the legend
 #
 # == detail
 # Genome-level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
@@ -57,40 +59,6 @@
 # apply `add_track` to add self-defined graphics to the plot track by track.
 #
 # For more detailed demonstration of the function, please go to the vignette.
-#
-# == legend
-# Legend is not supported in this package. But it is easy to add legends based on the ``grid`` graphic system.
-# Following example shows adding a simple legend on the right of the Trellis plot.
-#
-# First create a `grid::grob` object that contains the legend. The most simple way is to 
-# use `grid::legendGrob` to construct a simple legend.
-#
-#     legd = legendGrob("label", pch = 16)
-#
-# Create a layout which contains two columns and we set the width for the second column to the width 
-# of the legend by `grid::grobWidth`.
-#
-#     layout = grid.layout(nrow = 1, ncol = 2, widths = unit.c(unit(1, "null"), grobWidth(legd)))
-#     grid.newpage()
-#     pushViewport(viewport(layout = layout))
-#
-# In the left column, we add Trellis plot. Here you need to specify ``newpage`` to ``FALSE`` so that
-# the plot is added into the current page which not creating a new one.
-#
-#     pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
-#     gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]), newpage = FALSE)
-#     add_track(bed, panel.fun = function(bed) {
-#         x = (bed[[2]] + bed[[3]]) / 2
-#         y = bed[[4]]
-#         grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
-#     })
-#     upViewport()
-#
-# In the right column, add the legend.
-#
-#     pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
-#     grid.draw(legd)
-#     upViewport()
 #
 # == value
 # No value is returned.
@@ -111,7 +79,8 @@ gtrellis_layout = function(data = NULL, category = NULL,
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE, 
     name_fontsize = 10, name_track_fill = "#EEEEEE",
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
-    axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16) {
+    axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16,
+    legend = NULL, legend_side = c("right", "bottom")) {
 
     increase_plot_index()
     i_plot = get_plot_index()
@@ -119,6 +88,8 @@ gtrellis_layout = function(data = NULL, category = NULL,
     op = qq.options(READ.ONLY = FALSE)
     on.exit(qq.options(op))
     qq.options(code.pattern = "@\\{CODE\\}")
+
+    legend_side = match.arg(legend_side)[1]
 
     if(length(track_height) == 1) {
         if(is.unit(track_height)) {
@@ -384,9 +355,19 @@ gtrellis_layout = function(data = NULL, category = NULL,
         title_height = grobHeight(textGrob(title, gp = gpar(fontface = "bold", fontsize = title_fontsize)))*1.5
     }
 
+    legend_right_width = unit(0, "mm")
+    legend_bottom_height = unit(0, "mm")
+    if(!is.null(legend)) {
+        if(legend_side == "right") {
+            legend_right_width = grobWidth(legend)
+        } else if(legend_side == "bottom") {
+            legend_bottom_height = grobHeight(legend)
+        }
+    }
+
     if(newpage) grid.newpage(recording = FALSE)
-    layout = grid.layout(nrow = 5, ncol = 5, widths = unit.c(ylabel_left_width, yaxis_left_width, unit(1, "null"), yaxis_right_width, ylabel_right_width),
-                                             heights = unit.c(title_height, xaxis_top_height, unit(1, "null"), xaxis_bottom_height, xlabel_height))
+    layout = grid.layout(nrow = 6, ncol = 6, widths = unit.c(ylabel_left_width, yaxis_left_width, unit(1, "null"), yaxis_right_width, ylabel_right_width, legend_right_width),
+                                             heights = unit.c(title_height, xaxis_top_height, unit(1, "null"), xaxis_bottom_height, xlabel_height, legend_bottom_height))
     pushViewport(viewport(layout = layout, name = qq("global_layout_@{i_plot}")))
     
     if(!is.null(title)) {
@@ -399,6 +380,18 @@ gtrellis_layout = function(data = NULL, category = NULL,
         pushViewport(viewport(layout.pos.row = 5, layout.pos.col = 3))
         grid.text(xlab, gp = gpar(fontsize = lab_fontsize))
         upViewport()
+    }
+
+    if(!is.null(legend)) {
+        if(legend_side == "right") {
+            pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 6))
+            grid.draw(legend)
+            upViewport()
+        } else if(legend_side == "bottom") {
+            pushViewport(viewport(layout.pos.row = 6, layout.pos.col = 3))
+            grid.draw(legend)
+            upViewport()
+        }
     }
     
     if(length(gap) == 1) {
@@ -702,7 +695,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
             }
         }
     }
-    
+
     seekViewport(name = qq("global_layout_@{i_plot}"))
     upViewport()
 
