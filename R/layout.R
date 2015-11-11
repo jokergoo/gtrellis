@@ -876,6 +876,8 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
     } else {
         fa = category[category %in% all_fa]
     }
+
+    n_arg = length(as.list(args(panel.fun))) - 1
     
     for(chr in fa) {
         .GENOMIC_LAYOUT$current_fa = chr
@@ -888,7 +890,11 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
         }
         if(is.null(gr)) {
             seekViewport(name = vp)
-            panel.fun(NULL)
+            if(n_arg == 0){
+                panel.fun()
+            } else {
+                panel.fun(NULL)
+            }
         } else {
             extended_xlim = get_cell_meta_data("extended_xlim")
             if(inherits(gr, "GenomicRanges")) {
@@ -900,14 +906,22 @@ add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("tra
                 sub_gr = sub_gr[is_intersected(GenomicRanges::start(sub_gr), GenomicRanges::end(sub_gr), extended_xlim[1], extended_xlim[2])]
                 if(length(sub_gr)) {
                     seekViewport(name = vp)
-                    panel.fun(sub_gr)
+                    if(n_arg == 0) {
+                        panel.fun()
+                    } else {
+                        panel.fun(sub_gr)
+                    }
                 }
             } else {
                 sub_gr = gr[gr[[1]] == chr, , drop = FALSE]
                 sub_gr = sub_gr[is_intersected(sub_gr[[2]], sub_gr[[3]], extended_xlim[1], extended_xlim[2]), , drop = FALSE]
                 if(nrow(sub_gr)) {
                     seekViewport(name = vp)
-                    panel.fun(sub_gr)
+                    if(n_arg == 0) {
+                        panel.fun()
+                    } else {
+                        panel.fun(sub_gr)
+                    }
                 }
             }
             
