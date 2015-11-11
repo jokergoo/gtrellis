@@ -49,7 +49,7 @@
 # -axis_label_fontsize font size for axis labels.
 # -lab_fontsize font size for x-labels and y-labels.
 # -title_fontsize font size for title.
-# -legend a `grid::grob` object
+# -legend a `grid::grob` object, or a list of `grid::grob` objects.
 # -legend_side side of the legend
 #
 # == detail
@@ -80,7 +80,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     name_fontsize = 10, name_track_fill = "#EEEEEE",
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
     axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16,
-    legend = NULL, legend_side = c("right", "bottom")) {
+    legend = list(), legend_side = c("right", "bottom")) {
 
     increase_plot_index()
     i_plot = get_plot_index()
@@ -357,11 +357,11 @@ gtrellis_layout = function(data = NULL, category = NULL,
 
     legend_right_width = unit(0, "mm")
     legend_bottom_height = unit(0, "mm")
-    if(!is.null(legend)) {
+    if(length(legend) > 0) {
         if(legend_side == "right") {
-            legend_right_width = grobWidth(legend)
+            legend_right_width = max(do.call("unit.c", lapply(legend, grobWidth))) + unit(4, "mm")
         } else if(legend_side == "bottom") {
-            legend_bottom_height = grobHeight(legend)
+            legend_bottom_height = max(do.call("unit.c", lapply(legend, grobHeight))) + unit(4, "mm")
         }
     }
 
@@ -382,16 +382,36 @@ gtrellis_layout = function(data = NULL, category = NULL,
         upViewport()
     }
 
-    if(!is.null(legend)) {
+    if(length(legend) > 0) {
         if(legend_side == "right") {
-            pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 6))
-            grid.draw(legend)
+            pushViewport(viewport(x = unit(2, "mm"), just = "left", layout.pos.row = 3, layout.pos.col = 6))
+            gap = unit(2, "mm")
+            # draw the list of legend
+            legend_height = sum(do.call("unit.c", lapply(legend, grobHeight))) + gap*(length(legend)-1)
+            y = unit(0.5, "npc") + legend_height*0.5 
+            for(i in seq_along(legend)) {
+                pushViewport(viewport(x = unit(2, "mm"), y = y, height = grobHeight(legend[[i]]), width = grobWidth(legend[[i]]), just = c("left", "top")))
+                grid.draw(legend[[i]])
+                upViewport()
+                y = y - gap - grobHeight(legend[[i]])
+            }
             upViewport()
         } else if(legend_side == "bottom") {
-            pushViewport(viewport(layout.pos.row = 6, layout.pos.col = 3))
-            grid.draw(legend)
-            upViewport()
+            pushViewport(viewport(y = unit(2, "mm"), just = "bottom", layout.pos.row = 6, layout.pos.col = 3))
+            gap = unit(2, "mm")
+            # draw the list of legend
+            legend_width = sum(do.call("unit.c", lapply(legend, grobWidth))) + gap*(length(legend)-1)
+            x = unit(0.5, "npc") - legend_width*0.5 
+            for(i in seq_along(legend)) {
+                pushViewport(viewport(y = unit(2, "mm"), x = x, height = grobHeight(legend[[i]]), width = grobWidth(legend[[i]]), just = c("left", "bottom")))
+                grid.draw(legend[[i]])
+                upViewport()
+                x = x + gap + grobWidth(legend[[i]])
+            }
+            upViewport() 
         }
+
+        
     }
     
     if(length(gap) == 1) {

@@ -372,25 +372,25 @@ add_track(DMR_hyper, track = 2, panel.fun = function(gr) {
     df = rainfallTransform(gr[2:3])
     x = (df[[1]] + df[[2]])/2
     y = log10(df[[3]])
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "#FF000040"))
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "#FF000080"))
 })
 add_track(DMR_hypo, track = 2, panel.fun = function(gr) {
     df = rainfallTransform(gr[2:3])
     x = (df[[1]] + df[[2]])/2
     y = log10(df[[3]])
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "#0000FF40"))
+    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "#0000FF80"))
 })
 add_track(DMR_hyper_density, track = 3, panel.fun = function(gr) {
     x = (gr[[3]] + gr[[2]])/2
     y = gr[[4]]
     grid.polygon(c(x[1], x, x[length(x)]), 
-                 c(0, y, 0), default.units = "native", gp = gpar(fill = "#FF000040"))
+                 c(0, y, 0), default.units = "native", gp = gpar(fill = "#FF000080"))
 })
 add_track(DMR_hypo_density, track = 3, panel.fun = function(gr) {
     x = (gr[[3]] + gr[[2]])/2
     y = gr[[4]]
     grid.polygon(c(x[1], x, x[length(x)]), 
-                 c(0, y, 0), default.units = "native", gp = gpar(fill = "#0000FF40"))
+                 c(0, y, 0), default.units = "native", gp = gpar(fill = "#0000FF80"))
 })
 ```
 
