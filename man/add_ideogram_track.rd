@@ -13,7 +13,7 @@ add_ideogram_track(cytoband = paste0(system.file(package = "circlize"),
 \arguments{
 
   \item{cytoband}{Path of the cytoband file or a data frame that already contains cytoband data. Pass to \code{\link[circlize]{read.cytoband}}.}
-  \item{species}{Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If thisvalue is specified, the function will download \code{cytoBand.txt.gz} fromUCSC ftp automatically. Pass to \code{\link[circlize]{read.cytoband}}.}
+  \item{species}{Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this value is specified, the function will download \code{cytoBand.txt.gz} from UCSC ftp automatically. Pass to \code{\link[circlize]{read.cytoband}}.}
   \item{track}{which track the ideogram is added in. By default it is the next track in the layout.}
 
 }
