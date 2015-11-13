@@ -61,7 +61,7 @@ For each genomic category, multiple dimensional data which are represented as tr
 aspects. The \code{\link{gtrellis_layout}} function arranges genomic categories on the plot in a quite flexible way. Then users
 apply \code{\link{add_track}} to add self-defined graphics to the plot track by track.
 
-For more detailed demonstration of the function, please go to the vignette.
+For more detailed demonstration of the function, please refer to the vignette.
 }
 \value{
 No value is returned.

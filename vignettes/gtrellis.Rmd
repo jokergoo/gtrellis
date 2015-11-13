@@ -1,9 +1,9 @@
 <!--
 %\VignetteEngine{knitr}
-%\VignetteIndexEntry{Make Genome Level Trellis Graph}
+%\VignetteIndexEntry{Make Genome-level Trellis Graph}
 -->
 
-Make Genome Level Trellis Graph
+Make Genome-level Trellis Graph
 ========================================
 
 **Author**: Zuguang Gu ( z.gu@dkfz.de )
@@ -56,7 +56,7 @@ and supports adding self-defined graphics on the plot.
 tracks for visualization. In this package, initialization the layout and adding
 graphics are independent. After initialization of the layout, intersection between
 tracks and genomic categories are named cell or panel, and each cell is an independent
-plotting region (actually, each cell is a data viewport in **grid** system) 
+plotting region (actually, each cell is a viewport in **grid** system) 
 that self-defined graphics can be added afterwards.
 
 **gtrellis** is implemented in **grid** graphic system, so, in order
@@ -77,7 +77,7 @@ gtrellis_layout()
 ```
 
 `category` can be used to set subset of chromosomes as well as the order of chromosomes.
-`gtrellis_show_index()` here is an assistant function to add the information to each cell.
+`gtrellis_show_index()` here is an assistant function to add the information to each cell, just for demonstration purpose in this vignette.
 
 ```{r, fig.width = 6, fig.height = 6}
 gtrellis_layout(category = c("chr3", "chr1"))
