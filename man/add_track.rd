@@ -16,7 +16,7 @@ add_track(gr = NULL, category = NULL, track = get_cell_meta_data("track") + 1,
   \item{category}{subset of categories (e.g. chromosomes) that users want to add graphics.  The value can be a vector which contains more than one category. By default it is all available categories.}
   \item{track}{which track the graphics will be added to. By default it is the next track. The value should only be a scalar.}
   \item{clip}{whether graphics are restricted inside the cell.}
-  \item{panel.fun}{self-defined panel function to add graphics in each 'cell'. THe argument \code{gr} in \code{panel.fun}  only contains data for the current category which is a subset of the main \code{gr}.}
+  \item{panel.fun}{self-defined panel function to add graphics in each 'cell'. THe argument \code{gr} in \code{panel.fun}  only contains data for the current category which is a subset of the main \code{gr}. The function can also contains no argument if nothing needs to be passed in.}
 
 }
 \details{

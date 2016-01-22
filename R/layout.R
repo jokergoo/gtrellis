@@ -58,7 +58,7 @@
 # aspects. The `gtrellis_layout` function arranges genomic categories on the plot in a quite flexible way. Then users
 # apply `add_track` to add self-defined graphics to the plot track by track.
 #
-# For more detailed demonstration of the function, please go to the vignette.
+# For more detailed demonstration of the function, please refer to the vignette.
 #
 # == value
 # No value is returned.
@@ -791,7 +791,8 @@ add_ideogram_track = function(cytoband = paste0(system.file(package = "circlize"
 # -track which track the graphics will be added to. By default it is the next track. The value should only be a scalar.
 # -clip whether graphics are restricted inside the cell.
 # -panel.fun self-defined panel function to add graphics in each 'cell'. THe argument ``gr`` in ``panel.fun`` 
-#            only contains data for the current category which is a subset of the main ``gr``.
+#            only contains data for the current category which is a subset of the main ``gr``. The function can also
+#            contains no argument if nothing needs to be passed in.
 #
 # == detail
 # Initialization of the Trellis layout and adding graphics are two independent steps.
