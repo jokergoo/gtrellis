@@ -7,9 +7,9 @@ test_that("Test `.GENOMIC_LAYOUT`", {
     expect_that(gtrellis:::.GENOMIC_LAYOUT$fa,
         is_identical_to(paste0("chr", c(1:22, "X", "Y"))))
 
-    expect_that(gtrellis:::.GENOMIC_LAYOUT$n_track, is_identical_to(3))
-    expect_that(gtrellis:::.GENOMIC_LAYOUT$nrow, is_identical_to(2))
-    expect_that(gtrellis:::.GENOMIC_LAYOUT$ncol, is_identical_to(12))
+    expect_that(gtrellis:::.GENOMIC_LAYOUT$n_track, equals(3))
+    expect_that(gtrellis:::.GENOMIC_LAYOUT$nrow, equals(2))
+    expect_that(gtrellis:::.GENOMIC_LAYOUT$ncol[[1]], equals(12))
     
     dev.off()
 })
@@ -22,7 +22,7 @@ df = data.frame(chr = c("chr1", "chr2"),
 test_that("Test start position is not same", {
 
 	pdf(NULL)
-	expect_error(gtrellis_layout(df, ncol = 1), "start base in the same column should be the same")
+	expect_error(gtrellis_layout(df, ncol = 1), "Start base in a same column should be the same")
 	dev.off()
 
 })

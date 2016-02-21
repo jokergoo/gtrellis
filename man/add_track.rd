@@ -8,7 +8,7 @@ Add self-defined graphics track by track
 }
 \usage{
 add_track(gr = NULL, category = NULL, track = get_cell_meta_data("track") + 1,
-    clip = TRUE, panel.fun = function(gr) NULL)
+    clip = TRUE, panel_fun = function(gr) NULL, panel.fun = NULL)
 }
 \arguments{
 
@@ -16,13 +16,14 @@ add_track(gr = NULL, category = NULL, track = get_cell_meta_data("track") + 1,
   \item{category}{subset of categories (e.g. chromosomes) that users want to add graphics.  The value can be a vector which contains more than one category. By default it is all available categories.}
   \item{track}{which track the graphics will be added to. By default it is the next track. The value should only be a scalar.}
   \item{clip}{whether graphics are restricted inside the cell.}
-  \item{panel.fun}{self-defined panel function to add graphics in each 'cell'. THe argument \code{gr} in \code{panel.fun}  only contains data for the current category which is a subset of the main \code{gr}. The function can also contains no argument if nothing needs to be passed in.}
+  \item{panel_fun}{self-defined panel function to add graphics in each 'cell'. THe argument \code{gr} in \code{panel_fun}  only contains data for the current category which is a subset of the main \code{gr}. The function can also contains no argument if nothing needs to be passed in.}
+  \item{panel.fun}{deprecated}
 
 }
 \details{
 Initialization of the Trellis layout and adding graphics are two independent steps.
 Once the layout initialization finished, each cell will be an independent plotting region.
-As same as \code{panel.fun} in \code{\link[circlize]{circlize-package}}, the self-defined function \code{panel.fun}
+As same as \code{panel_fun} in \code{\link[circlize]{circlize-package}}, the self-defined function \code{panel_fun}
 will be applied on every cell in the specified track (by default it is the 'current' track).
 
 When adding graphics in each cell, \code{\link{get_cell_meta_data}} can return several meta data for the current cell.

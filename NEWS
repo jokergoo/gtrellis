@@ -1,24 +1,31 @@
-CHANGES IN VERSION 1.3.1
+## CHANGES IN VERSION 1.3.2
 
-* legend is supported
+- support 'compact' mode to arrange chromosomes
+- add customized functions to add points/lines/...
 
-======================================================
+----------------------------------------------------
 
-CHANGES IN VERSION 1.1.1
+## CHANGES IN VERSION 1.3.1
 
-* print message if input chromosome names are without 'chr'
-* call `start()` and `end()` explictely with `GenomicRanges::`
-* unit of x-axis is correct now
+- legend is supported
 
-======================================================
+----------------------------------------------------
 
-CHANGES IN VERSION 0.99.3
+## CHANGES IN VERSION 1.1.1
 
-* modified infinite loop when making asistant ticks
+- print message if input chromosome names are without 'chr'
+- call `start()` and `end()` explictely with `GenomicRanges::`
+- unit of x-axis is correct now
 
-======================================================
+----------------------------------------------------
 
-CHANGES IN VERSION 0.99.2
+## CHANGES IN VERSION 0.99.3
 
-* change `gtrellis_info` to `gtrellis_show_index`
+- modified infinite loop when making asistant ticks
+
+----------------------------------------------------
+
+## CHANGES IN VERSION 0.99.2
+
+- change `gtrellis_info` to `gtrellis_show_index`
 

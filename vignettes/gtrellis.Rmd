@@ -47,7 +47,9 @@ But if you want to compare more than one continuous regions, things will be comp
 Anyway, you can use `grid.layout` to arrange multiple continuous regions on the plot with using **ggbio** and **Gviz**,
 but the solution is not so straightforward.
 
-Here, **gtrellis** provides a flexible way to arrange genomic categories
+Here, **gtrellis** provides a flexible way to arrange genomic categories. It has following advantages:
+
+-
 and supports adding self-defined graphics on the plot.
 
 ## Basic design
@@ -129,6 +131,14 @@ Make all columns having equal width and also set multiple rows.
 
 ```{r, fig.width = 8, fig.height = 8}
 gtrellis_layout(ncol = 5, byrow = FALSE, equal_width = TRUE)
+gtrellis_show_index()
+```
+
+When there are multiple rows, chromosomes on a same row can be put compactly without aligned to 
+corresponding columns.
+
+```{r, fig.width = 8, fig.height = 8}
+gtrellis_layout(nrow = 3, compact = TRUE)
 gtrellis_show_index()
 ```
 
@@ -222,20 +232,62 @@ gtrellis_show_index()
 After the initialization of the layout, each cell can be thought as an ordinary coordinate
 system. Then graphics can be added in afterwards.
 
-Graphics are added by the self-defined function `panel.fun`. Similar as **circlize** 
-package, `panel.fun` will be applied in every cell in 'the current track'.
+First we will introduce functions which define a fixed type of graphics.
+
+- `add_points_track`
+- `add_segments_track`
+- `add_lines_track`
+- `add_rect_track`
+- `add_heatmap_track`
+
+```{r, fig.width = 10, fig.height = 6}
+require(circlize)
+bed = generateRandomBed()
+gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
+add_points_track(bed, bed[[4]])
+```
+
+```{r, fig.width = 10, fig.height = 6}
+bed = generateRandomBed(nr = 100)
+gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
+add_segments_track(bed, bed[[4]], gp = gpar(col = ifelse(bed[[4]] > 0, "red", "green"), lwd = 4))
+```
+
+```{r, fig.width = 10, fig.height = 6}
+bed = generateRandomBed(200)
+gtrellis_layout(n_track = 2, track_ylim = rep(range(bed[[4]]), 2), nrow = 3, byrow = FALSE)
+add_lines_track(bed, bed[[4]])
+add_lines_track(bed, bed[[4]], area = TRUE, gp = gpar(fill = "grey"))
+```
+
+```{r, fig.width = 10, fig.height = 6}
+col_fun = colorRamp2(c(-1, 0, 1), c("green", "black", "red"))
+gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
+add_rect_track(bed, h1 = bed[[4]], h2 = 0, 
+    gp = gpar(col = NA, fill = col_fun(bed[[4]])))
+add_lines_track(bed, bed[[4]], track = 1) 
+```
+
+```{r, fig.width = 10, fig.height = 6}
+gtrellis_layout(nrow = 3, byrow = FALSE, track_axis = FALSE)
+mat = matrix(rnorm(nrow(bed)*4), ncol = 4)
+add_heatmap_track(bed, mat, fill = col_fun)
+```
+
+Graphics are added by the self-defined function `panel_fun`. Similar as **circlize** 
+package, `panel_fun` will be applied in every cell in 'the current track'.
 The first argument of `add_track()` can be either a `GRanges` object or a data frame,
-and the argument in `panel.fun` is a subset of data in current chromosome.
+and the argument in `panel_fun` is a subset of data in current chromosome.
 
 ```{r, fig.width = 10, fig.height = 6}
 library(circlize)
 bed = generateRandomBed()
 gtrellis_layout(track_ylim = range(bed[[4]]))
-add_track(bed, panel.fun = function(bed) {
-    # `bed` inside `panel.fun` is a subset of the main `bed`
+add_track(bed, panel_fun = function(bed) {
+    # `bed` inside `panel_fun` is a subset of the main `bed`
     x = (bed[[2]] + bed[[3]]) / 2
     y = bed[[4]]
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+    grid.points(x, y, pch = 16, size = unit(1, "mm"))
 })
 ```
 
@@ -248,10 +300,10 @@ gr = GRanges(seqnames = bed[[1]],
                                end = bed[[3]]),
              score = bed[[4]])
 gtrellis_layout(track_ylim = range(gr$score))
-add_track(gr, panel.fun = function(gr) {
+add_track(gr, panel_fun = function(gr) {
     x = (start(gr) + end(gr)) / 2
     y = gr$score
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+    grid.points(x, y, pch = 16, size = unit(1, "mm"))
 })
 ```
 
@@ -260,10 +312,10 @@ same code to add graphics but with different layout. (Compare to the first figur
 
 ```{r, fig.width = 8, fig.height = 8}
 gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]))
-add_track(bed, panel.fun = function(bed) {
+add_track(bed, panel_fun = function(bed) {
     x = (bed[[2]] + bed[[3]]) / 2
     y = bed[[4]]
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+    grid.points(x, y, pch = 16, size = unit(1, "mm"))
 })
 ```
 
@@ -305,22 +357,22 @@ gtrellis_layout(n_track = 4, ncol = 4, byrow = FALSE,
     track_ylab = c("", "log10(inter_dist)", "density", ""))
 
 # track for chromosome names
-add_track(panel.fun = function(gr){
+add_track(panel_fun = function(gr){
     chr = get_cell_meta_data("name")
     grid.rect(gp = gpar(fill = "#EEEEEE"))
     grid.text(chr)
 })
 
 # track for rainfall plots
-add_track(DMR_hyper, panel.fun = function(gr) {
+add_track(DMR_hyper, panel_fun = function(gr) {
     df = circlize::rainfallTransform(gr[2:3])
     x = (df[[1]] + df[[2]])/2
     y = log10(df[[3]])
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "red"))
+    grid.points(x, y, pch = 16, size = unit(1, "mm"), gp = gpar(col = "red"))
 })
 
 # track for genomic density
-add_track(DMR_hyper_density, panel.fun = function(gr) {
+add_track(DMR_hyper_density, panel_fun = function(gr) {
     x = (gr[[3]] + gr[[2]])/2
     y = gr[[4]]
     grid.polygon(c(x[1], x, x[length(x)]), 
@@ -329,7 +381,7 @@ add_track(DMR_hyper_density, panel.fun = function(gr) {
 
 # track for ideogram
 cytoband_df = circlize::read.cytoband(species = "hg19")$df
-add_track(cytoband_df, panel.fun = function(gr) {
+add_track(cytoband_df, panel_fun = function(gr) {
     cytoband_chr = gr
     grid.rect( cytoband_chr[[2]], unit(0, "npc"),
                width = cytoband_chr[[3]] - cytoband_chr[[2]], height = unit(1, "npc"),
@@ -368,25 +420,59 @@ gtrellis_layout(n_track = 2, ncol = 4, byrow = FALSE,
     track_ylim = c(0, 8, c(0, max(c(DMR_hyper_density[[4]], DMR_hypo_density[[4]])))),
     track_ylab = c("log10(inter_dist)", "density"),
     add_name_track = TRUE, add_ideogram_track = TRUE)
-add_track(DMR_hyper, track = 2, panel.fun = function(gr) {
+add_track(DMR_hyper, track = 2, panel_fun = function(gr) {
     df = rainfallTransform(gr[2:3])
     x = (df[[1]] + df[[2]])/2
     y = log10(df[[3]])
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "#FF000080"))
+    grid.points(x, y, pch = 16, size = unit(1, "mm"), gp = gpar(col = "#FF000080"))
 })
-add_track(DMR_hypo, track = 2, panel.fun = function(gr) {
+add_track(DMR_hypo, track = 2, panel_fun = function(gr) {
     df = rainfallTransform(gr[2:3])
     x = (df[[1]] + df[[2]])/2
     y = log10(df[[3]])
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"), gp = gpar(col = "#0000FF80"))
+    grid.points(x, y, pch = 16, size = unit(1, "mm"), gp = gpar(col = "#0000FF80"))
 })
-add_track(DMR_hyper_density, track = 3, panel.fun = function(gr) {
+add_track(DMR_hyper_density, track = 3, panel_fun = function(gr) {
     x = (gr[[3]] + gr[[2]])/2
     y = gr[[4]]
     grid.polygon(c(x[1], x, x[length(x)]), 
                  c(0, y, 0), default.units = "native", gp = gpar(fill = "#FF000080"))
 })
-add_track(DMR_hypo_density, track = 3, panel.fun = function(gr) {
+add_track(DMR_hypo_density, track = 3, panel_fun = function(gr) {
+    x = (gr[[3]] + gr[[2]])/2
+    y = gr[[4]]
+    grid.polygon(c(x[1], x, x[length(x)]), 
+                 c(0, y, 0), default.units = "native", gp = gpar(fill = "#0000FF80"))
+})
+```
+
+```{r, fig.width = 14, fig.height = 7}
+gtrellis_layout(n_track = 2, nrow = 3, compact = TRUE,
+    track_axis = TRUE, 
+    track_height = unit.c(unit(1, "null"), 
+                          unit(0.5, "null")), 
+    track_ylim = c(0, 8, c(0, max(c(DMR_hyper_density[[4]], DMR_hypo_density[[4]])))),
+    track_ylab = c("log10(inter_dist)", "density"),
+    add_name_track = TRUE, add_ideogram_track = TRUE)
+add_track(DMR_hyper, track = 2, panel_fun = function(gr) {
+    df = rainfallTransform(gr[2:3])
+    x = (df[[1]] + df[[2]])/2
+    y = log10(df[[3]])
+    grid.points(x, y, pch = 16, size = unit(1, "mm"), gp = gpar(col = "#FF000080"))
+})
+add_track(DMR_hypo, track = 2, panel_fun = function(gr) {
+    df = rainfallTransform(gr[2:3])
+    x = (df[[1]] + df[[2]])/2
+    y = log10(df[[3]])
+    grid.points(x, y, pch = 16, size = unit(1, "mm"), gp = gpar(col = "#0000FF80"))
+})
+add_track(DMR_hyper_density, track = 3, panel_fun = function(gr) {
+    x = (gr[[3]] + gr[[2]])/2
+    y = gr[[4]]
+    grid.polygon(c(x[1], x, x[length(x)]), 
+                 c(0, y, 0), default.units = "native", gp = gpar(fill = "#FF000080"))
+})
+add_track(DMR_hypo_density, track = 3, panel_fun = function(gr) {
     x = (gr[[3]] + gr[[2]])/2
     y = gr[[4]]
     grid.polygon(c(x[1], x, x[length(x)]), 
@@ -402,7 +488,7 @@ all_chr = paste0("chr", 1:22)
 letter = strsplit("MERRY CHRISTMAS!", "")[[1]]
 gtrellis_layout(nrow = 5)
 for(i in seq_along(letter)) {
-    add_track(category = all_chr[i], track = 1, panel.fun = function(gr) {
+    add_track(category = all_chr[i], track = 1, panel_fun = function(gr) {
         grid.text(letter[i], gp = gpar(fontsize = 30))
     })
 }
@@ -443,14 +529,14 @@ gtrellis_layout(n_track = 3, nrow = 3, byrow = FALSE, gap = unit(c(4, 1), "mm"),
     add_name_track = TRUE, add_ideogram_track = TRUE)
 
 # track for coverage in tumor
-add_track(tumor_df, panel.fun = function(gr) {
+add_track(tumor_df, panel_fun = function(gr) {
     x = (gr[[2]] + gr[[3]])/2
     y = gr[[4]]
     grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000020"))
 })
 
 # track for coverage in control
-add_track(control_df, panel.fun = function(gr) {
+add_track(control_df, panel_fun = function(gr) {
     x = (gr[[2]] + gr[[3]])/2
     y = gr[[4]]
     grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000020"))
@@ -460,7 +546,7 @@ add_track(control_df, panel.fun = function(gr) {
 library(RColorBrewer)
 col_fun = circlize::colorRamp2(seq(-0.5, 0.5, length = 11), rev(brewer.pal(11, "RdYlBu")),
     transparency = 0.5)
-add_track(ratio_df, panel.fun = function(gr) {
+add_track(ratio_df, panel_fun = function(gr) {
     x = (gr[[2]] + gr[[3]])/2
     y = gr[[4]]
     grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = col_fun(y)))
@@ -486,7 +572,7 @@ gtrellis_layout(byrow = FALSE, n_track = 2, ncol = 4,
     track_height = unit.c(unit(1, "null"), unit(4, "mm")),
     track_ylab = c("density", ""))
 
-add_track(gene_density, panel.fun = function(gr) {
+add_track(gene_density, panel_fun = function(gr) {
     x = (gr[[3]] + gr[[2]])/2
     y = gr[[4]]
     grid.lines(x, y, default.unit = "native")
@@ -494,7 +580,7 @@ add_track(gene_density, panel.fun = function(gr) {
 
 col_fun = circlize::colorRamp2(seq(0, max(gene_density[[4]]), length = 11), 
                                rev(brewer.pal(11, "RdYlBu")))
-add_track(gene_density, panel.fun = function(gr) {
+add_track(gene_density, panel_fun = function(gr) {
     grid.rect(gr[[2]], 0, width = gr[[3]] - gr[[2]], height = 1, just = c(0, 0),
         default.units = "native", gp = gpar(fill = col_fun(gr[[4]]), col = NA))
 })
@@ -516,12 +602,12 @@ col_fun = colorRamp2(c(-1, 0, 1), c("green", "yellow", "red"))
 gtrellis_layout(n_track = 1, ncol = 1, track_axis = FALSE, xpadding = c(0.1, 0),
     gap = unit(4, "mm"), border = FALSE, asist_ticks = FALSE, add_ideogram_track = TRUE, 
     ideogram_track_height = unit(2, "mm"))
-add_track(bed, panel.fun = function(gr) {
+add_track(bed, panel_fun = function(gr) {
     grid.rect((gr[[2]] + gr[[3]])/2, unit(0.2, "npc"), unit(1, "mm"), unit(0.8, "npc"), 
         hjust = 0, vjust = 0, default.units = "native", 
         gp = gpar(fill = col_fun(gr[[4]]), col = NA))    
 })
-add_track(track = 2, clip = FALSE, panel.fun = function(gr) {
+add_track(track = 2, clip = FALSE, panel_fun = function(gr) {
     chr = get_cell_meta_data("name")
     if(chr == "chrY") {
         grid.lines(get_cell_meta_data("xlim"), unit(c(0, 0), "npc"), 
@@ -534,13 +620,13 @@ add_track(track = 2, clip = FALSE, panel.fun = function(gr) {
 ## Get meta data for each cell
 
 For every cell in the plot, several meta data can be extracted by `get_cell_meta_data()`.
-`get_cell_meta_data()` is always used inside `panel.fun` to extract information about the 
-'current cell'. You can also use the function outside `panel.fun` by explicitly specifying
+`get_cell_meta_data()` is always used inside `panel_fun` to extract information about the 
+'current cell'. You can also use the function outside `panel_fun` by explicitly specifying
 `category` and `track`. Pseudo code are:
 
 ```{r, eval = FALSE}
 gtrellis_layout()
-add_track(panel.fun(gr) {
+add_track(panel_fun(gr) {
     # get xlim of current cell
     xlim = get_cell_meta_data("xlim")
 })
@@ -570,7 +656,7 @@ library(GetoptLong)
 gtrellis_layout(category = c("chr1", "chr2", "chr21", "chr22"), equal_width = TRUE, add_name_track = TRUE, add_ideogram_track = TRUE, nrow = 2,
   xpadding = c(0.1, 0.1), ypadding = c(0.1, 0.1))
 
-add_track(panel.fun = function(gr) {
+add_track(panel_fun = function(gr) {
     xlim = get_cell_meta_data("xlim")
     ylim = get_cell_meta_data("ylim")
     extended_xlim = get_cell_meta_data("extended_xlim")
@@ -605,10 +691,10 @@ Or you can consider to use `frameGrob()` and `packGrob()` to build a legend from
 bed = generateRandomBed()
 lgd = legendGrob("label", pch = 16)
 gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]), legend = lgd)
-add_track(bed, panel.fun = function(bed) {
+add_track(bed, panel_fun = function(bed) {
     x = (bed[[2]] + bed[[3]]) / 2
     y = bed[[4]]
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
+    grid.points(x, y, pch = 16, size = unit(1, "mm"))
 })
 ```
 
@@ -626,12 +712,12 @@ lgd = color_mapping_legend(cm, plot = FALSE, title = "Value")
 gtrellis_layout(n_track = 1, ncol = 1, track_axis = FALSE, xpadding = c(0.1, 0),
     gap = unit(4, "mm"), border = FALSE, asist_ticks = FALSE, add_ideogram_track = TRUE, 
     ideogram_track_height = unit(2, "mm"), legend = lgd)
-add_track(bed, panel.fun = function(gr) {
+add_track(bed, panel_fun = function(gr) {
     grid.rect((gr[[2]] + gr[[3]])/2, unit(0.2, "npc"), unit(1, "mm"), unit(0.8, "npc"), 
         hjust = 0, vjust = 0, default.units = "native", 
         gp = gpar(fill = col_fun(gr[[4]]), col = NA))    
 })
-add_track(track = 2, clip = FALSE, panel.fun = function(gr) {
+add_track(track = 2, clip = FALSE, panel_fun = function(gr) {
     chr = get_cell_meta_data("name")
     if(chr == "chrY") {
         grid.lines(get_cell_meta_data("xlim"), unit(c(0, 0), "npc"), 
@@ -661,7 +747,7 @@ n = max(sapply(tp_family, length))
 
 gtrellis_layout(data = df, n_track = 1, track_ylim = c(0.5, n+0.5), 
     track_axis = FALSE, add_name_track = TRUE, xpadding = c(0.05, 0.05), ypadding = c(0.05, 0.05))
-add_track(panel.fun = function(gr) {
+add_track(panel_fun = function(gr) {
     gn = get_cell_meta_data("name")
     tr = tp_family[[gn]] # all transcripts for this gene
     for(i in seq_along(tr)) {
@@ -706,7 +792,7 @@ n = max(sapply(tp_family, length))
 gtrellis_layout(data = df, n_track = 1, ncol = 1, track_ylim = c(0.5, n+0.5), 
     track_axis = FALSE, add_name_track = TRUE, 
     xpadding = c(0.01, 0.01), ypadding = c(0.05, 0.05))
-add_track(panel.fun = function(gr) {
+add_track(panel_fun = function(gr) {
     gn = get_cell_meta_data("name")
     tr = tp_family[[gn]] # all transcripts for this gene
     for(i in seq_along(tr)) {
@@ -733,17 +819,17 @@ zoom = function(df) {
     track_ylim = c(cov_range, cov_range, ratio_range),
     track_ylab = c("tumor, log10(cov)", "control, log10(cov)", "ratio, log2(ratio)"), 
     add_name_track = TRUE, add_ideogram_track = TRUE)
-    add_track(tumor_df, panel.fun = function(gr) {
+    add_track(tumor_df, panel_fun = function(gr) {
         x = (gr[[2]] + gr[[3]])/2
         y = gr[[4]]
         grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000080"))
     })
-    add_track(control_df, panel.fun = function(gr) {
+    add_track(control_df, panel_fun = function(gr) {
         x = (gr[[2]] + gr[[3]])/2
         y = gr[[4]]
         grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#00000080"))
     })
-    add_track(ratio_df, panel.fun = function(gr) {
+    add_track(ratio_df, panel_fun = function(gr) {
         x = (gr[[2]] + gr[[3]])/2
         y = gr[[4]]
         grid.points(x, y, pch = 16, size = unit(2, "bigpts"), gp = gpar(col = "#FF000080"))
