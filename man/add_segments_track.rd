@@ -17,6 +17,9 @@ add_segments_track(gr, value, gp = gpar(), ...)
   \item{...}{other arguments passed to \code{\link{add_track}}}
 
 }
+\value{
+No value is returned.
+}
 \author{
 Zuguang Gu <z.gu@dkfz.de>
 }

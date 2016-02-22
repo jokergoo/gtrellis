@@ -19,6 +19,9 @@ add_points_track(gr, value, pch = 16, size = unit(1, "mm"), gp = gpar(), ...)
   \item{...}{other arguments passed to \code{\link{add_track}}}
 
 }
+\value{
+No value is returned.
+}
 \author{
 Zuguang Gu <z.gu@dkfz.de>
 }

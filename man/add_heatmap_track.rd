@@ -19,6 +19,9 @@ add_heatmap_track(gr, mat, fill, border = NA, track = current_track() + 1, ...)
   \item{...}{other arguments passed to \code{\link{add_track}}}
 
 }
+\value{
+No value is returned.
+}
 \author{
 Zuguang Gu <z.gu@dkfz.de>
 }

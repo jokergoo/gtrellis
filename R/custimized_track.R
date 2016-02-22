@@ -10,6 +10,9 @@
 # -gp graphic settings, should be specified by `grid::gpar`.
 # -... other arguments passed to `add_track`
 #
+# == value
+# No value is returned.
+#
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
@@ -46,6 +49,9 @@ add_points_track = function(gr, value, pch = 16, size = unit(1, "mm"), gp = gpar
 # -value numeric values associated with ``gr``
 # -gp graphic settings, should be specified by `grid::gpar`.
 # -... other arguments passed to `add_track`
+#
+# == value
+# No value is returned.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
@@ -85,6 +91,9 @@ add_segments_track = function(gr, value, gp = gpar(), ...) {
 # -baseline baseline for drawing polygon
 # -gp graphic settings, should be specified by `grid::gpar`.
 # -... other arguments passed to `add_track`
+#
+# == value
+# No value is returned.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
@@ -126,6 +135,9 @@ add_lines_track = function(gr, value, area = FALSE, baseline = "bottom", gp = gp
 # -h2 top/bottom positions for rectangles
 # -gp graphic settings, should be specified by `grid::gpar`.
 # -... other arguments passed to `add_track`
+#
+# == value
+# No value is returned.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
@@ -183,6 +195,9 @@ add_rect_track = function(gr, h1, h2, gp = gpar(), ...) {
 # -border border of the grids in heatmap
 # -track which track the graphics will be added to. By default it is the next track. The value should only be a scalar.
 # -... other arguments passed to `add_track`
+#
+# == value
+# No value is returned.
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>

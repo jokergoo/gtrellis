@@ -9,6 +9,9 @@ The index of current track
 \usage{
 current_track()
 }
+\value{
+No value is returned.
+}
 \author{
 Zuguang Gu <z.gu@dkfz.de>
 }

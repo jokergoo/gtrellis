@@ -295,6 +295,9 @@ is_intersected = function(start, end, lim_start, lim_end) {
 # == title
 # The index of current track
 # 
+# == value
+# No value is returned.
+#
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
