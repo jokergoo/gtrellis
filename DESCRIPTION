@@ -7,7 +7,7 @@ Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
 Depends: R (>= 3.1.2), grid, IRanges, GenomicRanges
 Imports: circlize (>= 0.3.3), GetoptLong
-Suggests: testthat (>= 0.3), knitr, RColorBrewer, markdown, ComplexHeatmap (>= 1.9.0)
+Suggests: testthat (>= 0.3), knitr, RColorBrewer, markdown, ComplexHeatmap
 VignetteBuilder: knitr
 Description: Genome level Trellis graph visualizes genomic data conditioned by 
     genomic categories (e.g. chromosomes). For each genomic category, multiple 
