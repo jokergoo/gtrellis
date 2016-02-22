@@ -10,15 +10,16 @@ Initialize genome-level Trellis layout
 gtrellis_layout(data = NULL, category = NULL,
     species = NULL, nrow = NULL, ncol = NULL,
     n_track = 1, track_height = 1, track_ylim = c(0, 1),
-    track_axis = TRUE, track_ylab = "",
-    title = NULL, xlab = "Genomic positions", xaxis = TRUE,
-    equal_width = FALSE, border = TRUE, asist_ticks = TRUE,
+    track_axis = TRUE, track_ylab = "", title = NULL,
+    xlab = "Genomic positions", xaxis = TRUE, xaxis_bin = NULL,
+    equal_width = FALSE, compact = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE,
     name_fontsize = 10, name_track_fill = "#EEEEEE",
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"),
     axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16,
-    legend = list(), legend_side = c("right", "bottom"))
+    legend = list(), legend_side = c("right", "bottom"),
+    padding = unit(c(2, 2, 2, 2), "mm"))
 }
 \arguments{
 
@@ -35,7 +36,9 @@ gtrellis_layout(data = NULL, category = NULL,
   \item{title}{title of the plot.}
   \item{xlab}{labels on x axes.}
   \item{xaxis}{whether show x axes.}
+  \item{xaxis_bin}{bin size for x axes.}
   \item{equal_width}{whether all columns in the layout have the same width. If \code{TRUE}, short categories will be extended according to the longest category.}
+  \item{compact}{For the catgories which are put in a same row, will they be put compactly without being aligned by columns.}
   \item{border}{whether show borders.}
   \item{asist_ticks}{if axes ticks are added on one side in rows or columns, whether add ticks on the other sides.}
   \item{xpadding}{padding on x axes in each cell. Numeric value means relative ratio corresponding to the cell width.  Use \code{\link[base]{I}} to set it as absolute value which is measured in the data viewport (the coordinate system corresponding to the real data). Currently you cannot set it as a \code{\link[grid]{unit}} object.}
@@ -53,6 +56,7 @@ gtrellis_layout(data = NULL, category = NULL,
   \item{title_fontsize}{font size for title.}
   \item{legend}{a \code{\link[grid]{grob}} object, or a list of \code{\link[grid]{grob}} objects.}
   \item{legend_side}{side of the legend}
+  \item{padding}{padding of the plot. Elements correspond to bottom, left, top, right paddings.}
 
 }
 \details{
@@ -61,7 +65,7 @@ For each genomic category, multiple dimensional data which are represented as tr
 aspects. The \code{\link{gtrellis_layout}} function arranges genomic categories on the plot in a quite flexible way. Then users
 apply \code{\link{add_track}} to add self-defined graphics to the plot track by track.
 
-For more detailed demonstration of the function, please go to the vignette.
+For more detailed demonstration of the function, please refer to the vignette.
 }
 \value{
 No value is returned.
