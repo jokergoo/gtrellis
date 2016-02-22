@@ -21,8 +21,8 @@
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
 #
-add_ideogram_track = function(cytoband = paste0(system.file(package = "circlize"),
-    "/extdata/cytoBand.txt"), species = NULL, track = current_track() + 1) {
+add_ideogram_track = function(cytoband = system.file("extdata", "cytoBand.txt", 
+    package = "circlize"), species = NULL, track = current_track() + 1) {
 
 	cytoband = read.cytoband(species = species)
     cytoband_df = cytoband$df
@@ -88,7 +88,13 @@ add_ideogram_track = function(cytoband = paste0(system.file(package = "circlize"
 # No value is returned.
 #
 # == seealso
-# `get_cell_meta_data`
+# There are several functions which draw specific graphics and are implemented by `add_track`:
+# 
+# - `add_points_track`
+# - `add_segments_track`
+# - `add_lines_track`
+# - `add_rect_track`
+# - `add_heatmap_track`
 #
 # == author
 # Zuguang Gu <z.gu@dkfz.de>
@@ -287,7 +293,7 @@ is_intersected = function(start, end, lim_start, lim_end) {
 }
 
 # == title
-# Current track
+# The index of current track
 # 
 # == author
 # Zuguang Gu <z.gu@dkfz.de>

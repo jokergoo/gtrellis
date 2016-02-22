@@ -7,7 +7,7 @@ Make Genome Level Trellis Graph
 
 ## Install
 
-**gtrellis** is available on Bioconductor, you can install it by:
+**gtrellis** is available on [Bioconductor](http://bioconductor.org/packages/devel/bioc/html/gtrellis.html), you can install it by:
 
 ```{r}
 source("http://bioconductor.org/biocLite.R")

@@ -17,7 +17,7 @@
 # require(circlize)
 # bed = generateRandomBed()
 # gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
-# add_points_track(bed, bed[[4]])
+# add_points_track(bed, bed[[4]], gp = gpar(col = ifelse(bed[[4]] > 0, "red", "green")))
 #
 add_points_track = function(gr, value, pch = 16, size = unit(1, "mm"), gp = gpar(), ...) {
 
@@ -93,8 +93,8 @@ add_segments_track = function(gr, value, gp = gpar(), ...) {
 # require(circlize)
 # bed = generateRandomBed(200)
 # gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
-# add_lines_track(bed, bed[[4]], area = TRUE, gp = gpar(fill = "grey"))
-#
+# add_lines_track(bed, bed[[4]])
+# add_lines_track(bed, bed[[4]], area = TRUE, gp = gpar(fill = "grey", col = NA))
 add_lines_track = function(gr, value, area = FALSE, baseline = "bottom", gp = gpar(), ...) {
 	
 	gr = normalizeToGRanges(gr)
@@ -137,7 +137,7 @@ add_lines_track = function(gr, value, area = FALSE, baseline = "bottom", gp = gp
 # bed = generateRandomBed(200)
 # col_fun = colorRamp2(c(-1, 0, 1), c("green", "black", "red"))
 # gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
-# add_rect_track(bed, h1 = 0.5, h2 = -0.5, 
+# add_rect_track(bed, h1 = bed[[4]], h2 = 0, 
 #     gp = gpar(col = NA, fill = col_fun(bed[[4]])))
 #
 add_rect_track = function(gr, h1, h2, gp = gpar(), ...) {

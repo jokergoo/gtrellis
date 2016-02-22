@@ -25,6 +25,7 @@
 # -title title of the plot.
 # -xlab labels on x axes.
 # -xaxis whether show x axes.
+# -xaxis_bin bin size for x axes.
 # -equal_width whether all columns in the layout have the same width. If ``TRUE``, short categories will be extended
 #              according to the longest category.
 # -compact For the catgories which are put in a same row, will they be put compactly without being aligned by columns.
@@ -74,8 +75,8 @@
 gtrellis_layout = function(data = NULL, category = NULL, 
     species = NULL, nrow = NULL, ncol = NULL,
     n_track = 1, track_height = 1, track_ylim = c(0, 1),
-    track_axis = TRUE, track_ylab = "", 
-    title = NULL, xlab = "Genomic positions", xaxis = TRUE,
+    track_axis = TRUE, track_ylab = "", title = NULL, 
+    xlab = "Genomic positions", xaxis = TRUE, xaxis_bin = NULL,
     equal_width = FALSE, compact = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE, 
@@ -526,6 +527,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
                 pushViewport(dataViewport(xscale = extended_xlim[current_ind[j], ], yscale = extended_track_ylim[k, ], extension = 0, name = qq("@{fa[current_ind[j]]}_track_@{k}_datavp_@{i_plot}")))
                 pushViewport(dataViewport(xscale = extended_xlim[current_ind[j], ], yscale = extended_track_ylim[k, ], extension = 0, clip = TRUE, name = qq("@{fa[current_ind[j]]}_track_@{k}_datavp_clip_@{i_plot}")))
                 if(border && k > 1) grid.lines(c(0, 1), c(1, 1))
+                u = convertWidth(unit(1, "mm"), "native", valueOnly = TRUE)
                 upViewport(4)
             }
             upViewport()
@@ -599,7 +601,11 @@ gtrellis_layout = function(data = NULL, category = NULL,
         current_ind = p[[1]]
         for(j in seq_len(ncol[1])) {
             seekViewport(name = qq("@{fa[current_ind[j]]}_track_1_datavp_@{i_plot}"))
-            xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+            if(is.null(xaxis_bin)) {
+                xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+            } else {
+                xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = xaxis_bin)
+            }
             if(length(xbreaks) == 0) xbreaks = grid.pretty(xlim2[current_ind[j], 1])[1]
             #xbreaks = grid.pretty(xlim2[j, ])
                 
@@ -632,7 +638,11 @@ gtrellis_layout = function(data = NULL, category = NULL,
         current_ind = p[[nrow]]
         for(j in seq_len(ncol[nrow])) {
             seekViewport(name = qq("@{fa[current_ind[j]]}_track_@{n_track}_datavp_@{i_plot}"))
-            xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+            if(is.null(xaxis_bin)) {
+                xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+            } else {
+                xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = xaxis_bin)
+            }
             #xbreaks = grid.pretty(xlim2[j, ])
             
             if(is_on_bottom(n_track, i, j, nrow, max(ncol), n_track)) {
@@ -662,10 +672,17 @@ gtrellis_layout = function(data = NULL, category = NULL,
             for(i in seq(nrow-1, 1)) {
                 current_ind = p[[i]]
                 for(j in seq(ncol[i], 1)) {
-                    if(sum(extended_xlim[current_ind[1:j], 2] - extended_xlim[current_ind[1:j], 1]) - 
-                        sum(extended_xlim[p[[i+1]], 2] - extended_xlim[p[[i+1]], 1]) > 
-                        (extended_xlim[current_ind[j], 2] - extended_xlim[current_ind[j], 1])*0.99) {
-                        xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+                    total_width = sum(extended_xlim[current_ind[1:j], 2] - extended_xlim[current_ind[1:j], 1])
+                    total_width_short = sum(extended_xlim[p[[i+1]], 2] - extended_xlim[p[[i+1]], 1])
+                    last_width = (extended_xlim[current_ind[j], 2] - extended_xlim[current_ind[j], 1])
+                    total_width = total_width + convertWidth(gap[2]*(j-1), "mm", valueOnly = TRUE)*u
+                    total_width_short = total_width_short + convertWidth(gap[2]*(length(p[[i+1]])-1), "mm", valueOnly = TRUE)*u
+                    if(total_width - total_width_short > last_width) {
+                        if(is.null(xaxis_bin)) {
+                            xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+                        } else {
+                            xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = xaxis_bin)
+                        }
                         seekViewport(name = qq("@{fa[current_ind[j]]}_track_@{n_track}_datavp_@{i_plot}"))
                         grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
                                       xbreaks, unit(0, "npc"), default.units = "native")
@@ -737,7 +754,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
                             if(compact) {
                                 if(track_ylab[k] != "") {
                                     grid.text(track_ylab[k], x = unit(1, "npc") + yaxis_right_width + ylabel_right_width*0.5, 
-                                        just = "right", rot = 90, gp = gpar(fontsize = lab_fontsize))
+                                        just = c("top"), rot = 90, gp = gpar(fontsize = lab_fontsize))
                                 }
                             }
                         }
