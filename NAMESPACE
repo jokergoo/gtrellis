@@ -8,6 +8,7 @@ export(add_segments_track)
 export(gtrellis_show_index)
 export(gtrellis_layout)
 export(get_cell_meta_data)
+export(current_track)
 
 import(grid)
 import(GenomicRanges)

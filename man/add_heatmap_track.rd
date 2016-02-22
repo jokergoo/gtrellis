@@ -7,7 +7,7 @@ add heatmap to a new track
 add heatmap to a new track
 }
 \usage{
-add_heatmap_track(gr, mat, fill, border = NA, track = get_cell_meta_data("track") + 1, ...)
+add_heatmap_track(gr, mat, fill, border = NA, track = current_track() + 1, ...)
 }
 \arguments{
 
