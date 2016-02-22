@@ -384,7 +384,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(title == "") {
         title_height = unit(2, "mm")
     } else {
-        title_height = grobHeight(textGrob(title, gp = gpar(fontface = "bold", fontsize = title_fontsize)))*1.5
+        title_height = grobHeight(textGrob(title, gp = gpar(fontsize = title_fontsize)))*1.5
     }
 
     if(inherits(legend, "grob")) legend = list(legend)

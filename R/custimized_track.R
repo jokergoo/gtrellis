@@ -197,10 +197,16 @@ add_rect_track = function(gr, h1, h2, gp = gpar(), ...) {
 # mat = matrix(rnorm(nrow(bed)*4), ncol = 4)
 # add_heatmap_track(bed, mat, fill = col_fun)
 #
-add_heatmap_track = function(gr, mat, fill, border = NA, track = get_cell_meta_data("track") + 1, ...) {
+add_heatmap_track = function(gr, mat, fill, border = NA, track = current_track() + 1, ...) {
 
 	gr = normalizeToGRanges(gr)
 	n = length(gr)
+
+	if(inherits(mat, "data.frame")) {
+		mat = as.matrix(mat)
+	} else if(!inherits(mat, "matrix")) {
+		mat = matrix(mat, ncol = 1)
+	}
 
 	col_mat = fill(mat)
 	nr = ncol(mat)

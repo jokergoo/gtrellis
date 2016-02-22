@@ -7,7 +7,7 @@ Add self-defined graphics track by track
 Add self-defined graphics track by track
 }
 \usage{
-add_track(gr = NULL, category = NULL, track = get_cell_meta_data("track") + 1,
+add_track(gr = NULL, category = NULL, track = current_track() + 1,
     clip = TRUE, panel_fun = function(gr) NULL, panel.fun = NULL)
 }
 \arguments{
