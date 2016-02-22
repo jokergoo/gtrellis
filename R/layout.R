@@ -27,6 +27,7 @@
 # -xaxis whether show x axes.
 # -equal_width whether all columns in the layout have the same width. If ``TRUE``, short categories will be extended
 #              according to the longest category.
+# -compact For the catgories which are put in a same row, will they be put compactly without being aligned by columns.
 # -border whether show borders.
 # -asist_ticks if axes ticks are added on one side in rows or columns, whether add ticks on the other sides.
 # -xpadding padding on x axes in each cell. Numeric value means relative ratio corresponding to the cell width. 
@@ -51,6 +52,7 @@
 # -title_fontsize font size for title.
 # -legend a `grid::grob` object, or a list of `grid::grob` objects.
 # -legend_side side of the legend
+# -padding padding of the plot. Elements correspond to bottom, left, top, right paddings.
 #
 # == detail
 # Genome-level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
@@ -74,13 +76,14 @@ gtrellis_layout = function(data = NULL, category = NULL,
     n_track = 1, track_height = 1, track_ylim = c(0, 1),
     track_axis = TRUE, track_ylab = "", 
     title = NULL, xlab = "Genomic positions", xaxis = TRUE,
-    equal_width = FALSE, border = TRUE, asist_ticks = TRUE,
+    equal_width = FALSE, compact = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE, 
     name_fontsize = 10, name_track_fill = "#EEEEEE",
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
     axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16,
-    legend = list(), legend_side = c("right", "bottom")) {
+    legend = list(), legend_side = c("right", "bottom"),
+    padding = unit(c(2, 2, 2, 2), "mm")) {
 
     increase_plot_index()
     i_plot = get_plot_index()
@@ -127,7 +130,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         df = chromInfo$df
         category = chromInfo$chromosome
   
-        xlim = df[2:3]
+        xlim = as.matrix(df[2:3])
         fa = category
     } else {
         data = as.data.frame(data)
@@ -141,6 +144,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         x1 = tapply(data[[2]], data[[1]], min)[fa]
         x2 = tapply(data[[3]], data[[1]], max)[fa]
         xlim = cbind(x1, x2)
+        xlim = as.matrix(xlim)
     }
     if(is.null(xlab)) xlab = ""
     if(is.na(xlab)) xlab = ""
@@ -215,26 +219,49 @@ gtrellis_layout = function(data = NULL, category = NULL,
 
 
     n = nrow(xlim)
-    if(is.null(nrow) && is.null(ncol)) nrow = 1
-    if(!is.null(nrow) && is.null(ncol)) {
-        ncol = ceiling(n/nrow)
-    } else if(is.null(nrow) && !is.null(ncol)) {
-        nrow = ceiling(n/ncol)
-    }
-    
-    if(nrow*ncol > n) {
-        fa = c(fa, paste0(".invisible_", seq_len(nrow*ncol-n)))
-        for(i in seq_len(nrow*ncol-n)) {
-            xlim = rbind(xlim, c(Inf, -Inf))
+    if(compact) {
+        if(is.null(nrow)) {
+            stop("`nrow` must be set if `compact` is TRUE.")
         }
-        n = nrow*ncol
-    }
-    rownames(xlim) = fa
-    fa = as.vector(t(matrix(fa, nrow, ncol, byrow = byrow)))
-    xlim = xlim[fa, , drop = FALSE]
+        p = partition(xlim[, 2] - xlim[, 1], nrow)
+        nrow = max(p)
+        p = as.list(tapply(p, p, function(i) which(p == unique(i)))[as.character(seq_len(nrow))])
+        ncol = sapply(p, length)
+        byrow = TRUE
+        equal_width = FALSE
+    } else {
+        if(is.null(nrow) && is.null(ncol)) nrow = 1
+        if(!is.null(nrow) && is.null(ncol)) {
+            ncol = ceiling(n/nrow)
+        } else if(is.null(nrow) && !is.null(ncol)) {
+            nrow = ceiling(n/ncol)
+        }
 
-    if(!check_xlim(xlim, nrow, ncol)) {
-        stop("start base in the same column should be the same.")
+        if(byrow) {
+            foo = rep(seq_len(nrow), each = ncol)[1:n]
+            nrow = max(foo)
+            foo = factor(foo, levels = as.character(1:nrow))
+            p = split(seq_len(n), foo)
+        } else {
+            foo = rep(seq_len(nrow), times = ncol)[1:n]
+            nrow = max(foo)
+            foo = factor(foo, levels = as.character(1:nrow))
+            p = split(seq_len(n), foo)
+        }
+        ncol = sapply(p, length)
+    }
+
+    rownames(xlim) = fa
+    
+    # check whether the start are same for all catgories in a same column
+    if(!compact) {
+        for(i in seq_along(max(ncol))) {
+            ind = sapply(p, function(x) x[i])
+            ind = ind[!is.na(ind)]
+            if(!almost_equal(xlim[ind, 1])) {
+                stop("Start base in a same column should be the same.")
+            }
+        }
     }
     
     .GENOMIC_LAYOUT$fa = fa
@@ -244,9 +271,14 @@ gtrellis_layout = function(data = NULL, category = NULL,
     .GENOMIC_LAYOUT$track_axis_show = track_axis
     .GENOMIC_LAYOUT$current_fa = NULL
     .GENOMIC_LAYOUT$current_track = 0
+    .GENOMIC_LAYOUT$p = p  # partitioning
     
-    xlim2 = re_calculate_xlim(xlim, nrow, ncol, equal_width)
-    
+    if(compact) {
+        xlim2 = xlim
+    } else {
+        xlim2 = re_calculate_xlim(xlim, p, equal_width)
+    }
+
     .GENOMIC_LAYOUT$original_xlim = xlim
     .GENOMIC_LAYOUT$original_ylim = track_ylim
     .GENOMIC_LAYOUT$xlim = xlim2
@@ -270,12 +302,12 @@ gtrellis_layout = function(data = NULL, category = NULL,
     .GENOMIC_LAYOUT$extended_ylim = extended_track_ylim
     
     
-    if(any(sapply(1:ncol, function(x) is_on_top(1, 1, x, nrow, ncol, n_track)))) {
+    if(any(sapply(seq_len(ncol[1]), function(x) is_on_top(1, 1, x, nrow, ncol[1], n_track)))) {
         xaxis_top_height = grobHeight(textGrob("B", gp = gpar(axis_label_fontsize))) + axis_tick_height + axis_label_gap
     } else {
         xaxis_top_height = unit(0, "null")
     }
-    if(any(sapply(1:ncol, function(x) is_on_bottom(n_track, nrow, x, nrow, ncol, n_track)))) {
+    if(any(sapply(seq_len(ncol[length(ncol)]), function(x) is_on_bottom(n_track, nrow, x, nrow, ncol[length(ncol)], n_track)))) {
         xaxis_bottom_height = grobHeight(textGrob("B", gp = gpar(axis_label_fontsize))) + axis_tick_height + axis_label_gap
     } else {
         xaxis_bottom_height = unit(0, "null")
@@ -293,7 +325,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     lstr_ylab_height = unit(0, "mm")
     for(i in seq_len(nrow)) {
         for(k in seq_len(n_track)) {
-            if(is_on_left(k, i, 1, nrow, ncol, n_track, track_axis | track_ylab != "")) {
+            if(is_on_left(k, i, 1, nrow, ncol[i], n_track, track_axis | track_ylab != "")) {
                 if(track_axis[k]) {
                     range = track_ylim[k, ]
                     axis_label= as.character(grid.pretty(range))
@@ -324,7 +356,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     lstr_ylab_height = unit(0, "mm")
     for(i in seq_len(nrow)) {
         for(k in seq_len(n_track)) {
-            if(is_on_right(k, i, ncol, nrow, ncol, n_track, track_axis | track_ylab != "")) {
+            if(is_on_right(k, i, ncol[i], nrow, ifelse(compact, ncol[i], ncol), n_track, track_axis | track_ylab != "")) {
                 if(track_axis[k]) {
                     range = track_ylim[k, ]
                     axis_label= as.character(grid.pretty(range))
@@ -366,14 +398,24 @@ gtrellis_layout = function(data = NULL, category = NULL,
         }
     }
 
+    if(length(padding) == 1) {
+        padding = rep(padding, 4)
+    } else if(length(padding) == 2) {
+        padding = rep(padding, 2)
+    } else if(length(padding) != 4) {
+        stop("`padding` can only have length of 1, 2, 4")
+    }
+
     if(newpage) grid.newpage(recording = FALSE)
     layout = grid.layout(nrow = 6, ncol = 6, widths = unit.c(ylabel_left_width, yaxis_left_width, unit(1, "null"), yaxis_right_width, ylabel_right_width, legend_right_width),
                                              heights = unit.c(title_height, xaxis_top_height, unit(1, "null"), xaxis_bottom_height, xlabel_height, legend_bottom_height))
-    pushViewport(viewport(layout = layout, name = qq("global_layout_@{i_plot}")))
+    pushViewport(viewport(layout = layout, name = qq("global_layout_@{i_plot}"),
+        x = padding[2], y = padding[1], width = unit(1, "npc") - padding[2] - padding[4],
+        height = unit(1, "npc") - padding[1] - padding[3], just = c("left", "bottom")))
     
     if(!is.null(title)) {
         pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 3))
-        grid.text(title, gp = gpar(fontface = "bold", fontsize = title_fontsize))
+        grid.text(title, gp = gpar(fontsize = title_fontsize))
         upViewport()
     }
     
@@ -436,49 +478,54 @@ gtrellis_layout = function(data = NULL, category = NULL,
     # initialize each fa
     pushViewport(viewport(layout.pos.col = 3, layout.pos.row = 3, name = qq("title_container_@{i_plot}")))
     
-    if(equal_width) {
-        chr_width = unit(1, "npc")*(1/ncol) - (ncol - 1)*xgap*(1/ncol)
-        chr_x = (1:ncol - 1)*xgap + (1:ncol - 0.5) * chr_width
-        chr_width = rep(chr_width, ncol)
-    } else {
-        ratio = (extended_xlim[, 2] - extended_xlim[, 1])/sum(extended_xlim[, 2] - extended_xlim[, 1])
-        chr_width = unit(1, "npc")*ratio - (ncol - 1)*xgap*ratio
-        chr_x = NULL
-        for(i in seq_along(chr_width)) {
-            if(i == 1) {
-                chr_x[[i]] = chr_width[i]*0.5
-            } else {
-                chr_x[[i]] = (i - 1)*xgap + sum(chr_width[seq_len(i-1)]) + chr_width[i]*0.5
-            }
-        }
-        chr_x = do.call("unit.c", chr_x)
-    }
+    
     chr_height = unit(1, "npc")*(1/nrow) - (nrow - 1)*ygap*(1/nrow)
     chr_y = (nrow:1 - 1)*ygap + (nrow:1 - 0.5) * chr_height
 
     # arrange fas on the plot
     for(i in seq_len(nrow)) {
-        for(j in seq_len(ncol)) {
-            pushViewport(viewport(x = chr_x[j], y = chr_y[i], width = chr_width[j], height = chr_height, name = qq("@{fa[j + (i-1)*ncol]}_container_@{i_plot}")))
-            if(is_visible(i, j) && border) grid.rect()
+        current_ind = p[[i]]
+        if(equal_width) {
+            chr_width = unit(1, "npc")*(1/max(ncol)) - (max(ncol) - 1)*xgap*(1/max(ncol))
+            chr_x = (1:ncol[i] - 1)*xgap + (1:ncol[i] - 0.5) * chr_width
+            chr_width = rep(chr_width, ncol[i])
+        } else {
+            max_sum = max(sapply(p, function(i) sum(extended_xlim[i, 2] - extended_xlim[i, 1])))
+            ratio = (extended_xlim[current_ind, 2] - extended_xlim[current_ind, 1])/ max_sum
+            chr_width = unit(1, "npc")*ratio - (ifelse(compact, ncol[i], ncol) - 1)*xgap*ratio
+            chr_x = NULL
+            for(k in seq_along(chr_width)) {
+                if(k == 1) {
+                    chr_x[[k]] = chr_width[k]*0.5
+                } else {
+                    chr_x[[k]] = (k - 1)*xgap + sum(chr_width[seq_len(k-1)]) + chr_width[k]*0.5
+                }
+            }
+            chr_x = do.call("unit.c", chr_x)
+        }
+        
+        for(j in seq_len(ncol[i])) {
+            pushViewport(viewport(x = chr_x[j], y = chr_y[i], width = chr_width[j], height = chr_height, name = qq("@{fa[current_ind[j]]}_container_@{i_plot}")))
+            if(border) grid.rect()
             upViewport()
         }
     }
     upViewport()
-    
+
     # add tracks
     for(i in seq_len(nrow)) {
-        for(j in seq_len(ncol)) {
-            seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_container_@{i_plot}"))
+        current_ind = p[[i]]
+        for(j in seq_along(current_ind)) {
+            seekViewport(name = qq("@{fa[current_ind[j]]}_container_@{i_plot}"))
             layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
-            pushViewport(viewport(layout = layout, name = qq("@{fa[j + (i-1)*ncol]}_layout_@{i_plot}")))
+            pushViewport(viewport(layout = layout, name = qq("@{fa[current_ind[j]]}_layout_@{i_plot}")))
             for(k in seq_len(n_track)) {
                 
-                pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_@{i_plot}")))
-                pushViewport(plotViewport(margins = c(0, 0, 0, 0), name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_plotvp_@{i_plot}")))
-                pushViewport(dataViewport(xscale = extended_xlim[j, ], yscale = extended_track_ylim[k, ], extension = 0, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_@{i_plot}")))
-                pushViewport(dataViewport(xscale = extended_xlim[j, ], yscale = extended_track_ylim[k, ], extension = 0, clip = TRUE, name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_clip_@{i_plot}")))
-                if(is_visible(i, j) && border && k > 1) grid.lines(c(0, 1), c(1, 1))
+                pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("@{fa[current_ind[j]]}_track_@{k}_@{i_plot}")))
+                pushViewport(plotViewport(margins = c(0, 0, 0, 0), name = qq("@{fa[current_ind[j]]}_track_@{k}_plotvp_@{i_plot}")))
+                pushViewport(dataViewport(xscale = extended_xlim[current_ind[j], ], yscale = extended_track_ylim[k, ], extension = 0, name = qq("@{fa[current_ind[j]]}_track_@{k}_datavp_@{i_plot}")))
+                pushViewport(dataViewport(xscale = extended_xlim[current_ind[j], ], yscale = extended_track_ylim[k, ], extension = 0, clip = TRUE, name = qq("@{fa[current_ind[j]]}_track_@{k}_datavp_clip_@{i_plot}")))
+                if(border && k > 1) grid.lines(c(0, 1), c(1, 1))
                 upViewport(4)
             }
             upViewport()
@@ -496,7 +543,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         for(k in seq_len(n_track)) {
                 
             pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_left_track_@{k}_@{i_plot}")))
-            if(is_on_left(k, i, 1, nrow, ncol, n_track, track_axis | track_ylab != "") && is_visible(i, 1)) {
+            if(is_on_left(k, i, 1, nrow, ncol[i], n_track, track_axis | track_ylab != "")) {
                 if(track_ylab[k] != "") {
                     grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
                 }
@@ -510,27 +557,29 @@ gtrellis_layout = function(data = NULL, category = NULL,
     upViewport()
 
     # y-labels on the right
-    pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 5))
-    for(i in seq_len(nrow)) {
-        pushViewport(viewport(y = chr_y[i], height = chr_height, name = qq("ylab_row_@{i}_right_@{i_plot}")))
-        
-        layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
-        pushViewport(viewport(layout = layout))
-        for(k in seq_len(n_track)) {
-                
-            pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_right_track_@{k}_@{i_plot}")))
-            if(is_on_right(k, i, ncol, nrow, ncol, n_track, track_axis | track_ylab != "") && is_visible(i, ncol)) {
-                if(track_ylab[k] != "") {
-                    grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
+    if(!compact) {
+        pushViewport(viewport(layout.pos.row = 3, layout.pos.col = 5))
+        for(i in seq_len(nrow)) {
+            pushViewport(viewport(y = chr_y[i], height = chr_height, name = qq("ylab_row_@{i}_right_@{i_plot}")))
+            
+            layout = grid.layout(nrow = n_track, ncol = 1, heights = track_height)
+            pushViewport(viewport(layout = layout))
+            for(k in seq_len(n_track)) {
+                    
+                pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_right_track_@{k}_@{i_plot}")))
+                if(is_on_right(k, i, ncol[i], nrow, ncol[i], n_track, track_axis | track_ylab != "") && ncol[i] == max(ncol)) {
+                    if(track_ylab[k] != "") {
+                        grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
+                    }
                 }
+                upViewport()
             }
+            upViewport()
+
             upViewport()
         }
         upViewport()
-
-        upViewport()
     }
-    upViewport()
     
     basepair_unit = function(x) {
         if(max(x) > 1e6) {
@@ -547,168 +596,158 @@ gtrellis_layout = function(data = NULL, category = NULL,
         il = which.max(xlim2[, 2] - xlim2[, 1])[1]
         breaks = grid.pretty(c(xlim2[il, 1], xlim2[il, 2]))
         i = 1
-        for(j in seq_len(ncol)) {
-            if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_1_datavp_@{i_plot}"))
-                xbreaks = seq(grid.pretty(xlim2[j, ])[1], xlim2[j, 2], by = breaks[2]-breaks[1])
-                if(length(xbreaks) == 0) xbreaks = grid.pretty(xlim2[j, 1])[1]
-                #xbreaks = grid.pretty(xlim2[j, ])
-                    
-                if(is_on_top(1, i, j, nrow, ncol, n_track)) {
-                    label = basepair_unit(xbreaks)
+        current_ind = p[[1]]
+        for(j in seq_len(ncol[1])) {
+            seekViewport(name = qq("@{fa[current_ind[j]]}_track_1_datavp_@{i_plot}"))
+            xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+            if(length(xbreaks) == 0) xbreaks = grid.pretty(xlim2[current_ind[j], 1])[1]
+            #xbreaks = grid.pretty(xlim2[j, ])
+                
+            if(is_on_top(1, i, j, nrow, ncol[1], n_track)) {
+                label = basepair_unit(xbreaks)
 
-                    pre_end_pos = -Inf
-                    for(k in seq_along(label)) {
-                        cur_start_pos = unit(xbreaks[k], "native") - 
-                                        convertUnit(grobWidth(textGrob(label[k], gp = gpar(fontsize = axis_label_fontsize)))*0.5, "native")
-                        cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm"))
-                        if(k == 1 || cur_start_pos > pre_end_pos) {
-                            grid.text(label[k], xbreaks[k], unit(1, "npc") + axis_tick_height + axis_label_gap, 
-                                default.units = "native", just = "bottom", gp = gpar(fontsize = axis_label_fontsize))
-                            pre_end_pos = convertUnit(unit(xbreaks[k], "native"), "npc") + 
-                                        convertUnit(grobWidth(textGrob(label[k], gp = gpar(fontsize = axis_label_fontsize)))*0.5, "npc")
-                            pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm"))
-                        }
+                pre_end_pos = -Inf
+                for(k in seq_along(label)) {
+                    cur_start_pos = unit(xbreaks[k], "native") - 
+                                    convertUnit(grobWidth(textGrob(label[k], gp = gpar(fontsize = axis_label_fontsize)))*0.5, "native")
+                    cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm"))
+                    if(k == 1 || cur_start_pos > pre_end_pos) {
+                        grid.text(label[k], xbreaks[k], unit(1, "npc") + axis_tick_height + axis_label_gap, 
+                            default.units = "native", just = "bottom", gp = gpar(fontsize = axis_label_fontsize))
+                        pre_end_pos = convertUnit(unit(xbreaks[k], "native"), "npc") + 
+                                    convertUnit(grobWidth(textGrob(label[k], gp = gpar(fontsize = axis_label_fontsize)))*0.5, "npc")
+                        pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm"))
                     }
-                    grid.segments(xbreaks, unit(1, "npc") + axis_tick_height,
-                              xbreaks, unit(1, "npc"), default.units = "native")
-                } else if(asist_ticks) {
-                    grid.segments(xbreaks, unit(1, "npc") + axis_tick_height,
-                              xbreaks, unit(1, "npc"), default.units = "native")
                 }
+                grid.segments(xbreaks, unit(1, "npc") + axis_tick_height,
+                          xbreaks, unit(1, "npc"), default.units = "native")
+            } else if(asist_ticks) {
+                grid.segments(xbreaks, unit(1, "npc") + axis_tick_height,
+                          xbreaks, unit(1, "npc"), default.units = "native")
             }
         }
-        
+
         # x-axis on bottom
         i = nrow
-        for(j in seq_len(ncol)) {
-            if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{n_track}_datavp_@{i_plot}"))
-                xbreaks = seq(grid.pretty(xlim2[j, ])[1], xlim2[j, 2], by = breaks[2]-breaks[1])
-                #xbreaks = grid.pretty(xlim2[j, ])
-                
-                if(is_on_bottom(n_track, i, j, nrow, ncol, n_track)) {
-                    label = basepair_unit(xbreaks)
+        current_ind = p[[nrow]]
+        for(j in seq_len(ncol[nrow])) {
+            seekViewport(name = qq("@{fa[current_ind[j]]}_track_@{n_track}_datavp_@{i_plot}"))
+            xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+            #xbreaks = grid.pretty(xlim2[j, ])
+            
+            if(is_on_bottom(n_track, i, j, nrow, max(ncol), n_track)) {
+                label = basepair_unit(xbreaks)
 
-                    pre_end_pos = -Inf
-                    for(k in seq_along(label)) {
-                        cur_start_pos = unit(xbreaks[k], "native") - 
-                                        convertUnit(grobWidth(textGrob(label[k], gp = gpar(fontsize = axis_label_fontsize)))*0.5, "native")
-                        cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm"))
-                        if(k == 1 || cur_start_pos > pre_end_pos) {
-                            grid.text(label[k], xbreaks[k], unit(0, "npc") - axis_tick_height - axis_label_gap, 
-                                default.units = "native", just = "top", gp = gpar(fontsize = axis_label_fontsize))
-                            pre_end_pos = convertUnit(unit(xbreaks[k], "native"), "npc") + 
-                                        convertUnit(grobWidth(textGrob(label[k], gp = gpar(fontsize = axis_label_fontsize)))*0.5, "npc")
-                            pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm"))
-                        }
-                    }
-                    grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
-                              xbreaks, unit(0, "npc"), default.units = "native")
-                } else if(asist_ticks) {
-                    grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
-                              xbreaks, unit(0, "npc"), default.units = "native")
-                }
-            } else if(asist_ticks) {
-                i2 = i
-                while(1) {
-                    i2 = i2 - 1
-                    if(is_visible(i2, j) || i2 == 1) {
-                        break
+                pre_end_pos = -Inf
+                for(k in seq_along(label)) {
+                    cur_start_pos = unit(xbreaks[k], "native") - 
+                                    convertUnit(grobWidth(textGrob(label[k], gp = gpar(fontsize = axis_label_fontsize)))*0.5, "native")
+                    cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm"))
+                    if(k == 1 || cur_start_pos > pre_end_pos) {
+                        grid.text(label[k], xbreaks[k], unit(0, "npc") - axis_tick_height - axis_label_gap, 
+                            default.units = "native", just = "top", gp = gpar(fontsize = axis_label_fontsize))
+                        pre_end_pos = convertUnit(unit(xbreaks[k], "native"), "npc") + 
+                                    convertUnit(grobWidth(textGrob(label[k], gp = gpar(fontsize = axis_label_fontsize)))*0.5, "npc")
+                        pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm"))
                     }
                 }
-                seekViewport(name = qq("@{fa[j + (i2-1)*ncol]}_track_@{n_track}_datavp_@{i_plot}"))
-                xbreaks = seq(0, xlim2[j, 2], by = 50000000)
-                xbreaks = xbreaks[xbreaks >= xlim2[j, 1] & xbreaks <= xlim2[j, 2]]
                 grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
-                              xbreaks, unit(0, "npc"), default.units = "native")
-
+                          xbreaks, unit(0, "npc"), default.units = "native")
+            } else if(asist_ticks) {
+                grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
+                          xbreaks, unit(0, "npc"), default.units = "native")
             }
+        }
+        if(asist_ticks && nrow > 1) {
+            for(i in seq(nrow-1, 1)) {
+                current_ind = p[[i]]
+                for(j in seq(ncol[i], 1)) {
+                    if(sum(extended_xlim[current_ind[1:j], 2] - extended_xlim[current_ind[1:j], 1]) - 
+                        sum(extended_xlim[p[[i+1]], 2] - extended_xlim[p[[i+1]], 1]) > 
+                        (extended_xlim[current_ind[j], 2] - extended_xlim[current_ind[j], 1])*0.99) {
+                        xbreaks = seq(grid.pretty(xlim2[current_ind[j], ])[1], xlim2[current_ind[j], 2], by = breaks[2]-breaks[1])
+                        seekViewport(name = qq("@{fa[current_ind[j]]}_track_@{n_track}_datavp_@{i_plot}"))
+                        grid.segments(xbreaks, unit(0, "npc") - axis_tick_height,
+                                      xbreaks, unit(0, "npc"), default.units = "native")
+                    }
+                }
+            }       
         }
     }
 
     # y-axis on left
     j = 1
     for(i in seq_len(nrow)) {
+        current_ind = p[[i]]
         for(k in seq_len(n_track)) {
-            if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_@{i_plot}"))
-                    ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
-                
+            seekViewport(name = qq("@{fa[current_ind[j]]}_track_@{k}_datavp_@{i_plot}"))
+                ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
+            
 
-                if(is_on_left(k, i, j, nrow, ncol, n_track, track_axis | track_ylab != "")) {
-                    if(track_axis[k]) {
-                        label = as.character(ybreaks)
-                        pre_end_pos = -Inf
-                        for(b in seq_along(label)) {
-                            cur_start_pos = unit(ybreaks[b], "native") - grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
-                            cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm", axisFrom = "y"))
-                            if(b == 1 || cur_start_pos > pre_end_pos) {
-                                grid.text(label[b], unit(0, "npc") - axis_tick_height - axis_label_gap, ybreaks[b],
-                                    default.units = "native", just = "right", gp = gpar(fontsize = axis_label_fontsize))
-                                pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
-                                pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
-                            }
+            if(is_on_left(k, i, j, nrow, ncol[i], n_track, track_axis | track_ylab != "")) {
+                if(track_axis[k]) {
+                    label = as.character(ybreaks)
+                    pre_end_pos = -Inf
+                    for(b in seq_along(label)) {
+                        cur_start_pos = unit(ybreaks[b], "native") - grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
+                        cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm", axisFrom = "y"))
+                        if(b == 1 || cur_start_pos > pre_end_pos) {
+                            grid.text(label[b], unit(0, "npc") - axis_tick_height - axis_label_gap, ybreaks[b],
+                                default.units = "native", just = "right", gp = gpar(fontsize = axis_label_fontsize))
+                            pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
+                            pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
                         }
                     }
-                    if(track_axis[k]) {
-                        grid.segments(unit(0, "npc") - axis_tick_height, ybreaks,
-                                      unit(0, "npc"), ybreaks, default.units = "native")
-                    }
-                } else if(asist_ticks) {
-                    if(track_axis[k]) {
-                        grid.segments(unit(0, "npc") - axis_tick_height, ybreaks,
-                                      unit(0, "npc"), ybreaks, default.units = "native")
-                    }
+                }
+                if(track_axis[k]) {
+                    grid.segments(unit(0, "npc") - axis_tick_height, ybreaks,
+                                  unit(0, "npc"), ybreaks, default.units = "native")
+                }
+            } else if(asist_ticks) {
+                if(track_axis[k]) {
+                    grid.segments(unit(0, "npc") - axis_tick_height, ybreaks,
+                                  unit(0, "npc"), ybreaks, default.units = "native")
                 }
             }
         }
     }
-    
-    # y-axis on right
-    j = ncol
-    for(i in seq_len(nrow)) {
-        for(k in seq_len(n_track)) {
-            if(is_visible(i, j)) {
-                seekViewport(name = qq("@{fa[j + (i-1)*ncol]}_track_@{k}_datavp_@{i_plot}"))
-                ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
-                
 
-                if(is_on_right(k, i, j, nrow, ncol, n_track, track_axis | track_ylab != "")) {
-                    if(track_axis[k]) {
-                        label = as.character(ybreaks)
-                        pre_end_pos = -Inf
-                        for(b in seq_along(label)) {
-                            cur_start_pos = unit(ybreaks[b], "native") - grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
-                            cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm", axisFrom = "y"))
-                            if(b == 1 || cur_start_pos > pre_end_pos) {
-                                grid.text(label[b], unit(1, "npc") + axis_tick_height + axis_label_gap, ybreaks[b],
-                                    default.units = "native", just = "left", gp = gpar(fontsize = axis_label_fontsize))
-                                pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
-                                pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
+    # y-axis on right
+    for(i in seq_len(nrow)) {
+        current_ind = p[[i]]
+        j = ncol[i]
+        for(k in seq_len(n_track)) {
+            seekViewport(name = qq("@{fa[current_ind[j]]}_track_@{k}_datavp_@{i_plot}"))
+            ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
+            
+
+            if(is_on_right(k, i, j, nrow, ifelse(compact, ncol[i], max(ncol)), n_track, track_axis | track_ylab != "")) {
+                if(track_axis[k]) {
+                    label = as.character(ybreaks)
+                    pre_end_pos = -Inf
+                    for(b in seq_along(label)) {
+                        cur_start_pos = unit(ybreaks[b], "native") - grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
+                        cur_start_pos = as.numeric(convertUnit(cur_start_pos, "cm", axisFrom = "y"))
+                        if(b == 1 || cur_start_pos > pre_end_pos) {
+                            grid.text(label[b], unit(1, "npc") + axis_tick_height + axis_label_gap, ybreaks[b],
+                                default.units = "native", just = "left", gp = gpar(fontsize = axis_label_fontsize))
+                            pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
+                            pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
+
+                            if(compact) {
+                                if(track_ylab[k] != "") {
+                                    grid.text(track_ylab[k], x = unit(1, "npc") + yaxis_right_width + ylabel_right_width*0.5, 
+                                        just = "right", rot = 90, gp = gpar(fontsize = lab_fontsize))
+                                }
                             }
                         }
                     }
-                    if(track_axis[k]) {
-                        grid.segments(unit(1, "npc") + axis_tick_height, ybreaks,
-                                      unit(1, "npc"), ybreaks, default.units = "native")
-                    }
-                } else if(asist_ticks) {
-                    if(track_axis[k]) {
-                        grid.segments(unit(1, "npc") + axis_tick_height, ybreaks,
-                                      unit(1, "npc"), ybreaks, default.units = "native")
-                    }
+                }
+                if(track_axis[k]) {
+                    grid.segments(unit(1, "npc") + axis_tick_height, ybreaks,
+                                  unit(1, "npc"), ybreaks, default.units = "native")
                 }
             } else if(asist_ticks) {
-                j2 = j
-                while(1) {
-                    j2 = j2 - 1
-                    if(is_visible(i, j2) || j2 == 1) {
-                        break
-                    }
-                }
-                seekViewport(name = qq("@{fa[j2 + (i-1)*ncol]}_track_@{k}_datavp_@{i_plot}"))
-                ybreaks = grid.pretty(.GENOMIC_LAYOUT$ylim[k, ])
                 if(track_axis[k]) {
                     grid.segments(unit(1, "npc") + axis_tick_height, ybreaks,
                                   unit(1, "npc"), ybreaks, default.units = "native")
@@ -724,7 +763,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     .GENOMIC_LAYOUT$current_track = 0
 
     if(add_name_track) {
-        add_track(panel.fun = function(gr){
+        add_track(panel_fun = function(gr){
             nm = get_cell_meta_data("name")
             grid.rect(gp = gpar(fill = name_track_fill, col = "#000000"))
             grid.text(nm, gp = gpar(fontsize = name_fontsize))
@@ -740,288 +779,18 @@ gtrellis_layout = function(data = NULL, category = NULL,
     
 }
 
-# == title
-# Add ideogram track
-#
-# == param
-# -cytoband Path of the cytoband file or a data frame that already contains cytoband data. Pass to `circlize::read.cytoband`.
-# -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
-#          value is specified, the function will download ``cytoBand.txt.gz`` from
-#          UCSC ftp automatically. Pass to `circlize::read.cytoband`.
-# -track which track the ideogram is added in. By default it is the next track in the layout.
-#
-# == detail
-# A track which contains ideograms will be added to the plot. 
-#
-# The function tries to download cytoband file from UCSC ftp. If there is no cytoband file
-# available for the species, there will be an error.
-#
-# == value
-# No value is returned.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-add_ideogram_track = function(cytoband = paste0(system.file(package = "circlize"),
-    "/extdata/cytoBand.txt"), species = NULL, track = get_cell_meta_data("track") + 1) {
-
-	cytoband = read.cytoband(species = species)
-    cytoband_df = cytoband$df
-    add_track(cytoband_df, track = track, clip = TRUE, panel.fun = function(gr) {
-        cytoband_chr = gr
-        grid.rect( cytoband_chr[[2]], unit(0, "npc"),
-                   width = cytoband_chr[[3]] - cytoband_chr[[2]], height = unit(1, "npc"),
-                   default.units = "native", hjust = 0, vjust = 0,
-                   gp = gpar(fill = cytoband.col(cytoband_chr[[5]])) )
-        grid.rect(min(cytoband_chr[[2]]), unit(0, "npc"),
-                  width = max(cytoband_chr[[3]]) - min(cytoband_chr[[2]]), height = unit(1, "npc"),
-                  default.units = "native", hjust = 0, vjust = 0,
-                  gp = gpar(fill = "transparent"))
-    })
-}
-
-# == title
-# Add self-defined graphics track by track
-#
-# == param
-# -gr genomic regions. It should be a data frame in BED format or a ``GRanges`` object.
-# -category subset of categories (e.g. chromosomes) that users want to add graphics. 
-#           The value can be a vector which contains more than one category. By default it
-#           is all available categories.
-# -track which track the graphics will be added to. By default it is the next track. The value should only be a scalar.
-# -clip whether graphics are restricted inside the cell.
-# -panel.fun self-defined panel function to add graphics in each 'cell'. THe argument ``gr`` in ``panel.fun`` 
-#            only contains data for the current category which is a subset of the main ``gr``. The function can also
-#            contains no argument if nothing needs to be passed in.
-#
-# == detail
-# Initialization of the Trellis layout and adding graphics are two independent steps.
-# Once the layout initialization finished, each cell will be an independent plotting region.
-# As same as ``panel.fun`` in `circlize::circlize-package`, the self-defined function ``panel.fun``
-# will be applied on every cell in the specified track (by default it is the 'current' track). 
-#
-# When adding graphics in each cell, `get_cell_meta_data` can return several meta data for the current cell.
-#
-# Since this package is implemented by the ``grid`` graphic system, ``grid``-family functions
-# (such as `grid::grid.points`, `grid::grid.rect`, ...) should be used to add graphics. The usage
-# of ``grid`` functions is quite similar as the traditional graphic functions. 
-# Followings are several examples:
-#
-#     grid.points(x, y)
-#     grid.lines(x, y)
-#     grid.rect(x, y, width, height)
-#
-# Graphical parameters are usually passed by `grid::gpar`:
-#
-#     grid.points(x, y, gp = gpar(col = "red")
-#     grid.rect(x, y, width, height, gp = gpar(fill = "black", col = "red"))
-#
-# ``grid`` system also support a large number of coordinate measurement systems by defining proper `grid::unit` object 
-# which provides high flexibility to place graphics on the plotting regions.
-#
-#     grid.points(x, y, default.units = "npc")
-#     grid.rect(x, y, width = unit(1, "cm"))
-#
-# You can refer to the documentations and vignettes of `grid::grid-package` to get a overview.
-#
-# == value
-# No value is returned.
-#
-# == seealso
-# `get_cell_meta_data`
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-add_track = function(gr = NULL, category = NULL, track = get_cell_meta_data("track") + 1, 
-    clip = TRUE, panel.fun = function(gr) NULL) {
-
-    i_plot = get_plot_index()
-    
-    op = qq.options(READ.ONLY = FALSE)
-    on.exit(qq.options(op))
-    qq.options(code.pattern = "@\\{CODE\\}")
-
-    if(length(track) != 1) {
-        stop("`track` can only be length 1.\n")
-    }
-    if(track > .GENOMIC_LAYOUT$n_track || track < 1) {
-        stop(qq("`track` should be between [1, @{.GENOMIC_LAYOUT$n_track}]\n"))
-    }
-
-    all_fa = .GENOMIC_LAYOUT$fa
-    fa = all_fa[ !grepl("^\\.invisible_", all_fa) ]
-
-    if(is.null(category)) {
-        if(is.null(gr)) {
-            fa = fa
-        } else {
-            if(inherits(gr, "GenomicRanges")) {
-            	if(requireNamespace("GenomicRanges")) {
-                	fa = unique(GenomicRanges::seqnames(gr))
-                } else {
-                	stop("Cannot load `GenomicRanges` package.")
-                }
-            } else {
-                fa = unique(as.character(gr[[1]]))
-            }
-            if(sum(fa %in% all_fa) == 0) {
-                if(sum(grepl("^(\\d+|[xXyY])$", fa)) > 5) {
-                    cat("Guess your category are chromosomes and chromosome names should start with 'chr'.\n")
-                }
-            }
-
-            fa = fa[fa %in% all_fa]
-
-        }
-    } else {
-        fa = category[category %in% all_fa]
-    }
-
-    n_arg = length(as.list(args(panel.fun))) - 1
-    
-    for(chr in fa) {
-        .GENOMIC_LAYOUT$current_fa = chr
-        .GENOMIC_LAYOUT$current_track = track
-        
-        if(clip) {
-        	vp = qq("@{chr}_track_@{track}_datavp_clip_@{i_plot}")
-        } else {
-        	vp = qq("@{chr}_track_@{track}_datavp_@{i_plot}")
-        }
-        if(is.null(gr)) {
-            seekViewport(name = vp)
-            if(n_arg == 0){
-                panel.fun()
-            } else {
-                panel.fun(NULL)
-            }
-        } else {
-            extended_xlim = get_cell_meta_data("extended_xlim")
-            if(inherits(gr, "GenomicRanges")) {
-            	if(requireNamespace("GenomicRanges")) {
-                	sub_gr = GenomicRanges::subset(gr, GenomicRanges::seqnames(gr) == chr)
-                } else {
-                	stop("Cannot load `GenomicRanges` package.")
-                }
-                sub_gr = sub_gr[is_intersected(GenomicRanges::start(sub_gr), GenomicRanges::end(sub_gr), extended_xlim[1], extended_xlim[2])]
-                if(length(sub_gr)) {
-                    seekViewport(name = vp)
-                    if(n_arg == 0) {
-                        panel.fun()
-                    } else {
-                        panel.fun(sub_gr)
-                    }
-                }
-            } else {
-                sub_gr = gr[gr[[1]] == chr, , drop = FALSE]
-                sub_gr = sub_gr[is_intersected(sub_gr[[2]], sub_gr[[3]], extended_xlim[1], extended_xlim[2]), , drop = FALSE]
-                if(nrow(sub_gr)) {
-                    seekViewport(name = vp)
-                    if(n_arg == 0) {
-                        panel.fun()
-                    } else {
-                        panel.fun(sub_gr)
-                    }
-                }
-            }
-            
-        }
-
-        # go to the highest vp
-        seekViewport(name = qq("global_layout_@{i_plot}"))
-        upViewport()
-    }
-}
-
-# == title
-# Get meta data in a cell
-#
-# == param
-# -name name of the supported meta data, see 'details' section.
-# -category which category. By default it is the current category.
-# -track which track. By default it is the current track.
-#
-# == detail
-# Following meta data can be retrieved:
-#
-# -name  name of the category.
-# -xlim  xlim without including padding. Cells in the same column share the same ``xlim``.
-# -ylim  ylim without including padding.
-# -extended_xlim xlim with padding.
-# -extended_ylim ylim with padding.
-# -original_xlim xlim in original data.
-# -original_ylim ylim in original data.
-# -column which column in the layout.
-# -row which row in the layout.
-# -track which track in the layout.
-#
-# The vignette has a graphical explanation of all these meta data.
-#
-# == value
-# Corresponding meta data that user queried.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-get_cell_meta_data = function(name, category, track) {
-
-    if(missing(category)) category = .GENOMIC_LAYOUT$current_fa
-    if(missing(track)) track = .GENOMIC_LAYOUT$current_track
-
-    column = which(.GENOMIC_LAYOUT$fa == category) %% .GENOMIC_LAYOUT$ncol
-    if(column == 0) column = .GENOMIC_LAYOUT$ncol
-    
-    switch(name,
-           name = category,
-           xlim = .GENOMIC_LAYOUT$xlim[column, ],
-           ylim = .GENOMIC_LAYOUT$ylim[track, ],
-           extended_xlim = .GENOMIC_LAYOUT$extended_xlim[column, ],
-           extended_ylim = .GENOMIC_LAYOUT$extended_ylim[track, ],
-           original_xlim = .GENOMIC_LAYOUT$original_xlim[category, ],
-           original_ylim = .GENOMIC_LAYOUT$original_ylim[track, ],
-           column = column,
-           row = ceiling(which(.GENOMIC_LAYOUT$fa == category) / (.GENOMIC_LAYOUT$ncol+0.5)),
-           track = track)
-}
-
-# == title
-# Show index on each cell
-#
-# == detail
-# The function adds name and index of track for each cell. 
-# It is only for demonstration purpose.
-#
-# == value
-# No value is returned.
-#
-# == author
-# Zuguang Gu <z.gu@dkfz.de>
-#
-gtrellis_show_index = function() {
-
-    op = qq.options(READ.ONLY = FALSE)
-    on.exit(qq.options(op))
-    qq.options(code.pattern = "@\\{CODE\\}")
-
-    track = .GENOMIC_LAYOUT$n_track
-    for(i in seq_len(track)) {
-        add_track(track = i, panel.fun = function(gr) {
-            nm = get_cell_meta_data("name")
-            grid.text(qq("@{nm}\ntrack:@{i}"), unit(0.5, "npc"), unit(0.5, "npc"))
+# calculate the common xlim for categories in a same column
+re_calculate_xlim = function(xlim, p, equal_width = FALSE) {
+    ncol = sapply(p, length)
+    xlim_start = numeric(sum(ncol))
+    xlim_end = numeric(sum(ncol))
+    for(i in seq_len(max(ncol))) {
+        ind = sapply(p, function(x) {
+            x[i]
         })
-    }
-}
-
-re_calculate_xlim = function(xlim, nrow, ncol, equal_width = FALSE) {
-    xlim_start = rep(Inf, ncol)
-    xlim_end = rep(-Inf, ncol)
-    for(i in seq_len(nrow)) {
-        for(j in seq_len(ncol)) {
-            xlim_start[j] = ifelse(xlim_start[j] > xlim[j + (i-1)*ncol, 1], xlim[j + (i-1)*ncol, 1], xlim_start[j])
-            xlim_end[j] = ifelse(xlim_end[j] < xlim[j + (i-1)*ncol, 2], xlim[j + (i-1)*ncol, 2], xlim_end[j])
-                
-        }
+        ind = ind[!is.na(ind)]
+        xlim_start[ind] = min(xlim[ind, 1])
+        xlim_end[ind] = max(xlim[ind, 2])
     }
     if(equal_width) {
         xlim_start = rep(min(xlim_start), length(xlim_start))
@@ -1030,19 +799,8 @@ re_calculate_xlim = function(xlim, nrow, ncol, equal_width = FALSE) {
     return(cbind(xlim_start, xlim_end))
 }
 
-# fa is by row
-# xlim[1] in the same column should be the same
-check_xlim = function(xlim, nrow, ncol) {
-    xlim = xlim[!grepl(".invisible", rownames(xlim)), , drop = FALSE]
-    n = nrow(xlim)
-    all(sapply(seq_len(ncol), function(column) {
-        if(column == ncol) column = 0
-        i = seq_len(n)[seq_len(n) %% ncol == column]
-        almost_equal(xlim[i, 1])
-    }))
-}
-
 almost_equal = function(x) {
+    if(length(x) == 1) return(TRUE)
     max(x) - min(x) < 1e-10
 }
 
@@ -1080,18 +838,4 @@ is_on_bottom = function(track, row, column, nrow, ncol, ntrack) {
         return(FALSE)
     }
     return(FALSE)
-}
-
-is_visible = function(row, column) {
-    fa = .GENOMIC_LAYOUT$fa
-    ncol = .GENOMIC_LAYOUT$ncol
-    !grepl("^\\.invisible_", fa[column + (row-1)*ncol])
-}
-
-
-is_intersected = function(start, end, lim_start, lim_end) {
-    l = (lim_start >= start & lim_start <= end) |
-        (lim_end >= start & lim_end <= end) | 
-        (lim_start <= start & lim_end >= end)
-    return(l)
 }
