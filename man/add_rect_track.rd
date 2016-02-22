@@ -29,6 +29,6 @@ require(circlize)
 bed = generateRandomBed(200)
 col_fun = colorRamp2(c(-1, 0, 1), c("green", "black", "red"))
 gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
-add_rect_track(bed, h1 = 0.5, h2 = -0.5, 
+add_rect_track(bed, h1 = bed[[4]], h2 = 0, 
     gp = gpar(col = NA, fill = col_fun(bed[[4]])))
 }

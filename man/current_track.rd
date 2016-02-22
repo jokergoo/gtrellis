@@ -1,10 +1,10 @@
 \name{current_track}
 \alias{current_track}
 \title{
-Current track
+The index of current track
 }
 \description{
-Current track
+The index of current track
 }
 \usage{
 current_track()

@@ -92,9 +92,10 @@ add_segments_track = function(gr, value, gp = gpar(), ...) {
 # == example
 # require(circlize)
 # bed = generateRandomBed(200)
-# gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
+# gtrellis_layout(n_track = 2, track_ylim = rep(range(bed[[4]]), 2), nrow = 3, byrow = FALSE)
 # add_lines_track(bed, bed[[4]])
 # add_lines_track(bed, bed[[4]], area = TRUE, gp = gpar(fill = "grey", col = NA))
+#
 add_lines_track = function(gr, value, area = FALSE, baseline = "bottom", gp = gpar(), ...) {
 	
 	gr = normalizeToGRanges(gr)

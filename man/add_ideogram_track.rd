@@ -7,8 +7,8 @@ Add ideogram track
 Add ideogram track
 }
 \usage{
-add_ideogram_track(cytoband = paste0(system.file(package = "circlize"),
-    "/extdata/cytoBand.txt"), species = NULL, track = current_track() + 1)
+add_ideogram_track(cytoband = system.file("extdata", "cytoBand.txt",
+    package = "circlize"), species = NULL, track = current_track() + 1)
 }
 \arguments{
 

@@ -25,6 +25,7 @@ Zuguang Gu <z.gu@dkfz.de>
 \examples{
 require(circlize)
 bed = generateRandomBed(200)
-gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
-add_lines_track(bed, bed[[4]], area = TRUE, gp = gpar(fill = "grey"))
+gtrellis_layout(n_track = 2, track_ylim = rep(range(bed[[4]]), 2), nrow = 3, byrow = FALSE)
+add_lines_track(bed, bed[[4]])
+add_lines_track(bed, bed[[4]], area = TRUE, gp = gpar(fill = "grey", col = NA))
 }

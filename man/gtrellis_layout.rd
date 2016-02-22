@@ -10,8 +10,8 @@ Initialize genome-level Trellis layout
 gtrellis_layout(data = NULL, category = NULL,
     species = NULL, nrow = NULL, ncol = NULL,
     n_track = 1, track_height = 1, track_ylim = c(0, 1),
-    track_axis = TRUE, track_ylab = "",
-    title = NULL, xlab = "Genomic positions", xaxis = TRUE,
+    track_axis = TRUE, track_ylab = "", title = NULL,
+    xlab = "Genomic positions", xaxis = TRUE, xaxis_bin = NULL,
     equal_width = FALSE, compact = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
     byrow = TRUE, newpage = TRUE, add_name_track = FALSE,
@@ -36,6 +36,7 @@ gtrellis_layout(data = NULL, category = NULL,
   \item{title}{title of the plot.}
   \item{xlab}{labels on x axes.}
   \item{xaxis}{whether show x axes.}
+  \item{xaxis_bin}{bin size for x axes.}
   \item{equal_width}{whether all columns in the layout have the same width. If \code{TRUE}, short categories will be extended according to the longest category.}
   \item{compact}{For the catgories which are put in a same row, will they be put compactly without being aligned by columns.}
   \item{border}{whether show borders.}

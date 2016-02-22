@@ -26,5 +26,5 @@ Zuguang Gu <z.gu@dkfz.de>
 require(circlize)
 bed = generateRandomBed()
 gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
-add_points_track(bed, bed[[4]])
+add_points_track(bed, bed[[4]], gp = gpar(col = ifelse(bed[[4]] > 0, "red", "green")))
 }

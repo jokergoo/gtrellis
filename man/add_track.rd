@@ -57,7 +57,15 @@ You can refer to the documentations and vignettes of \code{\link[grid]{grid-pack
 No value is returned.
 }
 \seealso{
-\code{\link{get_cell_meta_data}}
+There are several functions which draw specific graphics and are implemented by \code{\link{add_track}}:
+
+\itemize{
+  \item \code{\link{add_points_track}}
+  \item \code{\link{add_segments_track}}
+  \item \code{\link{add_lines_track}}
+  \item \code{\link{add_rect_track}}
+  \item \code{\link{add_heatmap_track}}
+}
 }
 \author{
 Zuguang Gu <z.gu@dkfz.de>
