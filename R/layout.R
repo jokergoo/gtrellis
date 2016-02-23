@@ -750,14 +750,13 @@ gtrellis_layout = function(data = NULL, category = NULL,
                                 default.units = "native", just = "left", gp = gpar(fontsize = axis_label_fontsize))
                             pre_end_pos = unit(ybreaks[b], "native") + grobHeight(textGrob(label[b], gp = gpar(fontsize = axis_label_fontsize)))*0.5
                             pre_end_pos = as.numeric(convertUnit(pre_end_pos, "cm", axisFrom = "y"))
-
-                            if(compact) {
-                                if(track_ylab[k] != "") {
-                                    grid.text(track_ylab[k], x = unit(1, "npc") + yaxis_right_width + ylabel_right_width*0.5, 
-                                        just = c("top"), rot = 90, gp = gpar(fontsize = lab_fontsize))
-                                }
-                            }
                         }
+                    }
+                }
+                if(compact) {
+                    if(track_ylab[k] != "") {
+                        grid.text(track_ylab[k], x = unit(1, "npc") + yaxis_right_width + ylabel_right_width*0.5, 
+                            just = c("top"), rot = 90, gp = gpar(fontsize = lab_fontsize))
                     }
                 }
                 if(track_axis[k]) {
