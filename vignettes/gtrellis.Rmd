@@ -10,6 +10,8 @@ Make Genome-level Trellis Graph
 
 **Date**: `r Sys.Date()`
 
+**Package version**: `r installed.packages()["gtrellis", "Version"]`
+
 -------------------------------------------------------------
 
 ```{r, echo = FALSE, message = FALSE}
@@ -478,7 +480,7 @@ for(i in seq_along(letter)) {
 }
 ```
 
-As a real application, following code plots coverage for a tumor sample, its companion normal sample
+Following code plots coverage for a tumor sample, its companion normal sample
 and the ratio of coverage. First prepare the data:
 
 ```{r}
@@ -549,6 +551,58 @@ col_fun = circlize::colorRamp2(seq(0, max(gene_density[[4]]), length = 11),
                                rev(brewer.pal(11, "RdYlBu")))
 add_heatmap_track(gene_density, gene_density[[4]], fill = col_fun)
 ```
+
+Following two plots compares the Manhattan plot with default and enhanced layout.  
+The GWAS data was downloaded from [UCSC Table Browser](https://genome.ucsc.edu/cgi-bin/hgTables). The parameters for downloading were:
+
+```
+clade: Mammal
+genome: Human
+assembly: Feb. 2009(GRCh37/hg19)
+group: Phenotype and Literature
+track: GWAS Catalog
+table: gwasCatalog
+```
+
+```{r}
+load(system.file("extdata", "gwasCatalog.RData", package = "gtrellis"))
+head(gwas)
+v = -log10(gwas[, "p-value"])
+# remove outliers
+q95 = quantile(v, 0.95)
+v[v > q95] = q95
+```
+
+First we make the normal Manhattan plot. From the plot below, basically we can only see there are 
+SNPs that show high significance and on chromosome 6 there exists a cluster where the SNP density
+are very high.
+
+```{r, fig.width = 14, fig.height = 6}
+library(gtrellis)
+gtrellis_layout(category = paste0("chr", 1:22), track_ylim = range(v), track_ylab = "-log10(p)")
+add_points_track(gwas, v, gp = gpar(col = "#00000080"))
+```
+
+Next we adjust the layout, also we add another track which shows the number of SNPs in
+5MB genomic windows. In the new layout, width for each chromosome is much wider than the previous plot,
+thus, it shows very clearly for the distribution pattern of highly significant SNPs
+in the genome (in the previous plot, due to the narrow plotting area for each chromosome, 
+the distribution of SNPs seems random). The additional track gives an exact view that SNP density is dominantly high
+in a cluster on chromosome 6 and there are also many small hotspot mutation areas spreading the genome.
+
+```{r, fig.width = 14, fig.height = 10}
+library(circlize)
+# how many SNPs in every 5MB window
+d = genomicDensity(gwas, 5e6)
+d[, 4] = d[, 4] * 5e6
+
+gtrellis_layout(nrow = 4, byrow = FALSE, n_track = 2, category = paste0("chr", 1:22),
+  add_ideogram_track = TRUE, add_name_track=TRUE, track_ylim = c(range(v), range(d[, 4])),
+  track_height = c(2, 1), track_ylab = c("-log10(p)", "#SNP"))
+add_points_track(gwas, v, gp = gpar(col = "#00000080"))
+add_lines_track(d, d[, 4], area = TRUE, gp = gpar(fill = "#999999", col = NA))
+```
+
 
 Following figure is karyogram view of genomic regions (reproduced from http://www.tengfei.name/ggbio/docs/man/layout_karyogram-method.html). We arrange the layout as 
 one column and create two 'short' tracks, one for genomic regions and one for ideogram.

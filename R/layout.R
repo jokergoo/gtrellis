@@ -54,6 +54,7 @@
 # -legend a `grid::grob` object, or a list of `grid::grob` objects.
 # -legend_side side of the legend
 # -padding padding of the plot. Elements correspond to bottom, left, top, right paddings.
+# -remove_chr_prefix if chromosome names start with 'chr', whether to remove it.
 #
 # == detail
 # Genome-level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes).
@@ -84,7 +85,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"), 
     axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16,
     legend = list(), legend_side = c("right", "bottom"),
-    padding = unit(c(2, 2, 2, 2), "mm")) {
+    padding = unit(c(2, 2, 2, 2), "mm"), remove_chr_prefix = FALSE) {
 
     increase_plot_index()
     i_plot = get_plot_index()
@@ -147,6 +148,11 @@ gtrellis_layout = function(data = NULL, category = NULL,
         xlim = cbind(x1, x2)
         xlim = as.matrix(xlim)
     }
+
+    if(remove_chr_prefix) {
+        fa = gsub("^chr", "", fa, ignore.case = TRUE)
+    }
+
     if(is.null(xlab)) xlab = ""
     if(is.na(xlab)) xlab = ""
 
@@ -507,7 +513,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         
         for(j in seq_len(ncol[i])) {
             pushViewport(viewport(x = chr_x[j], y = chr_y[i], width = chr_width[j], height = chr_height, name = qq("@{fa[current_ind[j]]}_container_@{i_plot}")))
-            if(border) grid.rect()
+            if(border) grid.rect(gp = gpar(col = "black", fill = "transparent"))
             upViewport()
         }
     }
