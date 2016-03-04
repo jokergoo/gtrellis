@@ -19,7 +19,7 @@ gtrellis_layout(data = NULL, category = NULL,
     add_ideogram_track = FALSE, ideogram_track_height = unit(2, "mm"),
     axis_label_fontsize = 6, lab_fontsize = 10, title_fontsize = 16,
     legend = list(), legend_side = c("right", "bottom"),
-    padding = unit(c(2, 2, 2, 2), "mm"))
+    padding = unit(c(2, 2, 2, 2), "mm"), remove_chr_prefix = FALSE)
 }
 \arguments{
 
@@ -57,6 +57,7 @@ gtrellis_layout(data = NULL, category = NULL,
   \item{legend}{a \code{\link[grid]{grob}} object, or a list of \code{\link[grid]{grob}} objects.}
   \item{legend_side}{side of the legend}
   \item{padding}{padding of the plot. Elements correspond to bottom, left, top, right paddings.}
+  \item{remove_chr_prefix}{if chromosome names start with 'chr', whether to remove it.}
 
 }
 \details{
