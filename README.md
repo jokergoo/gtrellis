@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jokergoo/gtrellis.svg)](https://travis-ci.org/jokergoo/gtrellis)  [![codecov](https://img.shields.io/codecov/c/github/jokergoo/gtrellis.svg)](https://codecov.io/github/jokergoo/gtrellis) [![bioc](http://www.bioconductor.org/shields/downloads/gtrellis.svg)](http://bioconductor.org/packages/stats/bioc/gtrelllis.html) ![bioc](http://www.bioconductor.org/shields/years-in-bioc/gtrellis.svg)
+[![Build Status](https://travis-ci.org/jokergoo/gtrellis.svg)](https://travis-ci.org/jokergoo/gtrellis)  [![codecov](https://img.shields.io/codecov/c/github/jokergoo/gtrellis.svg)](https://codecov.io/github/jokergoo/gtrellis) [![bioc](http://www.bioconductor.org/shields/downloads/gtrellis.svg)](http://bioconductor.org/packages/stats/bioc/gtrellis.html) ![bioc](http://www.bioconductor.org/shields/years-in-bioc/gtrellis.svg)
 
 ## Make Genome Level Trellis Graph
 
