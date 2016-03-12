@@ -1,11 +1,10 @@
-[![Build Status](https://travis-ci.org/jokergoo/gtrellis.svg)](https://travis-ci.org/jokergoo/gtrellis)
+[![Build Status](https://travis-ci.org/jokergoo/gtrellis.svg)](https://travis-ci.org/jokergoo/gtrellis)  [![codecov](https://img.shields.io/codecov/c/github/jokergoo/gtrellis.svg)](https://codecov.io/github/jokergoo/gtrellis) [![bioc](http://www.bioconductor.org/shields/downloads/gtrellis.svg)](http://bioconductor.org/packages/stats/bioc/gtrelllis.html) ![bioc](http://www.bioconductor.org/shields/years-in-bioc/gtrellis.svg)
 
-Make Genome Level Trellis Graph
-===============================
+## Make Genome Level Trellis Graph
 
-**gtrellis** aims to arrange chromosomes as Trellis style and support multiple tracks for visualization.
+Genome level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes). For each genomic category, multiple dimensional data which are represented as tracks describe different features from different aspects. This package provides high flexibility to arrange genomic categories and to add self-defined graphics in the plot.
 
-## Install
+### Install
 
 **gtrellis** is available on [Bioconductor](http://bioconductor.org/packages/devel/bioc/html/gtrellis.html), you can install it by:
 
@@ -21,7 +20,7 @@ library(devtools)
 install_github("jokergoo/gtrellis")
 ```
 
-## Usage
+### Usage
 
 Basic usage is:
 
@@ -37,12 +36,48 @@ add_track(bed, panel.fun = function(bed) {
 })
 ```
 
-## Example
+There are several tracks with pre-defined graphics:
+
+- `add_points_track()`
+- `add_lines_track()`
+- `add_rect_track()`
+- `add_segments_track()`
+- `add_heatmap_track()`
+
+### Layout
+
+**gtrellis** supports several types of layouts:
+
+One row layout:
+
+![image](https://cloud.githubusercontent.com/assets/449218/13721936/9a511d74-e835-11e5-83f3-20952687ec7f.png)
+
+Multiple row layout that chromosomes with similar length are arranged in a same column:
+
+![image](https://cloud.githubusercontent.com/assets/449218/13721942/b7ac4e0c-e835-11e5-8937-6c2d87868f65.png)
+
+Chromosomes in a same row are arranged compactly to the left:
+
+![image](https://cloud.githubusercontent.com/assets/449218/13721947/c6a2d55c-e835-11e5-80df-645fae07ff2d.png)
+
+For each chromosome, multiple tracks are supported:
+
+![image](https://cloud.githubusercontent.com/assets/449218/13721950/d6e5eff8-e835-11e5-9932-e868f084a717.png)
+
+### Example
 
 Example figures are:
 
-![default](https://cloud.githubusercontent.com/assets/449218/6318159/bca7edf4-ba81-11e4-9cf7-e6bab5303ca0.png)
+![image](https://cloud.githubusercontent.com/assets/449218/13721966/44ddc940-e836-11e5-8ac0-55e4751a606a.png)
+
 ![1](https://cloud.githubusercontent.com/assets/449218/6318160/c061efc6-ba81-11e4-9b80-ab6ddb7377dc.png)
+
 ![4](https://cloud.githubusercontent.com/assets/449218/5553818/89527e8a-8c30-11e4-84fe-2d8b72ddcc2e.png)
+
 ![5](https://cloud.githubusercontent.com/assets/449218/5553819/911f938c-8c30-11e4-8b49-d2b32291aef5.png)
+
 ![6](https://cloud.githubusercontent.com/assets/449218/5553820/978ab882-8c30-11e4-8259-2b8c91e780ce.png)
+
+### License
+
+GPL (>= 2)
