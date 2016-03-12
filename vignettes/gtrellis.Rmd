@@ -250,7 +250,7 @@ gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
 add_points_track(bed, bed[[4]], gp = gpar(col = ifelse(bed[[4]] > 0, "red", "green")))
 ```
 
-`add_segmetns_track()` adds segments for corresponding regions.
+`add_segments_track()` adds segments for corresponding regions.
 
 ```{r, fig.width = 10, fig.height = 6}
 bed = generateRandomBed(nr = 100)
