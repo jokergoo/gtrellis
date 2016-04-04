@@ -127,7 +127,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
             chr_len = sort(chromInfo$chr.len[l], decreasing = TRUE)
 
             # sometimes there are small scaffold
-            i = which(chr_len[seq_len(length(chr_len)-1)] / chr_len[seq_len(length(chr_len)-1)+1] > 5)[1]
+            i = which(chr_len[seq_len(length(chr_len)-1)] / chr_len[seq_len(length(chr_len)-1)+1] > 50)[1]
             if(length(i)) {
                 chromosome = chromosome[chromosome %in% names(chr_len[chr_len >= chr_len[i]])]
             }
