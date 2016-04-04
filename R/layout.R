@@ -11,8 +11,10 @@
 # -category subset of categories. It is also used for ordering.
 # -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
 #          value is specified, the function will download ``chromInfo.txt.gz`` from
-#          UCSC ftp automatically. Short scaffolds will be removed if they have obvious different length as others. The argument is passed
-#          to `circlize::read.chromInfo`.
+#          UCSC ftp automatically. Short scaffolds will be removed if they have obvious different length as others. 
+#          Non-normal chromosomes will also be detected and removed. Sometimes this detection is not always correct and
+#          if you find chromosomes shown on the plot is not what you expect, set ``category`` manually.
+#          The argument is passed to `circlize::read.chromInfo`.
 # -nrow Number of rows in the layout.
 # -ncol Number of columns in the layout.
 # -n_track Number of tracks in each genomic category.
