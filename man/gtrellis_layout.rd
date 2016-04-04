@@ -25,7 +25,7 @@ gtrellis_layout(data = NULL, category = NULL,
 
   \item{data}{a data frame with at least three columns. The first three columns should be genomic categories (e.g. chromosomes),  start positions and end positions. This data frame is used to extract ranges for each genomic category (minimal and maximal positions are taken as the range in the corresponding category).}
   \item{category}{subset of categories. It is also used for ordering.}
-  \item{species}{Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this value is specified, the function will download \code{chromInfo.txt.gz} from UCSC ftp automatically. Short scaffolds will be removed if they have obvious different length as others. The argument is passed to \code{\link[circlize]{read.chromInfo}}.}
+  \item{species}{Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this value is specified, the function will download \code{chromInfo.txt.gz} from UCSC ftp automatically. Short scaffolds will be removed if they have obvious different length as others.  Non-normal chromosomes will also be detected and removed. Sometimes this detection is not always correct and if you find chromosomes shown on the plot is not what you expect, set \code{category} manually. The argument is passed to \code{\link[circlize]{read.chromInfo}}.}
   \item{nrow}{Number of rows in the layout.}
   \item{ncol}{Number of columns in the layout.}
   \item{n_track}{Number of tracks in each genomic category.}

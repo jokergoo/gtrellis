@@ -11,8 +11,10 @@
 # -category subset of categories. It is also used for ordering.
 # -species Abbreviations of species. e.g. hg19 for human, mm10 for mouse. If this
 #          value is specified, the function will download ``chromInfo.txt.gz`` from
-#          UCSC ftp automatically. Short scaffolds will be removed if they have obvious different length as others. The argument is passed
-#          to `circlize::read.chromInfo`.
+#          UCSC ftp automatically. Short scaffolds will be removed if they have obvious different length as others. 
+#          Non-normal chromosomes will also be detected and removed. Sometimes this detection is not always correct and
+#          if you find chromosomes shown on the plot is not what you expect, set ``category`` manually.
+#          The argument is passed to `circlize::read.chromInfo`.
 # -nrow Number of rows in the layout.
 # -ncol Number of columns in the layout.
 # -n_track Number of tracks in each genomic category.
@@ -116,17 +118,26 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(is.null(data)) {
         if(is.null(category)) {
             chromInfo = read.chromInfo(species = species)
-            chr_len = sort(chromInfo$chr.len, decreasing = TRUE)
+            
+            chr_names = chromInfo$chromosome
+            # to remove something like chr1_xxxxxx
+            l = sapply(chr_names, function(nm) {
+            	any(grepl(paste0("^", nm, "_"), chr_names))
+            }) | !grepl("_", chr_names)
+            chromosome = chromInfo$chromosome[l]
+
+            chr_len = sort(chromInfo$chr.len[l], decreasing = TRUE)
 
             # sometimes there are small scaffold
-            i = which(chr_len[seq_len(length(chr_len)-1)] / chr_len[seq_len(length(chr_len)-1)+1] > 5)[1]
+            i = which(chr_len[seq_len(length(chr_len)-1)] / chr_len[seq_len(length(chr_len)-1)+1] > 50)[1]
             if(length(i)) {
-                chromosome = chromInfo$chromosome[chromInfo$chromosome %in% names(chr_len[chr_len >= chr_len[i]])]
-            } else {
-                chromosome = chromInfo$chromosome
+                chromosome = chromosome[chromosome %in% names(chr_len[chr_len >= chr_len[i]])]
             }
 
             category = chromosome
+            if(length(category) == 0) {
+                stop("Cannot identify any category, maybe you need to specify `category` manually.")
+            }
         }
         chromInfo = read.chromInfo(species = species, chromosome.index = category)
         df = chromInfo$df
