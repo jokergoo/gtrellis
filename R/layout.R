@@ -127,6 +127,9 @@ gtrellis_layout = function(data = NULL, category = NULL,
             }
 
             category = chromosome
+            if(length(category) == 0) {
+                stop("Cannot find any category, maybe you can specify `category` explicitly.")
+            }
         }
         chromInfo = read.chromInfo(species = species, chromosome.index = category)
         df = chromInfo$df
