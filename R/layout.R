@@ -116,19 +116,25 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(is.null(data)) {
         if(is.null(category)) {
             chromInfo = read.chromInfo(species = species)
-            chr_len = sort(chromInfo$chr.len, decreasing = TRUE)
+            
+            chr_names = chromInfo$chromosome
+            # to remove something like chr1_xxxxxx
+            l = sapply(chr_names, function(nm) {
+            	any(grepl(paste0("^", nm, "_"), chr_names))
+            }) | !grepl("_", chr_names)
+            chromosome = chromInfo$chromosome[l]
+
+            chr_len = sort(chromInfo$chr.len[l], decreasing = TRUE)
 
             # sometimes there are small scaffold
             i = which(chr_len[seq_len(length(chr_len)-1)] / chr_len[seq_len(length(chr_len)-1)+1] > 5)[1]
             if(length(i)) {
-                chromosome = chromInfo$chromosome[chromInfo$chromosome %in% names(chr_len[chr_len >= chr_len[i]])]
-            } else {
-                chromosome = chromInfo$chromosome
+                chromosome = chromosome[chromosome %in% names(chr_len[chr_len >= chr_len[i]])]
             }
 
             category = chromosome
             if(length(category) == 0) {
-                stop("Cannot find any category, maybe you can specify `category` explicitly.")
+                stop("Cannot identify any category, maybe you need to specify `category` manually.")
             }
         }
         chromInfo = read.chromInfo(species = species, chromosome.index = category)
