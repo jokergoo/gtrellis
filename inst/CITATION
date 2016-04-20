@@ -1,0 +1,17 @@
+citHeader("The methods within the code package can be cited as:")
+
+citEntry(
+   entry="article",
+   title = "gtrellis: an R/Bioconductor package for making genome-level Trellis graphics",
+   author = personList(as.person("Zuguang Gu"),
+                       as.person("Roland Eils"),
+                       as.person("Matthias Schlesner")),
+   journal = "BMC Bioinformatics",
+   year = 2016,
+   textVersion = "Gu, Z. (2016) gtrellis: an R/Bioconductor package for making genome-level Trellis graphics. BMC Bioinformatics."
+)
+
+citFooter("This free open-source software implements academic
+research by the authors and co-workers. If you use it,
+please support the project by citing the appropriate
+journal articles.")
