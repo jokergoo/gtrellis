@@ -27,6 +27,7 @@ knitr::opts_chunk$set(
 options(markdown.HTML.stylesheet = "custom.css")
 
 options(width = 100)
+library(ComplexHeatmap)
 ```
 
 [Trellis graph](http://www.statmethods.net/advgraphs/trellis.html) 
@@ -703,14 +704,15 @@ add_track(panel_fun = function(gr) {
 ## Legend
 
 Legend can be added by `legend` argument. The value must be a `grob` object. `ColorMapping` class 
-in **ComplexHeatmap** package or `legendGrob()` in grid package can be used to create a legend grob. 
-Or you can consider to use `frameGrob()` and `packGrob()` to build a legend from ground.
+and `Legend()` function in **ComplexHeatmap** package or `legendGrob()` in grid package can be used to create a legend grob. 
+Or you can consider to use `frameGrob()` and `placeGrob()` to build a legend from ground.
 
 ```{r, fig.width = 8, fig.height = 8}
+library(ComplexHeatmap)
 bed = generateRandomBed()
-lgd = legendGrob("label", pch = 16)
+lgd = Legend(at = c("class1", "class2"), title = "Class", type = "points", legend_gp = gpar(col = 2:3))
 gtrellis_layout(nrow = 5, byrow = FALSE, track_ylim = range(bed[[4]]), legend = lgd)
-add_points_track(bed, bed[[4]])
+add_points_track(bed, bed[[4]], gp = gpar(col = sample(2:3, nrow(bed), replace = TRUE)))
 ```
 
 The second example is already shown, but this time we add legend as well:
