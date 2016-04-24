@@ -22,6 +22,7 @@ r_check_args: --no-build-vignettes --no-vignettes
 
 r_github_packages:
   - jimhester/covr
+  - jokergoo/ComplexHeatmap
 after_success:
   - Rscript -e 'library(covr);codecov()'
   
