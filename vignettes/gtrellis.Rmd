@@ -865,6 +865,41 @@ df = data.frame(chr = c("chr1", "chr2"),
 gtrellis_layout(df, ncol = 1)
 ```
 
+## Support raster image
+
+When there are, say, huge number of points, if the plot is saved as a PDF file, the file size
+would be very huge. A [raster image](https://en.wikipedia.org/wiki/Raster_graphics) is a ideal way
+to effectively reduce the file size that the subset of the image is first stored as e.g. a PNG file, 
+then the PNG is imported and filled into the original plot. In `add_track()` (also for the five other
+customized function: `add_points_track()`, `add_segments_track()`, `add_lines_track()`, 
+`add_rect_track()` and `add_heatmap_track()`), there are arguments `use_raster`, `raster_quality`,
+`raster_quality` and `raster_device_param` which controls how to use raster image.
+
+When `use_raster` is set to `TRUE`, for every panel, the graphics are firstly written into e.g. a PNG file, 
+later the PNG is imported and filled to the panel. When `raster_quality` is 1, the size of the PNG is as same
+as the size of the panel, while when `raster_quality` is e.g. 2, the size of the PNG is actually double size
+as the panel (or the area is four times as the panel), when it is scaled and fit into the panel, actually, the size
+will reduce half size, thus, when `raster_quality` is set to larger than 1, all units defined in `panel_fun`
+should be increase by multiplying `raster_quanlity`. See following example (Once you save the image as a PDF or 
+visualize in R interactively, you will see the difference between tracks).
+
+```{r}
+bed = generateRandomBed()
+gtrellis_layout(category = "chr1", n_track = 4, track_ylim = range(bed[[4]]))
+add_track(bed, panel_fun = function(bed) {
+    grid.points((bed[[2]] + bed[[3]]) / 2, bed[[4]], pch = 16, size = unit(2, "mm"))
+})
+add_track(bed, panel_fun = function(bed) {
+    grid.points((bed[[2]] + bed[[3]]) / 2, bed[[4]], pch = 16, size = unit(2, "mm"))
+}, use_raster = TRUE)
+add_track(bed, panel_fun = function(bed) {
+    grid.points((bed[[2]] + bed[[3]]) / 2, bed[[4]], pch = 16, size = unit(2, "mm"))
+}, use_raster = TRUE, raster_quality = 2)
+add_track(bed, panel_fun = function(bed) {
+    grid.points((bed[[2]] + bed[[3]]) / 2, bed[[4]], pch = 16, size = unit(4, "mm"))
+}, use_raster = TRUE, raster_quality = 2)
+```
+
 ## Session info
 
 ```{r}

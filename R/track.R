@@ -215,7 +215,7 @@ add_track = function(gr = NULL, category = NULL, track = current_track() + 1,
                 dev.off()
                 image = getFromNamespace(device_info[3], ns = device_info[2])(temp_image)
                 image = as.raster(image)
-                grid.raster(image, width = unit(1, "npc"), height = unit(1, "npc"))
+                grid.raster(image, width = unit(1, "npc") - unit(2, "bigpts"), height = unit(1, "npc") - unit(2, "bigpts"))
                 file.remove(temp_image)
             }
         }
