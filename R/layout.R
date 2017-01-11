@@ -365,7 +365,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(lstr_ylab == "") {
         ylabel_left_width = unit(2, "mm")
     } else {
-        ylabel_left_width = lstr_ylab_height + grobHeight("foo", gp = gpar(fontsize = lab_fontsize)))
+        ylabel_left_width = lstr_ylab_height + grobHeight("foo", gp = gpar(fontsize = lab_fontsize))
     }
 
     lstr = ""
@@ -396,7 +396,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(lstr_ylab == "") {
         ylabel_right_width = unit(2, "mm")
     } else {
-        ylabel_right_width = lstr_ylab_height + grobHeight("foo", gp = gpar(fontsize = lab_fontsize)))
+        ylabel_right_width = lstr_ylab_height + grobHeight("foo", gp = gpar(fontsize = lab_fontsize))
     }
 
     if(title == "") {

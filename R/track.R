@@ -53,6 +53,10 @@ add_ideogram_track = function(cytoband = system.file("extdata", "cytoBand.txt",
 #            only contains data for the current category which is a subset of the main ``gr``. The function can also
 #            contains no argument if nothing needs to be passed in.
 # -panel.fun deprecated
+# -use_raster whether render the heatmap body as a raster image. It helps to reduce file size when the matrix is huge.
+# -raster_device graphic device which is used to generate the raster image
+# -raster_quality a value set to larger than 1 will improve the quality of the raster image.
+# -raster_device_param a list of further parameters for the selected graphic device
 #
 # == detail
 # Initialization of the Trellis layout and adding graphics are two independent steps.
@@ -100,7 +104,11 @@ add_ideogram_track = function(cytoband = system.file("extdata", "cytoBand.txt",
 # Zuguang Gu <z.gu@dkfz.de>
 #
 add_track = function(gr = NULL, category = NULL, track = current_track() + 1, 
-    clip = TRUE, panel_fun = function(gr) NULL, panel.fun = NULL) {
+    clip = TRUE, panel_fun = function(gr) NULL, panel.fun = NULL,
+    use_raster = FALSE, 
+    raster_device = c("png", "jpeg", "tiff", "CairoPNG", "CairoJPEG", "CairoTIFF"),
+    raster_quality = 1,
+    raster_device_param = list()) {
 
     if(!is.null(panel.fun)) {
         warning("`panel.fun` is deprecated, please use `panel_fun`.")
@@ -149,6 +157,8 @@ add_track = function(gr = NULL, category = NULL, track = current_track() + 1,
     }
 
     n_arg = length(as.list(args(panel_fun))) - 1
+
+    raster_device = match.arg(raster_device)[1]
     
     for(chr in fa) {
         .GENOMIC_LAYOUT$current_fa = chr
@@ -159,13 +169,58 @@ add_track = function(gr = NULL, category = NULL, track = current_track() + 1,
         } else {
         	vp = qq("@{chr}_track_@{track}_datavp_@{i_plot}")
         }
-        if(is.null(gr)) {
+
+        add_panel_fun = function(gr) {
             seekViewport(name = vp)
+
+            data_xscale = get_cell_meta_data("extended_xlim")
+            data_yscale = get_cell_meta_data("extended_ylim")
+
+            if(use_raster) {
+                # write the image into a temporary file and read it back
+                device_info = switch(raster_device,
+                    png = c("grDevices", "png", "readPNG"),
+                    jpeg = c("grDevices", "jpeg", "readJPEG"),
+                    tiff = c("grDevices", "tiff", "readTIFF"),
+                    CairoPNG = c("Cairo", "png", "readPNG"),
+                    CairoJPEG = c("Cairo", "jpeg", "readJPEG"),
+                    CairoTIFF = c("Cairo", "tiff", "readTIFF")
+                )
+                if(!requireNamespace(device_info[1])) {
+                    stop(paste0("Need ", device_info[1], " package to output image."))
+                }
+                if(!requireNamespace(device_info[2])) {
+                    stop(paste0("Need ", device_info[2], " package to read image."))
+                }
+                # can we get the size of the heatmap body?
+                panel_width = convertWidth(unit(1, "npc"), "bigpts", valueOnly = TRUE)
+                panel_height = convertHeight(unit(1, "npc"), "bigpts", valueOnly = TRUE)
+                if(panel_width <= 0 || panel_height <= 0) {
+                    stop("The width or height of the raster image is zero, maybe you forget to turn off the previous graphic device or it was corrupted. Run `dev.off()` to close it.")
+                }
+                temp_image = tempfile(pattern = paste0(".gtrellis_panel_", vp), tmpdir = ".", fileext = paste0(".", device_info[2]))
+                #getFromNamespace(raster_device, ns = device_info[1])(temp_image, width = heatmap_width*raster_quality, height = heatmap_height*raster_quality)
+                device_fun = getFromNamespace(raster_device, ns = device_info[1])
+                do.call("device_fun", c(list(filename = temp_image, width = panel_width*raster_quality, height = panel_height*raster_quality), raster_device_param))
+                pushViewport(viewport(xscale = data_xscale, yscale = data_yscale))
+            }
+
             if(n_arg == 0){
                 panel_fun()
             } else {
-                panel_fun(NULL)
+                panel_fun(gr)
             }
+
+            if(use_raster) {
+                dev.off()
+                image = getFromNamespace(device_info[3], ns = device_info[2])(temp_image)
+                image = as.raster(image)
+                grid.raster(image, width = unit(1, "npc"), height = unit(1, "npc"))
+                file.remove(temp_image)
+            }
+        }
+        if(is.null(gr)) {
+            add_panel_fun(gr)
         } else {
             extended_xlim = get_cell_meta_data("extended_xlim")
             if(inherits(gr, "GenomicRanges")) {
@@ -176,23 +231,13 @@ add_track = function(gr = NULL, category = NULL, track = current_track() + 1,
                 }
                 sub_gr = sub_gr[is_intersected(GenomicRanges::start(sub_gr), GenomicRanges::end(sub_gr), extended_xlim[1], extended_xlim[2])]
                 if(length(sub_gr)) {
-                    seekViewport(name = vp)
-                    if(n_arg == 0) {
-                        panel_fun()
-                    } else {
-                        panel_fun(sub_gr)
-                    }
+                    add_panel_fun(sub_gr)
                 }
             } else {
                 sub_gr = gr[gr[[1]] == chr, , drop = FALSE]
                 sub_gr = sub_gr[is_intersected(sub_gr[[2]], sub_gr[[3]], extended_xlim[1], extended_xlim[2]), , drop = FALSE]
                 if(nrow(sub_gr)) {
-                    seekViewport(name = vp)
-                    if(n_arg == 0) {
-                        panel_fun()
-                    } else {
-                        panel_fun(sub_gr)
-                    }
+                    add_panel_fun(sub_gr)
                 }
             }
             
