@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/jokergoo/gtrellis.svg)](https://travis-ci.org/jokergoo/gtrellis)  [![codecov](https://img.shields.io/codecov/c/github/jokergoo/gtrellis.svg)](https://codecov.io/github/jokergoo/gtrellis) [![bioc](http://www.bioconductor.org/shields/downloads/gtrellis.svg)](http://bioconductor.org/packages/stats/bioc/gtrellis.html) ![bioc](http://www.bioconductor.org/shields/years-in-bioc/gtrellis.svg)
+[![Build Status](https://travis-ci.org/jokergoo/gtrellis.svg)](https://travis-ci.org/jokergoo/gtrellis)  [![codecov](https://img.shields.io/codecov/c/github/jokergoo/gtrellis.svg)](https://codecov.io/github/jokergoo/gtrellis) [![bioc](http://www.bioconductor.org/shields/downloads/gtrellis.svg)](http://bioconductor.org/packages/stats/bioc/gtrellis.html) [![bioc](http://www.bioconductor.org/shields/years-in-bioc/gtrellis.svg)](http://bioconductor.org/packages/release/bioc/html/gtrellis.html)
 
 ## Make Genome Level Trellis Graph
 
@@ -10,7 +10,7 @@ Zuguang Gu, Roland Eils and Matthias Schlesner. [gtrellis: an R/Bioconductor pac
 
 ### Install
 
-**gtrellis** is available on [Bioconductor](http://bioconductor.org/packages/devel/bioc/html/gtrellis.html), you can install it by:
+**gtrellis** is available on [Bioconductor](http://bioconductor.org/packages/release/bioc/html/gtrellis.html), you can install it by:
 
 ```{r}
 source("http://bioconductor.org/biocLite.R")
@@ -81,6 +81,10 @@ Example figures are:
 ![5](https://cloud.githubusercontent.com/assets/449218/5553819/911f938c-8c30-11e4-8b49-d2b32291aef5.png)
 
 ![6](https://cloud.githubusercontent.com/assets/449218/5553820/978ab882-8c30-11e4-8259-2b8c91e780ce.png)
+
+![image](https://cloud.githubusercontent.com/assets/449218/21886589/c6852188-d8bc-11e6-9d1d-8ef16eb30b0e.png)
+
+![image](https://cloud.githubusercontent.com/assets/449218/21886590/cd5f0758-d8bc-11e6-8701-0b357c8bc8fa.png)
 
 ### License
 
