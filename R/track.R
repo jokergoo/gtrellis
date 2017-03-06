@@ -53,9 +53,11 @@ add_ideogram_track = function(cytoband = system.file("extdata", "cytoBand.txt",
 #            only contains data for the current category which is a subset of the main ``gr``. The function can also
 #            contains no argument if nothing needs to be passed in.
 # -panel.fun deprecated
-# -use_raster whether render the heatmap body as a raster image. It helps to reduce file size when the matrix is huge.
+# -use_raster whether render the each panel as a raster image. It helps to reduce file size when the file size is huge.
 # -raster_device graphic device which is used to generate the raster image
-# -raster_quality a value set to larger than 1 will improve the quality of the raster image.
+# -raster_quality a value set to larger than 1 will improve the quality of the raster image. A temporary image with
+#       ``raster_quality``*``raster_quality`` times the original size of panel is generated first and then fit into
+#        the panel by `grid::grid.raster`.
 # -raster_device_param a list of further parameters for the selected graphic device
 #
 # == detail
