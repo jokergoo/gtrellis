@@ -333,7 +333,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(xlab == "") {
         xlabel_height = unit(2, "mm")
     } else {
-        xlabel_height = grobHeight(textGrob(xlab, gp = gpar(lab_fontsize)))*2
+        xlabel_height = grobHeight(textGrob(xlab, gp = gpar(lab_fontsize))) + grobHeight(textGrob("foo", gp = gpar(lab_fontsize)))
     }
 
     # which tracks will have anno on left
@@ -365,7 +365,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(lstr_ylab == "") {
         ylabel_left_width = unit(2, "mm")
     } else {
-        ylabel_left_width = lstr_ylab_height*2
+        ylabel_left_width = lstr_ylab_height + grobHeight(textGrob("foo", gp = gpar(fontsize = lab_fontsize)))
     }
 
     lstr = ""
@@ -396,13 +396,13 @@ gtrellis_layout = function(data = NULL, category = NULL,
     if(lstr_ylab == "") {
         ylabel_right_width = unit(2, "mm")
     } else {
-        ylabel_right_width = lstr_ylab_height*2
+        ylabel_right_width = lstr_ylab_height + grobHeight(textGrob("foo", gp = gpar(fontsize = lab_fontsize)))
     }
 
     if(title == "") {
         title_height = unit(2, "mm")
     } else {
-        title_height = grobHeight(textGrob(title, gp = gpar(fontsize = title_fontsize)))*1.5
+        title_height = grobHeight(textGrob(title, gp = gpar(fontsize = title_fontsize))) + 0.5*grobHeight(textGrob("foo", gp = gpar(fontsize = title_fontsize)))
     }
 
     if(inherits(legend, "grob")) legend = list(legend)
