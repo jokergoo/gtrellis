@@ -20,16 +20,16 @@ get_cell_meta_data(name, category, track)
 Following meta data can be retrieved:
 
 \describe{
-  \item{name}{name of the category.}
-  \item{xlim}{xlim without including padding. Cells in the same column share the same \code{xlim}.}
-  \item{ylim}{ylim without including padding.}
-  \item{extended_xlim}{xlim with padding.}
-  \item{extended_ylim}{ylim with padding.}
-  \item{original_xlim}{xlim in original data.}
-  \item{original_ylim}{ylim in original data.}
-  \item{column}{which column in the layout.}
-  \item{row}{which row in the layout.}
-  \item{track}{which track in the layout.}
+  \item{\code{name}}{name of the category.}
+  \item{\code{xlim}}{xlim without including padding. Cells in the same column share the same \code{xlim}.}
+  \item{\code{ylim}}{ylim without including padding.}
+  \item{\code{extended_xlim}}{xlim with padding.}
+  \item{\code{extended_ylim}}{ylim with padding.}
+  \item{\code{original_xlim}}{xlim in original data.}
+  \item{\code{original_ylim}}{ylim in original data.}
+  \item{\code{column}}{which column in the layout.}
+  \item{\code{row}}{which row in the layout.}
+  \item{\code{track}}{which track in the layout.}
 }
 
 The vignette has a graphical explanation of all these meta data.

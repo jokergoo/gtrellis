@@ -262,16 +262,16 @@ add_track = function(gr = NULL, category = NULL, track = current_track() + 1,
 # == detail
 # Following meta data can be retrieved:
 #
-# -name  name of the category.
-# -xlim  xlim without including padding. Cells in the same column share the same ``xlim``.
-# -ylim  ylim without including padding.
-# -extended_xlim xlim with padding.
-# -extended_ylim ylim with padding.
-# -original_xlim xlim in original data.
-# -original_ylim ylim in original data.
-# -column which column in the layout.
-# -row which row in the layout.
-# -track which track in the layout.
+# -``name``  name of the category.
+# -``xlim``  xlim without including padding. Cells in the same column share the same ``xlim``.
+# -``ylim``  ylim without including padding.
+# -``extended_xlim`` xlim with padding.
+# -``extended_ylim`` ylim with padding.
+# -``original_xlim`` xlim in original data.
+# -``original_ylim`` ylim in original data.
+# -``column`` which column in the layout.
+# -``row`` which row in the layout.
+# -``track`` which track in the layout.
 #
 # The vignette has a graphical explanation of all these meta data.
 #
