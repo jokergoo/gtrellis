@@ -1,3 +1,8 @@
+Changes in version 1.9.1
+------------------------
+
+- Functions in GenomicRanges are imported
+
 Changes in version 1.7.1
 ------------------------
 

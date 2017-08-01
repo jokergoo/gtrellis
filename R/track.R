@@ -226,12 +226,8 @@ add_track = function(gr = NULL, category = NULL, track = current_track() + 1,
         } else {
             extended_xlim = get_cell_meta_data("extended_xlim")
             if(inherits(gr, "GenomicRanges")) {
-            	if(requireNamespace("GenomicRanges")) {
-                	sub_gr = GenomicRanges::subset(gr, GenomicRanges::seqnames(gr) == chr)
-                } else {
-                	stop("Cannot load `GenomicRanges` package.")
-                }
-                sub_gr = sub_gr[is_intersected(GenomicRanges::start(sub_gr), GenomicRanges::end(sub_gr), extended_xlim[1], extended_xlim[2])]
+            	sub_gr = gr[seqnames(gr) == chr]
+                sub_gr = sub_gr[is_intersected(start(sub_gr), end(sub_gr), extended_xlim[1], extended_xlim[2])]
                 if(length(sub_gr)) {
                     add_panel_fun(sub_gr)
                 }
