@@ -865,6 +865,11 @@ df = data.frame(chr = c("chr1", "chr2"),
 gtrellis_layout(df, ncol = 1)
 ```
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> bioc/master
 ## Support raster image
 
 When there are, say, huge number of points, if the plot is saved as a PDF file, the file size

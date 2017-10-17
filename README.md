@@ -4,7 +4,10 @@
 [![bioc](http://mcube.nju.edu.cn/cgi-bin/zuguanggu/bioc_download.pl?package=gtrellis)](https://bioconductor.org/packages/stats/bioc/gtrellis/) 
 [![bioc](http://www.bioconductor.org/shields/years-in-bioc/gtrellis.svg)](http://bioconductor.org/packages/devel/bioc/html/gtrellis.html)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> bioc/master
 ## Make Genome Level Trellis Graph
 
 Genome level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes). For each genomic category, multiple dimensional data which are represented as tracks describe different features from different aspects. This package provides high flexibility to arrange genomic categories and to add self-defined graphics in the plot.
@@ -87,6 +90,10 @@ Example figures are:
 
 ![6](https://cloud.githubusercontent.com/assets/449218/5553820/978ab882-8c30-11e4-8259-2b8c91e780ce.png)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> bioc/master
 ![image](https://cloud.githubusercontent.com/assets/449218/21886589/c6852188-d8bc-11e6-9d1d-8ef16eb30b0e.png)
 
 ![image](https://cloud.githubusercontent.com/assets/449218/21886590/cd5f0758-d8bc-11e6-8701-0b357c8bc8fa.png)
