@@ -21,4 +21,5 @@ importFrom("circlize", read.chromInfo)
 importFrom("circlize", read.cytoband)
 importFrom("grDevices", "as.raster", "dev.off")
 importFrom("utils", "getFromNamespace")
+importFrom("utils", "packageDescription")
 
