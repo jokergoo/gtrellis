@@ -179,7 +179,7 @@ add_rect_track = function(gr, h1, h2, gp = gpar(), ...) {
 	add_track(gr, panel_fun = function(gr) {
 		grid.rect((start(gr) + end(gr))*0.5, (gr$..h1.. + gr$..h2..)*0.5,
 			width = end(gr) - start(gr), 
-			height = abs(convertHeight(gr$..h1.. - gr$..h2.., "mm")),
+			height = gr$..h1.. - gr$..h2..,
 			default.units = "native", gp = gpar(col = gr$..col.., fill = gr$..fill.., lwd = gr$..lwd.., lty = gr$..lty..,
 				lineend = lineend, linejoin = linejoin))
 	}, ...)

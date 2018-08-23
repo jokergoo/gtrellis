@@ -1,3 +1,8 @@
+Changes in version 1.13.2
+--------------------------
+
+- add_rect_track(): height is not converted to mm anymore
+
 Changes in version 1.9.1
 ------------------------
 
