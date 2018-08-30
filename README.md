@@ -17,8 +17,9 @@ Zuguang Gu, Roland Eils and Matthias Schlesner. [gtrellis: an R/Bioconductor pac
 **gtrellis** is available on [Bioconductor](http://bioconductor.org/packages/release/bioc/html/gtrellis.html), you can install it by:
 
 ```{r}
-source("http://bioconductor.org/biocLite.R")
-biocLite("gtrellis") 
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("gtrellis") 
 ```
 
 If you want the latest version, install it directly from GitHub:
