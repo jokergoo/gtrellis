@@ -1,14 +1,14 @@
 Package: gtrellis
 Type: Package
 Title: Genome Level Trellis Layout
-Version: 1.13.2
-Date: 2017-8-1
+Version: 1.15.1
+Date: 2018-11-11
 Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
 Depends: R (>= 3.1.2), grid, IRanges, GenomicRanges
 Imports: circlize (>= 0.3.3), GetoptLong, grDevices, utils
-Suggests: testthat (>= 1.0.0), knitr, RColorBrewer, markdown, ComplexHeatmap (>= 1.9.7),
-          Cairo, png, jpeg, tiff
+Suggests: testthat (>= 1.0.0), knitr, RColorBrewer, markdown, 
+	ComplexHeatmap (>= 1.99.0), Cairo, png, jpeg, tiff
 VignetteBuilder: knitr
 Description: Genome level Trellis graph visualizes genomic data conditioned by 
     genomic categories (e.g. chromosomes). For each genomic category, multiple 

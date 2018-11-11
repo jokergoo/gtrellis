@@ -53,7 +53,7 @@
 # -axis_label_fontsize font size for axis labels.
 # -lab_fontsize font size for x-labels and y-labels.
 # -title_fontsize font size for title.
-# -legend a `grid::grob` object, or a list of `grid::grob` objects.
+# -legend a `grid::grob` or `ComplexHeatmap::Legends-class` object, or a list of them.
 # -legend_side side of the legend
 # -padding padding of the plot. Elements correspond to bottom, left, top, right paddings.
 # -remove_chr_prefix if chromosome names start with 'chr', whether to remove it.
@@ -405,6 +405,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
         title_height = grobHeight(textGrob(title, gp = gpar(fontsize = title_fontsize))) + 0.5*grobHeight(textGrob("foo", gp = gpar(fontsize = title_fontsize)))
     }
 
+    if(inherits(legend, "Legends")) legend = legend@grob
     if(inherits(legend, "grob")) legend = list(legend)
     legend_right_width = unit(0, "mm")
     legend_bottom_height = unit(0, "mm")
