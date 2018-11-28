@@ -11,7 +11,7 @@ add_heatmap_track(gr, mat, fill, border = NA, track = current_track() + 1, ...)
 }
 \arguments{
 
-  \item{gr}{genomic regions, it can be a data frame or a \code{\link[GenomicRanges]{GRanges}} object}
+  \item{gr}{genomic regions, it can be a data frame or a \code{\link[GenomicRanges:GRanges-class]{GRanges}} object}
   \item{mat}{matrix in which rows correspond to intervals in \code{gr}}
   \item{fill}{a color mapping function which maps values to colors. Users can consider \code{\link[circlize]{colorRamp2}} to generate a color mapping function.}
   \item{border}{border of the grids in heatmap}

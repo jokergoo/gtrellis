@@ -11,7 +11,7 @@ add_segments_track(gr, value, gp = gpar(), ...)
 }
 \arguments{
 
-  \item{gr}{genomic regions, it can be a data frame or a \code{\link[GenomicRanges]{GRanges}} object}
+  \item{gr}{genomic regions, it can be a data frame or a \code{\link[GenomicRanges:GRanges-class]{GRanges}} object}
   \item{value}{numeric values associated with \code{gr}}
   \item{gp}{graphic settings, should be specified by \code{\link[grid]{gpar}}.}
   \item{...}{other arguments passed to \code{\link{add_track}}}

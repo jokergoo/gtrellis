@@ -41,7 +41,7 @@ gtrellis_layout(data = NULL, category = NULL,
   \item{compact}{For the catgories which are put in a same row, will they be put compactly without being aligned by columns.}
   \item{border}{whether show borders.}
   \item{asist_ticks}{if axes ticks are added on one side in rows or columns, whether add ticks on the other sides.}
-  \item{xpadding}{padding on x axes in each cell. Numeric value means relative ratio corresponding to the cell width.  Use \code{\link[base]{I}} to set it as absolute value which is measured in the data viewport (the coordinate system corresponding to the real data). Currently you cannot set it as a \code{\link[grid]{unit}} object.}
+  \item{xpadding}{padding on x axes in each cell. Numeric value means relative ratio corresponding to the cell width.  Use \code{\link[base:AsIs]{I}} to set it as absolute value which is measured in the data viewport (the coordinate system corresponding to the real data). Currently you cannot set it as a \code{\link[grid]{unit}} object.}
   \item{ypadding}{padding on y axes in each cell. Only numeric value is allowed currently.}
   \item{gap}{0 or a \code{\link[grid]{unit}} object. If it is length two, the first element corresponds to the gaps between rows and the second corresponds to the gaps between columns.}
   \item{byrow}{arrange categories (e.g. chromosomes) by rows or by columns in the layout.}
@@ -54,7 +54,7 @@ gtrellis_layout(data = NULL, category = NULL,
   \item{axis_label_fontsize}{font size for axis labels.}
   \item{lab_fontsize}{font size for x-labels and y-labels.}
   \item{title_fontsize}{font size for title.}
-  \item{legend}{a \code{\link[grid]{grob}} object, or a list of \code{\link[grid]{grob}} objects.}
+  \item{legend}{a \code{\link[grid:grid.grob]{grob}} or \code{\link[ComplexHeatmap]{Legends-class}} object, or a list of them.}
   \item{legend_side}{side of the legend}
   \item{padding}{padding of the plot. Elements correspond to bottom, left, top, right paddings.}
   \item{remove_chr_prefix}{if chromosome names start with 'chr', whether to remove it.}

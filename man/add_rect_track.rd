@@ -11,7 +11,7 @@ add_rect_track(gr, h1, h2, gp = gpar(), ...)
 }
 \arguments{
 
-  \item{gr}{genomic regions, it can be a data frame or a \code{\link[GenomicRanges]{GRanges}} object}
+  \item{gr}{genomic regions, it can be a data frame or a \code{\link[GenomicRanges:GRanges-class]{GRanges}} object}
   \item{h1}{top/bottom positions for rectangles}
   \item{h2}{top/bottom positions for rectangles}
   \item{gp}{graphic settings, should be specified by \code{\link[grid]{gpar}}.}

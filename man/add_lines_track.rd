@@ -11,7 +11,7 @@ add_lines_track(gr, value, area = FALSE, baseline = "bottom", gp = gpar(), ...)
 }
 \arguments{
 
-  \item{gr}{genomic regions, it can be a data frame or a \code{\link[GenomicRanges]{GRanges}} object}
+  \item{gr}{genomic regions, it can be a data frame or a \code{\link[GenomicRanges:GRanges-class]{GRanges}} object}
   \item{value}{numeric values associated with \code{gr}}
   \item{area}{whether draw polygon for the area under the line}
   \item{baseline}{baseline for drawing polygon}
