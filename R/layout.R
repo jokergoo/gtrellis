@@ -407,6 +407,13 @@ gtrellis_layout = function(data = NULL, category = NULL,
 
     if(inherits(legend, "Legends")) legend = legend@grob
     if(inherits(legend, "grob")) legend = list(legend)
+    legend = lapply(legend, function(x) {
+        if(inherits(x, "Legends")) {
+            x = x@grob
+        } else {
+            x
+        }
+    })
     legend_right_width = unit(0, "mm")
     legend_bottom_height = unit(0, "mm")
     if(length(legend) > 0) {
