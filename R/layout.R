@@ -24,6 +24,7 @@
 #             into the two-column matrix by rows.
 # -track_axis whether show y axes for tracks. The value is logical that can be either length one or number of tracks.
 # -track_ylab labels for tracks on y axes. The value can be either length one or number of tracks.
+# -ylab_rot value can only be 0 or 90.
 # -title title of the plot.
 # -xlab labels on x axes.
 # -xaxis whether show x axes.
@@ -78,7 +79,7 @@
 gtrellis_layout = function(data = NULL, category = NULL, 
     species = NULL, nrow = NULL, ncol = NULL,
     n_track = 1, track_height = 1, track_ylim = c(0, 1),
-    track_axis = TRUE, track_ylab = "", title = NULL, 
+    track_axis = TRUE, track_ylab = "", ylab_rot = 90, title = NULL, 
     xlab = "Genomic positions", xaxis = TRUE, xaxis_bin = NULL,
     equal_width = FALSE, compact = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
@@ -352,7 +353,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
                     }
                     if(any(axis_label != "")) lstr = "a"
                 }
-                lstr_ylab_height = max(unit.c(lstr_ylab_height, grobHeight(textGrob(track_ylab[k], gp = gpar(fontsize = lab_fontsize)))))
+                lstr_ylab_height = max(unit.c(lstr_ylab_height, grobWidth(textGrob(track_ylab[k], rot = ylab_rot, gp = gpar(fontsize = lab_fontsize)))))
                 if(track_ylab[k] != "") lstr_ylab = "a"
             }
         }
@@ -383,7 +384,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
                     }
                     if(any(axis_label != "")) lstr = "a"
                 }
-                lstr_ylab_height = max(unit.c(lstr_ylab_height, grobHeight(textGrob(track_ylab[k], gp = gpar(fontsize = lab_fontsize)))))
+                lstr_ylab_height = max(unit.c(lstr_ylab_height, grobWidth(textGrob(track_ylab[k], rot = ylab_rot, gp = gpar(fontsize = lab_fontsize)))))
                 if(track_ylab[k] != "") lstr_ylab = "a"
             }
         }
@@ -572,7 +573,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
             pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_left_track_@{k}_@{i_plot}")))
             if(is_on_left(k, i, 1, nrow, ncol[i], n_track, track_axis | track_ylab != "")) {
                 if(track_ylab[k] != "") {
-                    grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
+                    grid.text(track_ylab[k], rot = ylab_rot, gp = gpar(fontsize = lab_fontsize), just = ifelse(ylab_rot == 90, "bottom", "right"))
                 }
             }
             upViewport()
@@ -596,7 +597,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
                 pushViewport(viewport(layout.pos.col = 1, layout.pos.row = k, name = qq("ylab_row_@{i}_right_track_@{k}_@{i_plot}")))
                 if(is_on_right(k, i, ncol[i], nrow, ncol[i], n_track, track_axis | track_ylab != "") && ncol[i] == max(ncol)) {
                     if(track_ylab[k] != "") {
-                        grid.text(track_ylab[k], rot = 90, gp = gpar(fontsize = lab_fontsize))
+                        grid.text(track_ylab[k], rot = ylab_rot, gp = gpar(fontsize = lab_fontsize), just = ifelse(ylab_rot == 90, "top", "left"))
                     }
                 }
                 upViewport()
@@ -781,7 +782,7 @@ gtrellis_layout = function(data = NULL, category = NULL,
                 if(compact) {
                     if(track_ylab[k] != "") {
                         grid.text(track_ylab[k], x = unit(1, "npc") + yaxis_right_width + ylabel_right_width*0.5, 
-                            just = c("top"), rot = 90, gp = gpar(fontsize = lab_fontsize))
+                            just = ifelse(ylab_rot == 90, "top", "left"), rot = ylab_rot, gp = gpar(fontsize = lab_fontsize))
                     }
                 }
                 if(track_axis[k]) {

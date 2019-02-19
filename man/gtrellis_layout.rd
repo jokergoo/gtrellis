@@ -10,7 +10,7 @@ Initialize genome-level Trellis layout
 gtrellis_layout(data = NULL, category = NULL,
     species = NULL, nrow = NULL, ncol = NULL,
     n_track = 1, track_height = 1, track_ylim = c(0, 1),
-    track_axis = TRUE, track_ylab = "", title = NULL,
+    track_axis = TRUE, track_ylab = "", ylab_rot = 90, title = NULL,
     xlab = "Genomic positions", xaxis = TRUE, xaxis_bin = NULL,
     equal_width = FALSE, compact = FALSE, border = TRUE, asist_ticks = TRUE,
     xpadding = c(0, 0), ypadding = c(0, 0), gap = unit(1, "mm"),
@@ -33,6 +33,7 @@ gtrellis_layout(data = NULL, category = NULL,
   \item{track_ylim}{ranges on y axes of tracks. The value can be a vector of length two which means all tracks share same y ranges, or a matrix with two columns, or a vector of length \code{2*n_track} which will be coerced into the two-column matrix by rows.}
   \item{track_axis}{whether show y axes for tracks. The value is logical that can be either length one or number of tracks.}
   \item{track_ylab}{labels for tracks on y axes. The value can be either length one or number of tracks.}
+  \item{ylab_rot}{value can only be 0 or 90.}
   \item{title}{title of the plot.}
   \item{xlab}{labels on x axes.}
   \item{xaxis}{whether show x axes.}
