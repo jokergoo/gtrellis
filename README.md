@@ -97,4 +97,4 @@ Example figures are:
 
 ### License
 
-GPL (>= 2)
+MIT @ Zuguang Gu
