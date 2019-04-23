@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/jokergoo/gtrellis.svg)](https://travis-ci.org/jokergoo/gtrellis)
 [![codecov](https://img.shields.io/codecov/c/github/jokergoo/gtrellis.svg)](https://codecov.io/github/jokergoo/gtrellis)
-[![bioc](http://www.bioconductor.org/shields/downloads/gtrellis.svg)](https://bioconductor.org/packages/stats/bioc/gtrellis/) 
+[![bioc](https://bioconductor.org/shields/downloads/devel/gtrellis.svg)](https://bioconductor.org/packages/stats/bioc/gtrellis/) 
 [![bioc](http://mcube.nju.edu.cn/cgi-bin/zuguanggu/bioc_download.pl?package=gtrellis)](https://bioconductor.org/packages/stats/bioc/gtrellis/) 
 [![bioc](http://www.bioconductor.org/shields/years-in-bioc/gtrellis.svg)](http://bioconductor.org/packages/devel/bioc/html/gtrellis.html)
 
