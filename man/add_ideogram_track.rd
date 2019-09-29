@@ -30,8 +30,6 @@ No value is returned.
 Zuguang Gu <z.gu@dkfz.de>
 }
 \examples{
-gtrellis_layout(n_track = 2, ncol = 3,
-    track_height = unit.c(unit(1, "null"), unit(5, "mm")))
-add_ideogram_track(track = 2)
-
+# There is no example
+NULL
 }

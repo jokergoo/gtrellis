@@ -41,33 +41,6 @@ Corresponding meta data that user queried.
 Zuguang Gu <z.gu@dkfz.de>
 }
 \examples{
-gtrellis_layout(ncol = 4, n_track = 3)
-add_track(panel.fun = function(gr) {
-    print(get_cell_meta_data("xlim"))
-    print(get_cell_meta_data("ylim"))
-    print(get_cell_meta_data("extended_xlim"))
-    print(get_cell_meta_data("extended_ylim"))
-    print(get_cell_meta_data("original_xlim"))
-    print(get_cell_meta_data("original_ylim"))
-    print(get_cell_meta_data("name"))
-    print(get_cell_meta_data("column"))
-    print(get_cell_meta_data("row"))
-    print(get_cell_meta_data("track"))
-    cat("\n\n")
-})
-
-for(chr in paste0("chr", 1:22)) {
-    print(get_cell_meta_data("xlim", category = chr, track = 1))
-    print(get_cell_meta_data("ylim", category = chr, track = 1))
-    print(get_cell_meta_data("extended_xlim", category = chr, track = 1))
-    print(get_cell_meta_data("extended_ylim", category = chr, track = 1))
-    print(get_cell_meta_data("original_xlim", category = chr, track = 1))
-    print(get_cell_meta_data("original_ylim", category = chr, track = 1))
-    print(get_cell_meta_data("name", category = chr, track = 1))
-    print(get_cell_meta_data("column", category = chr, track = 1))
-    print(get_cell_meta_data("row", category = chr, track = 1))
-    print(get_cell_meta_data("track", category = chr, track = 1))
-    cat("\n\n")
-}
-
+# There is no example
+NULL
 }

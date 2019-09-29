@@ -79,10 +79,6 @@ No value is returned.
 Zuguang Gu <z.gu@dkfz.de>
 }
 \examples{
-gtrellis_layout()
-gtrellis_layout(ncol = 5)
-gtrellis_layout(n_track = 3, ncol = 4)
-
-# for more examples, please go to the vignette
-
+# There is no example
+NULL
 }

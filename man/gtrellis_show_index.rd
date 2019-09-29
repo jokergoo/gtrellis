@@ -20,7 +20,6 @@ No value is returned.
 Zuguang Gu <z.gu@dkfz.de>
 }
 \examples{
-gtrellis_layout()
-gtrellis_show_index()
-
+# There is no example
+NULL
 }

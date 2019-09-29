@@ -79,23 +79,6 @@ There are several functions which draw specific graphics and are implemented by 
 Zuguang Gu <z.gu@dkfz.de>
 }
 \examples{
-require(circlize)
-bed = circlize::generateRandomBed()
-gtrellis_layout(track_ylim = range(bed[[4]]))
-add_track(bed, panel.fun = function(bed) {
-    x = (bed[[2]] + bed[[3]]) / 2
-    y = bed[[4]]
-    grid.points(x, y, pch = 16, size = unit(0.5, "mm"))
-})
-
-# you can add graphics in any cell by specifying `category` and `track`
-all_chr = paste0("chr", 1:22)
-letter = strsplit("MERRY CHRISTMAS!", "")[[1]]
-gtrellis_layout(nrow = 5)
-for(i in seq_along(letter)) {
-    add_track(category = all_chr[i], track = 1, panel.fun = function(gr) {
-        grid.text(letter[i], gp = gpar(fontsize = 30))
-    })
-}
-
+# There is no example
+NULL
 }
