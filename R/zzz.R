@@ -10,6 +10,9 @@ Documentation: http://bioconductor.org/packages/gtrellis/
 If you use it in published research, please cite:
 Gu, Z. gtrellis: an R/Bioconductor package for making genome-level 
   Trellis graphics. BMC Bioinformatics 2016.
+
+This message can be suppressed by:
+  suppressPackageStartupMessages(library(gtrellis))
 ========================================
 ")	
 
