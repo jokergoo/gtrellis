@@ -1,4 +1,4 @@
-
+q
 # == title
 # add points to a new or exsited track
 #
@@ -152,7 +152,6 @@ add_lines_track = function(gr, value, area = FALSE, baseline = "bottom", gp = gp
 # gtrellis_layout(track_ylim = range(bed[[4]]), nrow = 3, byrow = FALSE)
 # add_rect_track(bed, h1 = bed[[4]], h2 = 0, 
 #     gp = gpar(col = NA, fill = col_fun(bed[[4]])))
-#
 add_rect_track = function(gr, h1, h2, gp = gpar(), ...) {
 
 	gr = normalizeToGRanges(gr)
@@ -212,7 +211,7 @@ add_rect_track = function(gr, h1, h2, gp = gpar(), ...) {
 # gtrellis_layout(nrow = 3, byrow = FALSE, track_axis = FALSE)
 # mat = matrix(rnorm(nrow(bed)*4), ncol = 4)
 # add_heatmap_track(bed, mat, fill = col_fun)
-#
+
 add_heatmap_track = function(gr, mat, fill, border = NA, track = current_track() + 1, ...) {
 
 	gr = normalizeToGRanges(gr)

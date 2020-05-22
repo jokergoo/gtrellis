@@ -87,10 +87,6 @@ Example figures are:
 
 ![6](https://cloud.githubusercontent.com/assets/449218/5553820/978ab882-8c30-11e4-8259-2b8c91e780ce.png)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> bioc/master
 ![image](https://cloud.githubusercontent.com/assets/449218/21886589/c6852188-d8bc-11e6-9d1d-8ef16eb30b0e.png)
 
 ![image](https://cloud.githubusercontent.com/assets/449218/21886590/cd5f0758-d8bc-11e6-8701-0b357c8bc8fa.png)
