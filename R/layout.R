@@ -612,9 +612,9 @@ gtrellis_layout = function(data = NULL, category = NULL,
     
     basepair_unit = function(x) {
         if(max(x) > 1e6) {
-            paste0(x/1e6, "MB")
+            paste0(x/1e6, "Mb")
         } else if(max(x) > 1e3) {
-            paste0(x/1e3, "KB")
+            paste0(x/1e3, "kb")
         } else {
             paste0(x, "bp")
         }
