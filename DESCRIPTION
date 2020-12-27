@@ -1,7 +1,7 @@
 Package: gtrellis
 Type: Package
 Title: Genome Level Trellis Layout
-Version: 1.21.1.1000
+Version: 1.23.1
 Date: 2020-12-27
 Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
