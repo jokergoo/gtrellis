@@ -1,16 +1,17 @@
-[![Build Status](https://travis-ci.org/jokergoo/gtrellis.svg)](https://travis-ci.org/jokergoo/gtrellis)
+# Make Genome Level Trellis Graph
+
+[![R-CMD-check](https://github.com/jokergoo/gtrellis/workflows/R-CMD-check/badge.svg)](https://github.com/jokergoo/gtrellis/actions)
 [![codecov](https://img.shields.io/codecov/c/github/jokergoo/gtrellis.svg)](https://codecov.io/github/jokergoo/gtrellis)
 [![bioc](https://bioconductor.org/shields/downloads/devel/gtrellis.svg)](https://bioconductor.org/packages/stats/bioc/gtrellis/) 
 [![bioc](http://mcube.nju.edu.cn/cgi-bin/zuguanggu/bioc_download.pl?package=gtrellis)](https://bioconductor.org/packages/stats/bioc/gtrellis/) 
 [![bioc](http://www.bioconductor.org/shields/years-in-bioc/gtrellis.svg)](http://bioconductor.org/packages/devel/bioc/html/gtrellis.html)
 
-## Make Genome Level Trellis Graph
 
 Genome level Trellis graph visualizes genomic data conditioned by genomic categories (e.g. chromosomes). For each genomic category, multiple dimensional data which are represented as tracks describe different features from different aspects. This package provides high flexibility to arrange genomic categories and to add self-defined graphics in the plot.
 
 ### Citation
 
-Zuguang Gu, Roland Eils and Matthias Schlesner. [gtrellis: an R/Bioconductor package for making genome-level Trellis graphics](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1051-4), 2016. BMC Bioinformatics.
+Zuguang Gu, et al., [gtrellis: an R/Bioconductor package for making genome-level Trellis graphics](http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1051-4), 2016. BMC Bioinformatics.
 
 ### Install
 
