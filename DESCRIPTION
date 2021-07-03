@@ -7,7 +7,7 @@ Author: Zuguang Gu
 Maintainer: Zuguang Gu <z.gu@dkfz.de>
 Depends: R (>= 3.1.2), grid, IRanges, GenomicRanges
 Imports: circlize (>= 0.4.8), GetoptLong, grDevices, utils
-Suggests: testthat (>= 1.0.0), knitr, RColorBrewer, markdown, 
+Suggests: testthat (>= 1.0.0), knitr, RColorBrewer, markdown, rmarkdown,
 	ComplexHeatmap (>= 1.99.0), Cairo, png, jpeg, tiff
 VignetteBuilder: knitr
 Description: Genome level Trellis graph visualizes genomic data conditioned by 
