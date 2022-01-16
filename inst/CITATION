@@ -8,7 +8,7 @@ citEntry(
                        as.person("Matthias Schlesner")),
    journal = "BMC Bioinformatics",
    year = 2016,
-   textVersion = "Gu, Z. (2016) gtrellis: an R/Bioconductor package for making genome-level Trellis graphics. BMC Bioinformatics."
+   textVersion = "Gu, Z. (2016) gtrellis: an R/Bioconductor package for making genome-level Trellis graphics. BMC Bioinformatics, http://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1051-4."
 )
 
 citFooter("This free open-source software implements academic
