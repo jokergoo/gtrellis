@@ -1,7 +1,7 @@
 Package: gtrellis
 Type: Package
 Title: Genome Level Trellis Layout
-Version: 1.29.2
+Version: 1.30.0
 Date: 2022-09-30
 Authors@R: person("Zuguang", "Gu", email = "z.gu@dkfz.de", role = c("aut", "cre"),
                   comment = c('ORCID'="0000-0002-7395-8709"))
