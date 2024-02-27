@@ -1,5 +1,5 @@
 ---
-title: "Make Genome-level Trellis Graph"
+title: "The gtrellis package"
 author: "Zuguang Gu (z.gu@dkfz.de)"
 date: '`r Sys.Date()`'
 output: rmarkdown::html_vignette
