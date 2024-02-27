@@ -1,11 +1,11 @@
 Package: gtrellis
 Type: Package
 Title: Genome Level Trellis Layout
-Version: 1.35.0
-Date: 2023-03-22
+Version: 1.35.1
+Date: 2024-02-27
 Authors@R: person("Zuguang", "Gu", email = "z.gu@dkfz.de", role = c("aut", "cre"),
                   comment = c('ORCID'="0000-0002-7395-8709"))
-Depends: R (>= 3.1.2), grid, IRanges, GenomicRanges
+Depends: R (>= 4.0.0), grid, IRanges, GenomicRanges
 Imports: circlize (>= 0.4.8), GetoptLong, grDevices, utils
 Suggests: testthat (>= 1.0.0), knitr, RColorBrewer, markdown, rmarkdown,
 	ComplexHeatmap (>= 1.99.0), Cairo, png, jpeg, tiff
