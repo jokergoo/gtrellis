@@ -5,20 +5,22 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> • gtrellis</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<title>Make Genome-level Trellis Graph • gtrellis</title>
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Make Genome-level Trellis Graph">
+<meta property="og:description" content="gtrellis">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,20 +33,24 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gtrellis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.17.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.31.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Articles
      
+    <span class="caret"></span>
   </a>
-</li>
-<li>
-  <a href="../articles/gtrellis.html">Get started</a>
+  <ul class="dropdown-menu" role="menu">
+<li class="dropdown-header">Vignettes</li>
+    <li>
+      <a href="../articles/gtrellis_full.html">Make Genome-level Trellis Graph</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -52,8 +58,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/jokergoo/gtrellis">
-    <span class="fab fa fab fa-github fa-lg"></span>
+  <a href="https://github.com/jokergoo/gtrellis/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -70,696 +76,23 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1></h1>
+      <h1 data-toc-skip>Make Genome-level Trellis Graph</h1>
+                        <h4 data-toc-skip class="author">Zuguang Gu (<a href="mailto:z.gu@dkfz.de" class="email">z.gu@dkfz.de</a>)</h4>
             
+            <h4 data-toc-skip class="date">2024-02-27</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/jokergoo/gtrellis/blob/master/vignettes/gtrellis.Rmd"><code>vignettes/gtrellis.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/jokergoo/gtrellis/blob/HEAD/vignettes/gtrellis.Rmd" class="external-link"><code>vignettes/gtrellis.Rmd</code></a></small>
       <div class="hidden name"><code>gtrellis.Rmd</code></div>
 
     </div>
 
     
     
-<!--
-%\VignetteEngine{knitr}
-%\VignetteIndexEntry{Make Genome-level Trellis Graph}
--->
-<div id="make-genome-level-trellis-graph" class="section level1">
-<h1 class="hasAnchor">
-<a href="#make-genome-level-trellis-graph" class="anchor"></a>Make Genome-level Trellis Graph</h1>
-<p><strong>Author</strong>: Zuguang Gu ( <a href="mailto:z.gu@dkfz.de">z.gu@dkfz.de</a> )</p>
-<p><strong>Date</strong>: 2019-09-29</p>
-<p><strong>Package version</strong>: 1.17.1</p>
-<hr>
-<p><a href="http://www.statmethods.net/advgraphs/trellis.html">Trellis graph</a> is a type of graph which splits data by certain conditions and visualizes subset of data in each category parallel. In genomic data analysis, the conditional variable is mostly the chromosome. The advantage of Trellis graph is it can easily reveal multiple variable relationship behind the data. In R, <strong>lattice</strong> and <strong>ggplot2</strong> package can make Trellis graph, however, specially for whole genome level plot, they are limited in:</p>
-<ul>
-<li>Chromosomes have different length. But in <strong>lattice</strong>/<strong>ggplot2</strong>, panel width for each chromosome are the same, so short chromosomes will be extended with empty areas which sometimes is a waste of space. (just find out <strong>latticeExtra</strong> allows different panel width.)</li>
-<li>Genomic data are more multiple dimensional, which means, there are always more than one tracks for chromosomes that to be compared. Unfortunately, <strong>lattice</strong>/<strong>ggplot2</strong> can only plot one track at one time.</li>
-</ul>
-<p>For a single continuous region, multiple tracks are supported in <strong>ggbio</strong> and <strong>Gviz</strong>. But if you want to compare more than one regions, things will be complex. Due to the design of <strong>ggbio</strong> or <strong>Gviz</strong>, it will not be so efficient to visualize e.g. larger than 10 regions at a same time.</p>
-<p>Here, <strong>gtrellis</strong> provides a flexible way to arrange genomic categories. It has following advantages:</p>
-<ul>
-<li>The layout is flexible that it is good at visualizing many genomic categories at a same time (e.g. 24 human chromosomes).</li>
-<li>Genomic category is not restricted in chromosome, it can be any type (e.g. genes).</li>
-<li>Support multiple tracks.</li>
-<li>Graphics in tracks can be highly customized.</li>
-</ul>
-<div id="basic-design" class="section level2">
-<h2 class="hasAnchor">
-<a href="#basic-design" class="anchor"></a>Basic design</h2>
-<p><strong>gtrellis</strong> aims to arrange genomic categories as Trellis style and supports multiple tracks for visualization. In this package, initializating the layout and adding graphics are independent. After initialization of the layout, intersection between tracks and genomic categories are named cell or panel, and each cell is an independent plotting region (actually, each cell is a viewport in <strong>grid</strong> system) that self-defined graphics can be added afterwards.</p>
-<p><strong>gtrellis</strong> is implemented in <strong>grid</strong> graphic system, so, in order to add graphics in each cell, users need to use low-level graphic functions (<code>grid.points</code>, <code>grid.lines</code>, <code>grid.rect</code>, …) which are quite similar as those in classic graphic system.</p>
-</div>
-<div id="initialize-the-layout" class="section level2">
-<h2 class="hasAnchor">
-<a href="#initialize-the-layout" class="anchor"></a>Initialize the layout</h2>
-<p><code><a href="../reference/gtrellis_layout.html">gtrellis_layout()</a></code> is used to create the global layout. By default, it initializes the layout with hg19 and puts all chromosomes in one row. Each chromosome has only one track and range on y-axis is 0 to 1.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(gtrellis)
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-2-1.png" width="960" style="display: block; margin: auto;"></p>
-<p><code>category</code> can be used to set subset of chromosomes as well as the order of chromosomes. <code><a href="../reference/gtrellis_show_index.html">gtrellis_show_index()</a></code> here is an assistant function to add the information to each cell, just for demonstration purpose in this vignette.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">category =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"chr3"</span>, <span class="st">"chr1"</span>))
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>Other species are also supported as long as corresponding chromInfo files exist on UCSC ftp. E.g. chromInfo file for mouse (mm10) is <a href="http://hgdownload.cse.ucsc.edu/goldenpath/mm10/database/chromInfo.txt.gz" class="uri">http://hgdownload.cse.ucsc.edu/goldenpath/mm10/database/chromInfo.txt.gz</a>. Since there may be many short scaffolds in chromInfo file, if <code>category</code> is not specified, <code>gtrellis</code> will first remove these short scaffolds before making the plot. Also non-normal chromosomes (e.g. “chr1_xxxxxx”) will also be removed. Sometimes this detection is not always correct, if you find chromosomes shown on the plot is not what you expect, set <code>category</code> manually.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">species =</span> <span class="st">"mm10"</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-4-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>You can put chromosomes on multiple rows by specifying <code>nrow</code> or/and <code>ncol</code>. For chromosomes in the same column, the corresponding width is the width of the longest chromosome in that column and short chromosomes will be extended with empty areas.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">nrow =</span> <span class="dv">3</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-5-1.png" width="768" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">ncol =</span> <span class="dv">5</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-5-2.png" width="768" style="display: block; margin: auto;"></p>
-<p>You can set <code>byrow</code> argument to arrange chromosomes either by rows or by columns. As explained before, by default chromosomes in the same column will share the length of the longest one. It is better to put chromosomes with similar length in a same column.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">ncol =</span> <span class="dv">5</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;"></p>
-<p>If <code>equal_width</code> is set to <code>TRUE</code>, the layout will be a ‘standard’ Trellis layout. All chromosomes will share the same range on x-axis (length of the longest chromosome) and short chromosomes will be extended with empty areas.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">equal_width =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-7-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Make all columns having equal width and also set multiple rows.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">ncol =</span> <span class="dv">5</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>, <span class="dt">equal_width =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;"></p>
-<p>There is also a ‘compact’ mode of the layout that when there are multiple rows, chromosomes on a same row can be put compactly without being aligned to corresponding columns. This mode saves a lot of white space but the drawback is that it is not easy to directly compare positions among chromosomes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">compact =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Set gaps between chromosomes. Note if it is set as a numeric value, it should only be 0 (no gap).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">gap =</span> <span class="dv">0</span>)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-10-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Or <code>gap</code> can be a <code>unit</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">gap =</span> <span class="kw">unit</span>(<span class="dv">5</span>, <span class="st">"mm"</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-11-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>When you arrange the layout with multiple rows, you can also set <code>gap</code> as length of two. In this case, the first element corresponds to the gaps between rows and the second corresponds to the gaps between columns.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">ncol =</span> <span class="dv">5</span>, <span class="dt">gap =</span> <span class="kw">unit</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">5</span>, <span class="dv">2</span>), <span class="st">"mm"</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-12-1.png" width="768" style="display: block; margin: auto;"></p>
-<p>There may be multiple tracks for chromosomes which describe multiple dimensional data. The tracks can be created by <code>n_track</code> argument.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-13-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>By default, tracks share the same height. The height can be customized by <code>track_height</code> argument. If it is set as numeric values, it will be normalized as percent to the sum.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">track_height =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-14-1.png" width="960" style="display: block; margin: auto;"></p>
-<p><code>track_height</code> can also be a <code>unit</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, 
-    <span class="dt">track_height =</span> <span class="kw">unit.c</span>(<span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"cm"</span>), <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"null"</span>), <span class="kw">grobHeight</span>(<span class="kw">textGrob</span>(<span class="st">"chr1"</span>))))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-15-1.png" width="960" style="display: block; margin: auto;"></p>
-<p><code>track_axis</code> controls whether to show y-axes. If certain value is set to <code>FALSE</code>, y-axis on corresponding track will not be drawn.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">track_axis =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>), <span class="dt">xaxis =</span> <span class="ot">FALSE</span>, <span class="dt">xlab =</span> <span class="st">""</span>)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-16-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Set y-lim by <code>track_ylim</code>. It should be a two-column matrix. But to make things easy, it can also be a vector and it will be filled into a two-column matrix by rows. If it is a vector with length 2, it means all tracks share the same y-lim.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">1000000</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-17-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Axis ticks are added on one side of rows or columns, <code>asist_ticks</code> controls whether to add axis ticks on the other sides. (You can compare following figure to the above one.)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">0</span>, <span class="dv">1000000</span>), <span class="dt">asist_ticks =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-18-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Set x-label by <code>xlab</code> and set y-labels by <code>track_ylab</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">title =</span> <span class="st">"title"</span>, <span class="dt">track_ylab =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">""</span>, <span class="st">"bbbbbb"</span>, <span class="st">"ccccccc"</span>), <span class="dt">xlab =</span> <span class="st">"xlab"</span>)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-19-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Since chromosomes can have more than one tracks, following shows a layout with multiple columns and multiple tracks.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">4</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-20-1.png" width="768" style="display: block; margin: auto;"></p>
-<p>Set <code>border</code> to <code>FALSE</code> to remove borders.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, <span class="dt">border =</span> <span class="ot">FALSE</span>, <span class="dt">xaxis =</span> <span class="ot">FALSE</span>, <span class="dt">track_axis =</span> <span class="ot">FALSE</span>, <span class="dt">xlab =</span> <span class="st">""</span>)
-<span class="kw"><a href="../reference/gtrellis_show_index.html">gtrellis_show_index</a></span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-21-1.png" width="768" style="display: block; margin: auto;"></p>
-</div>
-<div id="add-graphics" class="section level2">
-<h2 class="hasAnchor">
-<a href="#add-graphics" class="anchor"></a>Add graphics</h2>
-<p>After the initialization of the layout, each cell can be thought as an ordinary coordinate system. Then graphics can be added in afterwards.</p>
-<div id="pre-defined-track" class="section level3">
-<h3 class="hasAnchor">
-<a href="#pre-defined-track" class="anchor"></a>Pre-defined track</h3>
-<p>First we will introduce functions which add fixed types of graphics.</p>
-<p><code><a href="../reference/add_points_track.html">add_points_track()</a></code> directly adds points at the middle points of corresponding genomic regions. The genomic region variable can be either a data frame or a <code>GRanges</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(circlize)
-bed =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/generateRandomBed.html">generateRandomBed</a></span>()
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(bed, bed[[<span class="dv">4</span>]], <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="kw"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(bed[[<span class="dv">4</span>]] <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="st">"red"</span>, <span class="st">"green"</span>)))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-22-1.png" width="960" style="display: block; margin: auto;"></p>
-<p><code><a href="../reference/add_segments_track.html">add_segments_track()</a></code> adds segments for corresponding regions.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bed =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/generateRandomBed.html">generateRandomBed</a></span>(<span class="dt">nr =</span> <span class="dv">100</span>)
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/add_segments_track.html">add_segments_track</a></span>(bed, bed[[<span class="dv">4</span>]], <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="kw"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(bed[[<span class="dv">4</span>]] <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>, <span class="st">"red"</span>, <span class="st">"green"</span>), <span class="dt">lwd =</span> <span class="dv">4</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-23-1.png" width="960" style="display: block; margin: auto;"></p>
-<p><code><a href="../reference/add_lines_track.html">add_lines_track()</a></code> adds lines. Also it can draw areas below the lines (or above, depending on <code>baseline</code>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bed =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/generateRandomBed.html">generateRandomBed</a></span>(<span class="dv">200</span>)
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">2</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]), <span class="dv">2</span>), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/add_lines_track.html">add_lines_track</a></span>(bed, bed[[<span class="dv">4</span>]])
-<span class="kw"><a href="../reference/add_lines_track.html">add_lines_track</a></span>(bed, bed[[<span class="dv">4</span>]], <span class="dt">area =</span> <span class="ot">TRUE</span>, <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">"grey"</span>, <span class="dt">col =</span> <span class="ot">NA</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-24-1.png" width="960" style="display: block; margin: auto;"></p>
-<p><code><a href="../reference/add_rect_track.html">add_rect_track()</a></code> adds rectangles which is useful to draw bars.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">col_fun =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html">colorRamp2</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"green"</span>, <span class="st">"black"</span>, <span class="st">"red"</span>))
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/add_rect_track.html">add_rect_track</a></span>(bed, <span class="dt">h1 =</span> bed[[<span class="dv">4</span>]], <span class="dt">h2 =</span> <span class="dv">0</span>, 
-    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="ot">NA</span>, <span class="dt">fill =</span> <span class="kw">col_fun</span>(bed[[<span class="dv">4</span>]])))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-25-1.png" width="960" style="display: block; margin: auto;"></p>
-<p><code><a href="../reference/add_heatmap_track.html">add_heatmap_track()</a></code> adds heatmap. Heatmap will fill the whole track vertically.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>, <span class="dt">track_axis =</span> <span class="ot">FALSE</span>)
-mat =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(bed)<span class="op">*</span><span class="dv">4</span>), <span class="dt">ncol =</span> <span class="dv">4</span>)
-<span class="kw"><a href="../reference/add_heatmap_track.html">add_heatmap_track</a></span>(bed, mat, <span class="dt">fill =</span> col_fun)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-26-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>By default, these pre-defined graphic functions draw in the next track. However, different types of graphics can be drawn in a same track by manually setting <code>track</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">col_fun =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html">colorRamp2</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"green"</span>, <span class="st">"black"</span>, <span class="st">"red"</span>))
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]), <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>)
-<span class="kw"><a href="../reference/add_rect_track.html">add_rect_track</a></span>(bed, <span class="dt">h1 =</span> bed[[<span class="dv">4</span>]], <span class="dt">h2 =</span> <span class="dv">0</span>, <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="ot">NA</span>, <span class="dt">fill =</span> <span class="kw">col_fun</span>(bed[[<span class="dv">4</span>]])))
-<span class="kw"><a href="../reference/add_lines_track.html">add_lines_track</a></span>(bed, bed[[<span class="dv">4</span>]], <span class="dt">track =</span> <span class="kw"><a href="../reference/current_track.html">current_track</a></span>())
-<span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(bed, bed[[<span class="dv">4</span>]], <span class="dt">track =</span> <span class="kw"><a href="../reference/current_track.html">current_track</a></span>(), <span class="dt">size =</span> <span class="kw">unit</span>(<span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(bed[[<span class="dv">4</span>]])<span class="op">*</span><span class="dv">5</span>, <span class="st">"mm"</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-27-1.png" width="960" style="display: block; margin: auto;"></p>
-</div>
-<div id="customized-track" class="section level3">
-<h3 class="hasAnchor">
-<a href="#customized-track" class="anchor"></a>Customized track</h3>
-<p>More generally, <code><a href="../reference/add_track.html">add_track()</a></code> allows adding self-defined graphics. Actually this is how <code><a href="../reference/add_points_track.html">add_points_track()</a></code>, <code><a href="../reference/add_segments_track.html">add_segments_track()</a></code>, <code><a href="../reference/add_lines_track.html">add_lines_track()</a></code>, <code><a href="../reference/add_rect_track.html">add_rect_track()</a></code> and <code><a href="../reference/add_heatmap_track.html">add_heatmap_track()</a></code> are implemented.</p>
-<p>The self-defined graphics are added by <code>panel_fun</code> argument which should be a function. <code>panel_fun</code> is applied to every genomic categories (e.g. chromosomes) and the input value of <code>panel_fun</code> is a subset of data which corresponds to the current chromosome. Following example simply shows how to add points by <code>panel_fun</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bed =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/generateRandomBed.html">generateRandomBed</a></span>()
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]))
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(bed, <span class="dt">panel_fun =</span> <span class="cf">function</span>(bed) {
-    <span class="co"># `bed` inside `panel_fun` is a subset of the main `bed`</span>
-    x =<span class="st"> </span>(bed[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>bed[[<span class="dv">3</span>]]) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
-    y =<span class="st"> </span>bed[[<span class="dv">4</span>]]
-    <span class="kw">grid.points</span>(x, y, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>))
-})</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-28-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>If the input data is a <code>GRanges</code> object, the input variable in <code>panel_fun</code> is also a <code>GRanges</code> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gr =<span class="st"> </span><span class="kw">GRanges</span>(<span class="dt">seqnames =</span> bed[[<span class="dv">1</span>]],
-             <span class="dt">ranges =</span> <span class="kw">IRanges</span>(<span class="dt">start =</span> bed[[<span class="dv">2</span>]],
-                               <span class="dt">end =</span> bed[[<span class="dv">3</span>]]),
-             <span class="dt">score =</span> bed[[<span class="dv">4</span>]])
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(gr<span class="op">$</span>score))
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(gr, <span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    x =<span class="st"> </span>(<span class="kw"><a href="https://rdrr.io/r/stats/start.html">start</a></span>(gr) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/start.html">end</a></span>(gr)) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
-    y =<span class="st"> </span>gr<span class="op">$</span>score
-    <span class="kw">grid.points</span>(x, y, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>))
-})</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-29-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Initialization and adding graphics are actually independent. Following example uses same code to add graphics but with different layout.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]))
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(bed, <span class="dt">panel_fun =</span> <span class="cf">function</span>(bed) {
-    x =<span class="st"> </span>(bed[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>bed[[<span class="dv">3</span>]]) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
-    y =<span class="st"> </span>bed[[<span class="dv">4</span>]]
-    <span class="kw">grid.points</span>(x, y, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>))
-})</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-30-1.png" width="768" style="display: block; margin: auto;"></p>
-</div>
-</div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
-<p>In following, we make rainfall plot as well as the density distribution of genomic regions (in the example below, <code>DMR_hyper</code> contains differentially methylated regions that show high methylation compared to control samples and in <code>DMR_hypo</code> the methylation is lower than control samples). Also, we manually add a track which contains chromosome names and a track which contains ideograms.</p>
-<p>Density for genomic regions is defined as the percent of a genomic window that is covered by the input genomic regions.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"DMR.RData"</span>, <span class="dt">package =</span> <span class="st">"circlize"</span>))
-DMR_hyper_density =<span class="st"> </span>circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/genomicDensity.html">genomicDensity</a></span>(DMR_hyper, <span class="dt">window.size =</span> <span class="fl">1e7</span>)
-<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(DMR_hyper_density)</code></pre></div>
-<pre><code>##    chr    start      end       pct
-## 1 chr1        1 10000000 0.0038096
-## 2 chr1  5000001 15000000 0.0019618
-## 3 chr1 10000001 20000000 0.0029903
-## 4 chr1 15000001 25000000 0.0024798
-## 5 chr1 20000001 30000000 0.0020628
-## 6 chr1 25000001 35000000 0.0024249</code></pre>
-<p>Initialize the layout and add following four tracks:</p>
-<ol style="list-style-type: decimal">
-<li>chromosome names, simple text.</li>
-<li>rainfall plot, first apply rainfall transformation and then add points.</li>
-<li>genomic density, lines with area (actually it is polygons).</li>
-<li>ideogram, rectangles.</li>
-</ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">4</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>,
-    <span class="dt">track_axis =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="ot">FALSE</span>, <span class="ot">TRUE</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>), 
-    <span class="dt">track_height =</span> <span class="kw">unit.c</span>(<span class="dv">2</span><span class="op">*</span><span class="kw">grobHeight</span>(<span class="kw">textGrob</span>(<span class="st">"chr1"</span>)), 
-                          <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"null"</span>), 
-                          <span class="kw">unit</span>(<span class="fl">0.5</span>, <span class="st">"null"</span>), 
-                          <span class="kw">unit</span>(<span class="dv">3</span>, <span class="st">"mm"</span>)), 
-    <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">8</span>, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(DMR_hyper_density[[<span class="dv">4</span>]])), <span class="dv">0</span>, <span class="dv">1</span>),
-    <span class="dt">track_ylab =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">""</span>, <span class="st">"log10(inter_dist)"</span>, <span class="st">"density"</span>, <span class="st">""</span>))
-
-<span class="co"># track for chromosome names</span>
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(<span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    <span class="co"># the use of `get_cell_meta_data()` will be introduced later</span>
-    chr =<span class="st"> </span><span class="kw"><a href="../reference/get_cell_meta_data.html">get_cell_meta_data</a></span>(<span class="st">"name"</span>)  
-    <span class="kw">grid.rect</span>(<span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">"#EEEEEE"</span>))
-    <span class="kw">grid.text</span>(chr)
-})
-
-<span class="co"># track for rainfall plots</span>
-DMR_hyper_rainfall =<span class="st"> </span>circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/rainfallTransform.html">rainfallTransform</a></span>(DMR_hyper)
-<span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(DMR_hyper_rainfall, <span class="kw"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(DMR_hyper_rainfall[[<span class="dv">4</span>]]),
-  <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>), <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"red"</span>))
-
-<span class="co"># track for genomic density</span>
-<span class="kw"><a href="../reference/add_lines_track.html">add_lines_track</a></span>(DMR_hyper_density, DMR_hyper_density[[<span class="dv">4</span>]], <span class="dt">area =</span> <span class="ot">TRUE</span>, 
-  <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">"pink"</span>))
-
-<span class="co"># track for ideogram</span>
-cytoband_df =<span class="st"> </span>circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/read.cytoband.html">read.cytoband</a></span>(<span class="dt">species =</span> <span class="st">"hg19"</span>)<span class="op">$</span>df
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(cytoband_df, <span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    cytoband_chr =<span class="st"> </span>gr
-    <span class="kw">grid.rect</span>(cytoband_chr[[<span class="dv">2</span>]], <span class="kw">unit</span>(<span class="dv">0</span>, <span class="st">"npc"</span>),
-              <span class="dt">width =</span> cytoband_chr[[<span class="dv">3</span>]] <span class="op">-</span><span class="st"> </span>cytoband_chr[[<span class="dv">2</span>]], <span class="dt">height =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>),
-              <span class="dt">default.units =</span> <span class="st">"native"</span>, <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">vjust =</span> <span class="dv">0</span>,
-              <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/cytoband.col.html">cytoband.col</a></span>(cytoband_chr[[<span class="dv">5</span>]])))
-    <span class="kw">grid.rect</span>(<span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(cytoband_chr[[<span class="dv">2</span>]]), <span class="kw">unit</span>(<span class="dv">0</span>, <span class="st">"npc"</span>),
-              <span class="dt">width =</span> <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(cytoband_chr[[<span class="dv">3</span>]]) <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(cytoband_chr[[<span class="dv">2</span>]]), <span class="dt">height =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>),
-              <span class="dt">default.units =</span> <span class="st">"native"</span>, <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">vjust =</span> <span class="dv">0</span>,
-              <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">"transparent"</span>))
-})</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-32-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Actually, you don’t need to add name track and ideogram track manually. Name track and ideogram track can be added by <code>add_name_track</code> and <code>add_ideogram_track</code> arguments. Name track will be inserted before the first track and ideogram track will be inserted after the last track. So in following example, although we only specified <code>n_track</code> to 2, but the name track and ideogram track are also added, thus, the final number of track is 4.</p>
-<p>In following example, we additionally add graphics for hypo-DMR as well so that direct comparison between different methylation patterns can be performed. Since rainfall plots for both hyper-DMR and hypo-DMR are added in a same track, we explicitly specify value of <code>track</code> argument to <code><a href="../reference/current_track.html">current_track()</a></code> in <code><a href="../reference/add_track.html">add_track()</a></code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DMR_hypo_density =<span class="st"> </span>circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/genomicDensity.html">genomicDensity</a></span>(DMR_hypo, <span class="dt">window.size =</span> <span class="fl">1e7</span>)
-DMR_hypo_rainfall =<span class="st"> </span>circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/rainfallTransform.html">rainfallTransform</a></span>(DMR_hypo)
-
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>,
-    <span class="dt">track_axis =</span> <span class="ot">TRUE</span>, 
-    <span class="dt">track_height =</span> <span class="kw">unit.c</span>(<span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"null"</span>), 
-                          <span class="kw">unit</span>(<span class="fl">0.5</span>, <span class="st">"null"</span>)), 
-    <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">8</span>, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(DMR_hyper_density[[<span class="dv">4</span>]], DMR_hypo_density[[<span class="dv">4</span>]])))),
-    <span class="dt">track_ylab =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"log10(inter_dist)"</span>, <span class="st">"density"</span>),
-    <span class="dt">add_name_track =</span> <span class="ot">TRUE</span>, <span class="dt">add_ideogram_track =</span> <span class="ot">TRUE</span>)
-
-<span class="co"># put into a function and we will use it later</span>
-add_graphics =<span class="st"> </span><span class="cf">function</span>() {
-    <span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(DMR_hyper_rainfall, <span class="kw"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(DMR_hyper_rainfall[[<span class="dv">4</span>]]),
-        <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>), <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#FF000080"</span>))
-    <span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(DMR_hypo_rainfall, <span class="kw"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(DMR_hypo_rainfall[[<span class="dv">4</span>]]), <span class="dt">track =</span> <span class="kw"><a href="../reference/current_track.html">current_track</a></span>(),
-        <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>), <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#0000FF80"</span>))
-
-    <span class="co"># track for genomic density</span>
-    <span class="kw"><a href="../reference/add_lines_track.html">add_lines_track</a></span>(DMR_hyper_density, DMR_hyper_density[[<span class="dv">4</span>]], <span class="dt">area =</span> <span class="ot">TRUE</span>, 
-        <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">"#FF000080"</span>))
-    <span class="kw"><a href="../reference/add_lines_track.html">add_lines_track</a></span>(DMR_hypo_density, DMR_hypo_density[[<span class="dv">4</span>]], <span class="dt">area =</span> <span class="ot">TRUE</span>, <span class="dt">track =</span> <span class="kw"><a href="../reference/current_track.html">current_track</a></span>(),
-        <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">"#0000FF80"</span>))
-}
-
-<span class="kw">add_graphics</span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-33-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Next we change the layout to the ‘compact’ mode without changing the code that adds graphics.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">2</span>, <span class="dt">nrow =</span> <span class="dv">4</span>, <span class="dt">compact =</span> <span class="ot">TRUE</span>,
-    <span class="dt">track_axis =</span> <span class="ot">TRUE</span>, 
-    <span class="dt">track_height =</span> <span class="kw">unit.c</span>(<span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"null"</span>), 
-                          <span class="kw">unit</span>(<span class="fl">0.5</span>, <span class="st">"null"</span>)), 
-    <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">8</span>, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(DMR_hyper_density[[<span class="dv">4</span>]], DMR_hypo_density[[<span class="dv">4</span>]])))),
-    <span class="dt">track_ylab =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"log10(inter_dist)"</span>, <span class="st">"density"</span>),
-    <span class="dt">add_name_track =</span> <span class="ot">TRUE</span>, <span class="dt">add_ideogram_track =</span> <span class="ot">TRUE</span>)
-<span class="kw">add_graphics</span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-34-1.png" width="1344" style="display: block; margin: auto;"></p>
-<p>By default, tracks are added from the first track to the last one. You can also add graphics in any specified chromosomes and tracks by specifying <code>category</code> and <code>track</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_chr =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"chr"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">22</span>)
-letter =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span>(<span class="st">"MERRY CHRISTMAS!"</span>, <span class="st">""</span>)[[<span class="dv">1</span>]]
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">nrow =</span> <span class="dv">5</span>)
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(letter)) {
-    <span class="kw"><a href="../reference/add_track.html">add_track</a></span>(<span class="dt">category =</span> all_chr[i], <span class="dt">track =</span> <span class="dv">1</span>, <span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-        <span class="kw">grid.text</span>(letter[i], <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fontsize =</span> <span class="dv">30</span>))
-    })
-}</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-35-1.png" width="768" style="display: block; margin: auto;"></p>
-<p>Following code plots coverage for a tumor sample, its companion normal sample and the ratio of coverage. First prepare the data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tumor_df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"df_tumor.rds"</span>, <span class="dt">package =</span> <span class="st">"gtrellis"</span>))
-control_df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"df_control.rds"</span>, <span class="dt">package =</span> <span class="st">"gtrellis"</span>))
-
-<span class="co"># remove regions that have zero coverage</span>
-ind =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/which.html">which</a></span>(tumor_df<span class="op">$</span>cov <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;</span><span class="st"> </span>control_df<span class="op">$</span>cov <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)
-tumor_df =<span class="st"> </span>tumor_df[ind, , drop =<span class="st"> </span><span class="ot">FALSE</span>]
-control_df =<span class="st"> </span>control_df[ind, , drop =<span class="st"> </span><span class="ot">FALSE</span>]
-ratio_df =<span class="st"> </span>tumor_df
-
-<span class="co"># get rid of small value dividing small value resulting large value</span>
-q01 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(tumor_df<span class="op">$</span>cov, control_df<span class="op">$</span>cov), <span class="fl">0.01</span>)
-ratio_df[[<span class="dv">4</span>]] =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log2</a></span>( (tumor_df<span class="op">$</span>cov<span class="op">+</span>q01) <span class="op">/</span><span class="st"> </span>(control_df<span class="op">$</span>cov<span class="op">+</span>q01) <span class="op">*</span><span class="st"> </span>
-<span class="st">                       </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(control_df<span class="op">$</span>cov) <span class="op">/</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(tumor_df<span class="op">$</span>cov) )
-<span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(ratio_df) =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"chr"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>, <span class="st">"ratio"</span>)
-tumor_df[[<span class="dv">4</span>]] =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(tumor_df[[<span class="dv">4</span>]])
-control_df[[<span class="dv">4</span>]] =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(control_df[[<span class="dv">4</span>]])</code></pre></div>
-<p>Then, initialize the layout and add three tracks.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cov_range =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(tumor_df[[<span class="dv">4</span>]], control_df[[<span class="dv">4</span>]]))
-ratio_range =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(ratio_df[[<span class="dv">4</span>]])
-ratio_range =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(ratio_range)), <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(ratio_range)))
-
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>, <span class="dt">gap =</span> <span class="kw">unit</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">4</span>, <span class="dv">1</span>), <span class="st">"mm"</span>),
-    <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(cov_range, cov_range, ratio_range),
-    <span class="dt">track_ylab =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"tumor, log10(cov)"</span>, <span class="st">"control, log10(cov)"</span>, <span class="st">"ratio, log2(ratio)"</span>), 
-    <span class="dt">add_name_track =</span> <span class="ot">TRUE</span>, <span class="dt">add_ideogram_track =</span> <span class="ot">TRUE</span>)
-
-<span class="co"># track for coverage in tumor</span>
-<span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(tumor_df, tumor_df[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"bigpts"</span>), 
-    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#00000020"</span>))
-<span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(control_df, tumor_df[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"bigpts"</span>), 
-    <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#00000020"</span>))
-
-<span class="co"># track for ratio between tumor and control</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(RColorBrewer)
-col_fun =<span class="st"> </span>circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html">colorRamp2</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="dt">length =</span> <span class="dv">11</span>), <span class="kw"><a href="https://rdrr.io/r/base/rev.html">rev</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="dv">11</span>, <span class="st">"RdYlBu"</span>)),
-    <span class="dt">transparency =</span> <span class="fl">0.5</span>)
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(ratio_df, <span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    x =<span class="st"> </span>(gr[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>gr[[<span class="dv">3</span>]])<span class="op">/</span><span class="dv">2</span>
-    y =<span class="st"> </span>gr[[<span class="dv">4</span>]]
-    <span class="kw">grid.lines</span>(<span class="kw">unit</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="st">"npc"</span>), <span class="kw">unit</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="st">"native"</span>), <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#0000FF80"</span>, <span class="dt">lty =</span> <span class="dv">2</span>))
-    <span class="kw">grid.points</span>(x, y, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"bigpts"</span>), <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="kw">col_fun</span>(y)))
-})</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-37-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Following example visualizes gene density (defined as how much a genomic window is covered by gene regions) on different chromosomes both by a line track and a heatmap track.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">gene =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"gencode_v19_protein_coding_genes.rds"</span>, <span class="dt">package =</span> <span class="st">"gtrellis"</span>))
-gene_density =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/genomicDensity.html">genomicDensity</a></span>(gene)
-
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">byrow =</span> <span class="ot">FALSE</span>, <span class="dt">n_track =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, 
-    <span class="dt">add_ideogram_track =</span> <span class="ot">TRUE</span>, <span class="dt">add_name_track =</span> <span class="ot">TRUE</span>,
-    <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(gene_density[[<span class="dv">4</span>]]), <span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">track_axis =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="ot">TRUE</span>, <span class="ot">FALSE</span>),
-    <span class="dt">track_height =</span> <span class="kw">unit.c</span>(<span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"null"</span>), <span class="kw">unit</span>(<span class="dv">4</span>, <span class="st">"mm"</span>)),
-    <span class="dt">track_ylab =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"density"</span>, <span class="st">""</span>))
-
-<span class="kw"><a href="../reference/add_lines_track.html">add_lines_track</a></span>(gene_density, gene_density[[<span class="dv">4</span>]])
-
-col_fun =<span class="st"> </span>circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html">colorRamp2</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="dv">0</span>, <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(gene_density[[<span class="dv">4</span>]]), <span class="dt">length =</span> <span class="dv">11</span>), 
-                               <span class="kw"><a href="https://rdrr.io/r/base/rev.html">rev</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="dv">11</span>, <span class="st">"RdYlBu"</span>)))
-<span class="kw"><a href="../reference/add_heatmap_track.html">add_heatmap_track</a></span>(gene_density, gene_density[[<span class="dv">4</span>]], <span class="dt">fill =</span> col_fun)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-38-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>Following two plots compares the Manhattan plot with default and enhanced layout.<br>
-The GWAS data was downloaded from <a href="https://genome.ucsc.edu/cgi-bin/hgTables">UCSC Table Browser</a>. The parameters for downloading were:</p>
-<pre><code>clade: Mammal
-genome: Human
-assembly: Feb. 2009(GRCh37/hg19)
-group: Phenotype and Literature
-track: GWAS Catalog
-table: gwasCatalog</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata"</span>, <span class="st">"gwasCatalog.RData"</span>, <span class="dt">package =</span> <span class="st">"gtrellis"</span>))
-<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(gwas)</code></pre></div>
-<pre><code>##    chr   start     end       name p-value
-## 1 chr1 1005805 1005806  rs3934834   6e-07
-## 2 chr1 1079197 1079198 rs11260603   4e-07
-## 3 chr1 1247493 1247494    rs12103   8e-13
-## 4 chr1 1723030 1723031  rs9660180   8e-07
-## 5 chr1 1723030 1723031  rs9660180   6e-07
-## 6 chr1 2069171 2069172   rs425277   2e-08</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v =<span class="st"> </span><span class="op">-</span><span class="kw"><a href="https://rdrr.io/r/base/Log.html">log10</a></span>(gwas[, <span class="st">"p-value"</span>])
-<span class="co"># remove outliers</span>
-q95 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span>(v, <span class="fl">0.95</span>)
-v[v <span class="op">&gt;</span><span class="st"> </span>q95] =<span class="st"> </span>q95</code></pre></div>
-<p>First we make the normal Manhattan plot. From the plot below, basically we can only see there are SNPs that show high significance and on chromosome 6 there exists a cluster where the SNP density are very high.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(gtrellis)
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">category =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"chr"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">22</span>), <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(v), <span class="dt">track_ylab =</span> <span class="st">"-log10(p)"</span>)
-<span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(gwas, v, <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#00000080"</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-40-1.png" width="1344" style="display: block; margin: auto;"></p>
-<p>Next we adjust the layout, also we add another track which shows the number of SNPs in 5MB genomic windows. In the new layout, width for each chromosome is much wider than the previous plot, thus, it shows very clearly for the distribution pattern of highly significant SNPs in the genome (in the previous plot, due to the narrow plotting area for each chromosome, the distribution of SNPs seems random). The additional track gives an exact view that SNP density is dominantly high in a cluster on chromosome 6 and there are also many small hotspot mutation areas spreading the genome.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(circlize)
-<span class="co"># how many SNPs in every 5MB window</span>
-d =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/genomicDensity.html">genomicDensity</a></span>(gwas, <span class="fl">5e6</span>)
-d[, <span class="dv">4</span>] =<span class="st"> </span>d[, <span class="dv">4</span>] <span class="op">*</span><span class="st"> </span><span class="fl">5e6</span>
-
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">nrow =</span> <span class="dv">4</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>, <span class="dt">n_track =</span> <span class="dv">2</span>, <span class="dt">category =</span> <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"chr"</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">22</span>),
-  <span class="dt">add_ideogram_track =</span> <span class="ot">TRUE</span>, <span class="dt">add_name_track=</span><span class="ot">TRUE</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(v), <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(d[, <span class="dv">4</span>])),
-  <span class="dt">track_height =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="dt">track_ylab =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"-log10(p)"</span>, <span class="st">"#SNP"</span>))
-<span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(gwas, v, <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#00000080"</span>))
-<span class="kw"><a href="../reference/add_lines_track.html">add_lines_track</a></span>(d, d[, <span class="dv">4</span>], <span class="dt">area =</span> <span class="ot">TRUE</span>, <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">"#999999"</span>, <span class="dt">col =</span> <span class="ot">NA</span>))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-41-1.png" width="1344" style="display: block; margin: auto;"></p>
-<p>Following figure is karyogram view of genomic regions (reproduced from <a href="http://www.tengfei.name/ggbio/docs/man/layout_karyogram-method.html" class="uri">http://www.tengfei.name/ggbio/docs/man/layout_karyogram-method.html</a>). We arrange the layout as one column and create two ‘short’ tracks, one for genomic regions and one for ideogram. Different values are mapped to continuous colors.</p>
-<p>We specified <code>n_track</code> to 1, but we also specify <code>add_ideogram_track</code> to <code>TRUE</code>, so actually there are two tracks. <code>xpadding</code> is specified to make some space on the left of the cells so that We can manually add chromosome names in the second track.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bed =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/generateRandomBed.html">generateRandomBed</a></span>(<span class="dt">nr =</span> <span class="dv">10000</span>)
-bed =<span class="st"> </span>bed[<span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="dv">10000</span>, <span class="dv">100</span>), ]
-col_fun =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html">colorRamp2</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"green"</span>, <span class="st">"yellow"</span>, <span class="st">"red"</span>))
-
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">1</span>, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">track_axis =</span> <span class="ot">FALSE</span>, <span class="dt">xpadding =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>, <span class="dv">0</span>),
-    <span class="dt">gap =</span> <span class="kw">unit</span>(<span class="dv">4</span>, <span class="st">"mm"</span>), <span class="dt">border =</span> <span class="ot">FALSE</span>, <span class="dt">asist_ticks =</span> <span class="ot">FALSE</span>, <span class="dt">add_ideogram_track =</span> <span class="ot">TRUE</span>, 
-    <span class="dt">ideogram_track_height =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"mm"</span>))
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(bed, <span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    <span class="kw">grid.rect</span>((gr[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>gr[[<span class="dv">3</span>]])<span class="op">/</span><span class="dv">2</span>, <span class="kw">unit</span>(<span class="fl">0.2</span>, <span class="st">"npc"</span>), <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>), <span class="kw">unit</span>(<span class="fl">0.8</span>, <span class="st">"npc"</span>), 
-        <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">vjust =</span> <span class="dv">0</span>, <span class="dt">default.units =</span> <span class="st">"native"</span>, 
-        <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="kw">col_fun</span>(gr[[<span class="dv">4</span>]]), <span class="dt">col =</span> <span class="ot">NA</span>))    
-})
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(<span class="dt">track =</span> <span class="dv">2</span>, <span class="dt">clip =</span> <span class="ot">FALSE</span>, <span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    chr =<span class="st"> </span><span class="kw"><a href="../reference/get_cell_meta_data.html">get_cell_meta_data</a></span>(<span class="st">"name"</span>)
-    <span class="cf">if</span>(chr <span class="op">==</span><span class="st"> "chrY"</span>) {
-        <span class="kw">grid.lines</span>(<span class="kw"><a href="../reference/get_cell_meta_data.html">get_cell_meta_data</a></span>(<span class="st">"xlim"</span>), <span class="kw">unit</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="st">"npc"</span>), 
-            <span class="dt">default.units =</span> <span class="st">"native"</span>)
-    }
-    <span class="kw">grid.text</span>(chr, <span class="dt">x =</span> <span class="dv">0</span>, <span class="dt">y =</span> <span class="dv">0</span>, <span class="dt">just =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"left"</span>, <span class="st">"bottom"</span>))
-})</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-42-1.png" width="768" style="display: block; margin: auto;"></p>
-</div>
-<div id="get-meta-data-for-each-cell" class="section level2">
-<h2 class="hasAnchor">
-<a href="#get-meta-data-for-each-cell" class="anchor"></a>Get meta data for each cell</h2>
-<p>For every cell in the plot, several meta data can be extracted by <code><a href="../reference/get_cell_meta_data.html">get_cell_meta_data()</a></code>. <code><a href="../reference/get_cell_meta_data.html">get_cell_meta_data()</a></code> is always used inside <code>panel_fun</code> to extract information about the ‘current cell’. You can also use the function outside <code>panel_fun</code> by explicitly specifying <code>category</code> and <code>track</code>. Pseudo code are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>()
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(<span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    <span class="co"># get xlim of current cell</span>
-    xlim =<span class="st"> </span><span class="kw"><a href="../reference/get_cell_meta_data.html">get_cell_meta_data</a></span>(<span class="st">"xlim"</span>)
-})
-
-<span class="co"># get xlim of the specified cell</span>
-xlim =<span class="st"> </span><span class="kw"><a href="../reference/get_cell_meta_data.html">get_cell_meta_data</a></span>(<span class="st">"xlim"</span>, <span class="dt">category =</span> <span class="st">"chr2"</span>, <span class="dt">track =</span> <span class="dv">1</span>)</code></pre></div>
-<p>Following meta data can be retrieved by <code><a href="../reference/get_cell_meta_data.html">get_cell_meta_data()</a></code>:</p>
-<ul>
-<li>
-<code>name</code>: category name, e.g. the chromosome name.</li>
-<li>
-<code>xlim</code>: xlim without including padding, cells in a same column shares the same <code>xlim</code>.</li>
-<li>
-<code>ylim</code>: ylim without including padding.</li>
-<li>
-<code>extended_xlim</code>: xlim with padding.</li>
-<li>
-<code>extended_ylim</code>: ylim with padding.</li>
-<li>
-<code>original_xlim</code>: xlim in original data.</li>
-<li>
-<code>original_ylim</code>: ylim in original data.</li>
-<li>
-<code>column</code>: which column in the layout.</li>
-<li>
-<code>row</code>: which row in the layout.</li>
-<li>
-<code>track</code>: which track in the layout.</li>
-</ul>
-<p>Following figure demonstrates difference between different cell meta data. The space between <code>extended_xlim</code> and <code>xlim</code> is the padding regions on x direction.</p>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-44-1.png" width="768" style="display: block; margin: auto;"></p>
-</div>
-<div id="legend" class="section level2">
-<h2 class="hasAnchor">
-<a href="#legend" class="anchor"></a>Legend</h2>
-<p>Legend can be added by <code>legend</code> argument. The value must be a <code>grob</code> object. <code>ColorMapping</code> class and <code><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legend.html">Legend()</a></code> function in <strong>ComplexHeatmap</strong> package or <code>legendGrob()</code> in grid package can be used to create a legend grob. Or you can consider to use <code>frameGrob()</code> and <code>placeGrob()</code> to build a legend from ground.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ComplexHeatmap)
-bed =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/generateRandomBed.html">generateRandomBed</a></span>()
-lgd =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Legend.html">Legend</a></span>(<span class="dt">at =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"class1"</span>, <span class="st">"class2"</span>), <span class="dt">title =</span> <span class="st">"Class"</span>, <span class="dt">type =</span> <span class="st">"points"</span>, <span class="dt">legend_gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>))
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">nrow =</span> <span class="dv">5</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]), <span class="dt">legend =</span> lgd)
-<span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(bed, bed[[<span class="dv">4</span>]], <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>, <span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(bed), <span class="dt">replace =</span> <span class="ot">TRUE</span>)))</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-45-1.png" width="768" style="display: block; margin: auto;"></p>
-<p>The second example is already shown, but this time we add legend as well:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ComplexHeatmap)
-
-bed =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/generateRandomBed.html">generateRandomBed</a></span>(<span class="dt">nr =</span> <span class="dv">10000</span>)
-bed =<span class="st"> </span>bed[<span class="kw"><a href="https://rdrr.io/r/base/sample.html">sample</a></span>(<span class="dv">10000</span>, <span class="dv">100</span>), ]
-col_fun =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html">colorRamp2</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"green"</span>, <span class="st">"yellow"</span>, <span class="st">"red"</span>))
-cm =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/ColorMapping.html">ColorMapping</a></span>(<span class="dt">col_fun =</span> col_fun)
-lgd =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/color_mapping_legend-ColorMapping-method.html">color_mapping_legend</a></span>(cm, <span class="dt">plot =</span> <span class="ot">FALSE</span>, <span class="dt">title =</span> <span class="st">"Value"</span>)
-
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">n_track =</span> <span class="dv">1</span>, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">track_axis =</span> <span class="ot">FALSE</span>, <span class="dt">xpadding =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.1</span>, <span class="dv">0</span>),
-    <span class="dt">gap =</span> <span class="kw">unit</span>(<span class="dv">4</span>, <span class="st">"mm"</span>), <span class="dt">border =</span> <span class="ot">FALSE</span>, <span class="dt">asist_ticks =</span> <span class="ot">FALSE</span>, <span class="dt">add_ideogram_track =</span> <span class="ot">TRUE</span>, 
-    <span class="dt">ideogram_track_height =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"mm"</span>), <span class="dt">legend =</span> lgd)
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(bed, <span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    <span class="kw">grid.rect</span>((gr[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>gr[[<span class="dv">3</span>]])<span class="op">/</span><span class="dv">2</span>, <span class="kw">unit</span>(<span class="fl">0.2</span>, <span class="st">"npc"</span>), <span class="kw">unit</span>(<span class="dv">1</span>, <span class="st">"mm"</span>), <span class="kw">unit</span>(<span class="fl">0.8</span>, <span class="st">"npc"</span>), 
-        <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">vjust =</span> <span class="dv">0</span>, <span class="dt">default.units =</span> <span class="st">"native"</span>, 
-        <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="kw">col_fun</span>(gr[[<span class="dv">4</span>]]), <span class="dt">col =</span> <span class="ot">NA</span>))    
-})
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(<span class="dt">track =</span> <span class="dv">2</span>, <span class="dt">clip =</span> <span class="ot">FALSE</span>, <span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-    chr =<span class="st"> </span><span class="kw"><a href="../reference/get_cell_meta_data.html">get_cell_meta_data</a></span>(<span class="st">"name"</span>)
-    <span class="cf">if</span>(chr <span class="op">==</span><span class="st"> "chrY"</span>) {
-        <span class="kw">grid.lines</span>(<span class="kw"><a href="../reference/get_cell_meta_data.html">get_cell_meta_data</a></span>(<span class="st">"xlim"</span>), <span class="kw">unit</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="st">"npc"</span>), 
-            <span class="dt">default.units =</span> <span class="st">"native"</span>)
-    }
-    <span class="kw">grid.text</span>(chr, <span class="dt">x =</span> <span class="dv">0</span>, <span class="dt">y =</span> <span class="dv">0</span>, <span class="dt">just =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"left"</span>, <span class="st">"bottom"</span>))
-})</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-46-1.png" width="768" style="display: block; margin: auto;"></p>
-</div>
-<div id="general-genomic-categories" class="section level2">
-<h2 class="hasAnchor">
-<a href="#general-genomic-categories" class="anchor"></a>General genomic categories</h2>
-<p>Genomic categories are not restricted in chromosomes. It can be any kind, such as genes. You can also specify genomic categories as well as their ranges as a data frame when initializing the layout.</p>
-<p>In following example, we put three genes in one row and add their transcripts afterwards.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="dt">package =</span> <span class="st">"circlize"</span>), <span class="st">"/extdata/tp_family.RData"</span>))
-df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">gene =</span> <span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(tp_family),
-    <span class="dt">start =</span> <span class="kw"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(tp_family, <span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(x))),
-    <span class="dt">end =</span> <span class="kw"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(tp_family, <span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(x))))
-df</code></pre></div>
-<pre><code>##      gene     start       end
-## TP73 TP73   3569084   3652765
-## TP63 TP63 189349205 189615068
-## TP53 TP53   7565097   7590856</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># maximum number of transcripts</span>
-n =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(tp_family, length))
-
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">data =</span> df, <span class="dt">n_track =</span> <span class="dv">1</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.5</span>, n<span class="op">+</span><span class="fl">0.5</span>), 
-    <span class="dt">track_axis =</span> <span class="ot">FALSE</span>, <span class="dt">add_name_track =</span> <span class="ot">TRUE</span>, <span class="dt">xpadding =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="dt">ypadding =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>))
-
-<span class="co"># put into a function so that we can use it repeatedly</span>
-add_tx =<span class="st"> </span><span class="cf">function</span>() {
-  <span class="kw"><a href="../reference/add_track.html">add_track</a></span>(<span class="dt">panel_fun =</span> <span class="cf">function</span>(gr) {
-      gn =<span class="st"> </span><span class="kw"><a href="../reference/get_cell_meta_data.html">get_cell_meta_data</a></span>(<span class="st">"name"</span>)
-      tr =<span class="st"> </span>tp_family[[gn]] <span class="co"># all transcripts for this gene</span>
-      <span class="cf">for</span>(i <span class="cf">in</span> <span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span>(tr)) {
-          <span class="co"># for each transcript</span>
-          current_tr_start =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(tr[[i]]<span class="op">$</span>start)
-          current_tr_end =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(tr[[i]]<span class="op">$</span>end)
-          <span class="kw">grid.lines</span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(current_tr_start, current_tr_end), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(n <span class="op">-</span><span class="st"> </span>i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, n <span class="op">-</span><span class="st"> </span>i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>), 
-              <span class="dt">default.units =</span> <span class="st">"native"</span>, <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#CCCCCC"</span>))
-          <span class="kw">grid.rect</span>(tr[[i]][[<span class="dv">1</span>]], n <span class="op">-</span><span class="st"> </span>i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, tr[[i]][[<span class="dv">2</span>]] <span class="op">-</span><span class="st"> </span>tr[[i]][[<span class="dv">1</span>]], <span class="fl">0.8</span>,
-              <span class="dt">default.units =</span> <span class="st">"native"</span>, <span class="dt">just =</span> <span class="st">"left"</span>, 
-              <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">fill =</span> <span class="st">"orange"</span>, <span class="dt">col =</span> <span class="st">"orange"</span>))
-      }
-  })
-}
-
-<span class="kw">add_tx</span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-47-1.png" width="960" style="display: block; margin: auto;"></p>
-<p>If you want to put all genes on one column and align them by TSS, you need to normalize the genomic coordinate first. In follwoing code, numbers are positions of TSS of corresponding gene.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tp_family<span class="op">$</span>TP53 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(tp_family<span class="op">$</span>TP53, <span class="cf">function</span>(df) {
-        <span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">start =</span> <span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(df[[<span class="dv">2</span>]] <span class="op">-</span><span class="st"> </span><span class="dv">7590856</span>),
-                   <span class="dt">end =</span> <span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(df[[<span class="dv">1</span>]] <span class="op">-</span><span class="st"> </span><span class="dv">7590856</span>))
-    })
-tp_family<span class="op">$</span>TP63 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(tp_family<span class="op">$</span>TP63, <span class="cf">function</span>(df) {
-        <span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">start =</span> <span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(df[[<span class="dv">1</span>]] <span class="op">-</span><span class="st"> </span><span class="dv">189349205</span>),
-                   <span class="dt">end =</span> <span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(df[[<span class="dv">2</span>]] <span class="op">-</span><span class="st"> </span><span class="dv">189349205</span>))
-    })
-tp_family<span class="op">$</span>TP73 =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(tp_family<span class="op">$</span>TP73, <span class="cf">function</span>(df) {
-        <span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">start =</span> <span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(df[[<span class="dv">1</span>]] <span class="op">-</span><span class="st"> </span><span class="dv">3569084</span>),
-                   <span class="dt">end =</span> <span class="kw"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(df[[<span class="dv">2</span>]] <span class="op">-</span><span class="st"> </span><span class="dv">3569084</span>))
-    })</code></pre></div>
-<p>Then similar code as previous one.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">gene =</span> <span class="kw"><a href="https://rdrr.io/r/base/names.html">names</a></span>(tp_family),
-    <span class="dt">start =</span> <span class="kw"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(tp_family, <span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(x))),
-    <span class="dt">end =</span> <span class="kw"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(tp_family, <span class="cf">function</span>(x) <span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(x))))
-df</code></pre></div>
-<pre><code>##      gene start    end
-## TP73 TP73     0  83681
-## TP63 TP63     0 265863
-## TP53 TP53     0  25759</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span>(tp_family, length))
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">data =</span> df, <span class="dt">n_track =</span> <span class="dv">1</span>, <span class="dt">ncol =</span> <span class="dv">1</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.5</span>, n<span class="op">+</span><span class="fl">0.5</span>), 
-    <span class="dt">track_axis =</span> <span class="ot">FALSE</span>, <span class="dt">add_name_track =</span> <span class="ot">TRUE</span>, 
-    <span class="dt">xpadding =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>), <span class="dt">ypadding =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>))
-<span class="kw">add_tx</span>()</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-49-1.png" width="768" style="display: block; margin: auto;"></p>
-<p>You can create layout with self-defined regions. <code>clip</code> argument controls whether data points outside of the cell need to be added. Since by default <code>clip</code> is <code>TRUE</code>, you do not need to make intersection of your full data to the sub-region, which means, you can use same code to deal with different regions.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">col_fun =<span class="st"> </span>circlize<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/colorRamp2.html">colorRamp2</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/seq.html">seq</a></span>(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="dt">length =</span> <span class="dv">11</span>), <span class="kw"><a href="https://rdrr.io/r/base/rev.html">rev</a></span>(<span class="kw"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span>(<span class="dv">11</span>, <span class="st">"RdYlBu"</span>)),
-    <span class="dt">transparency =</span> <span class="fl">0.5</span>)
-zoom =<span class="st"> </span><span class="cf">function</span>(df) {
-    <span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">data =</span> df, <span class="dt">n_track =</span> <span class="dv">3</span>, <span class="dt">nrow =</span> <span class="dv">2</span>,
-    <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(cov_range, cov_range, ratio_range),
-    <span class="dt">track_ylab =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"tumor, log10(cov)"</span>, <span class="st">"control, log10(cov)"</span>, <span class="st">"ratio, log2(ratio)"</span>), 
-    <span class="dt">add_name_track =</span> <span class="ot">TRUE</span>, <span class="dt">add_ideogram_track =</span> <span class="ot">TRUE</span>)
-    
-    <span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(tumor_df, tumor_df[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"bigpts"</span>), 
-        <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#00000080"</span>))
-    <span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(control_df, control_df[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"bigpts"</span>), 
-        <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="st">"#00000080"</span>))
-    <span class="kw"><a href="../reference/add_points_track.html">add_points_track</a></span>(ratio_df, ratio_df[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"bigpts"</span>), 
-        <span class="dt">gp =</span> <span class="kw">gpar</span>(<span class="dt">col =</span> <span class="kw">col_fun</span>(ratio_df[[<span class="dv">4</span>]])))
-}
-
-df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">chr =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"chr1"</span>, <span class="st">"chr2"</span>),
-                <span class="dt">start =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1e8</span>, <span class="fl">1e8</span>),
-                <span class="dt">end =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2e8</span>, <span class="fl">2e8</span>))
-<span class="kw">zoom</span>(df)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-50-1.png" width="960" style="display: block; margin: auto;"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">chr =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"chr11"</span>, <span class="st">"chr12"</span>),
-                <span class="dt">start =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">4e7</span>, <span class="fl">4e7</span>),
-                <span class="dt">end =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">8e7</span>, <span class="fl">8e7</span>))
-<span class="kw">zoom</span>(df)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-50-2.png" width="960" style="display: block; margin: auto;"></p>
-<p>If start positions for two genomic categories are different (e.g. 0~100000 for the first one and 100000~200000 for the second one), you should not put them in a same column. You should normalize start positions in the first place.</p>
-<p>The following code will generate an error.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">chr =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"chr1"</span>, <span class="st">"chr2"</span>),
-                <span class="dt">start =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">1e8</span>, <span class="fl">2e8</span>),
-                <span class="dt">end =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">2e8</span>, <span class="fl">3e8</span>))
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(df, <span class="dt">ncol =</span> <span class="dv">1</span>)</code></pre></div>
-<pre><code>## Error in gtrellis_layout(df, ncol = 1): Start base in a same column should be the same.</code></pre>
-</div>
-<div id="support-raster-image" class="section level2">
-<h2 class="hasAnchor">
-<a href="#support-raster-image" class="anchor"></a>Support raster image</h2>
-<p>When there are, say, huge number of points, if the plot is saved as a PDF file, the file size would be very huge. A <a href="https://en.wikipedia.org/wiki/Raster_graphics">raster image</a> is a ideal way to effectively reduce the file size that the subset of the image is first stored as e.g. a PNG file, then the PNG is imported and filled into the original plot. In <code><a href="../reference/add_track.html">add_track()</a></code> (also for the five other customized function: <code><a href="../reference/add_points_track.html">add_points_track()</a></code>, <code><a href="../reference/add_segments_track.html">add_segments_track()</a></code>, <code><a href="../reference/add_lines_track.html">add_lines_track()</a></code>, <code><a href="../reference/add_rect_track.html">add_rect_track()</a></code> and <code><a href="../reference/add_heatmap_track.html">add_heatmap_track()</a></code>), there are arguments <code>use_raster</code>, <code>raster_quality</code>, <code>raster_quality</code> and <code>raster_device_param</code> which controls how to use raster image.</p>
-<p>When <code>use_raster</code> is set to <code>TRUE</code>, for every panel, the graphics are firstly written into e.g. a PNG file, later the PNG is imported and filled to the panel. When <code>raster_quality</code> is 1, the size of the PNG is as same as the size of the panel, while when <code>raster_quality</code> is e.g. 2, the size of the PNG is actually double size as the panel (or the area is four times as the panel), when it is scaled and fit into the panel, actually, the size will reduce half size, thus, when <code>raster_quality</code> is set to larger than 1, all units defined in <code>panel_fun</code> should be increase by multiplying <code>raster_quanlity</code>. See following example (Once you save the image as a PDF or visualize in R interactively, you will see the difference between tracks).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bed =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/circlize/man/generateRandomBed.html">generateRandomBed</a></span>()
-<span class="kw"><a href="../reference/gtrellis_layout.html">gtrellis_layout</a></span>(<span class="dt">category =</span> <span class="st">"chr1"</span>, <span class="dt">n_track =</span> <span class="dv">4</span>, <span class="dt">track_ylim =</span> <span class="kw"><a href="https://rdrr.io/r/base/range.html">range</a></span>(bed[[<span class="dv">4</span>]]))
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(bed, <span class="dt">panel_fun =</span> <span class="cf">function</span>(bed) {
-    <span class="kw">grid.points</span>((bed[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>bed[[<span class="dv">3</span>]]) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, bed[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"mm"</span>))
-})
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(bed, <span class="dt">panel_fun =</span> <span class="cf">function</span>(bed) {
-    <span class="kw">grid.points</span>((bed[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>bed[[<span class="dv">3</span>]]) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, bed[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"mm"</span>))
-}, <span class="dt">use_raster =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(bed, <span class="dt">panel_fun =</span> <span class="cf">function</span>(bed) {
-    <span class="kw">grid.points</span>((bed[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>bed[[<span class="dv">3</span>]]) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, bed[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">2</span>, <span class="st">"mm"</span>))
-}, <span class="dt">use_raster =</span> <span class="ot">TRUE</span>, <span class="dt">raster_quality =</span> <span class="dv">2</span>)
-<span class="kw"><a href="../reference/add_track.html">add_track</a></span>(bed, <span class="dt">panel_fun =</span> <span class="cf">function</span>(bed) {
-    <span class="kw">grid.points</span>((bed[[<span class="dv">2</span>]] <span class="op">+</span><span class="st"> </span>bed[[<span class="dv">3</span>]]) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>, bed[[<span class="dv">4</span>]], <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">size =</span> <span class="kw">unit</span>(<span class="dv">4</span>, <span class="st">"mm"</span>))
-}, <span class="dt">use_raster =</span> <span class="ot">TRUE</span>, <span class="dt">raster_quality =</span> <span class="dv">2</span>)</code></pre></div>
-<p><img src="gtrellis_files/figure-html/unnamed-chunk-52-1.png" width="700" style="display: block; margin: auto;"></p>
-</div>
-<div id="session-info" class="section level2">
-<h2 class="hasAnchor">
-<a href="#session-info" class="anchor"></a>Session info</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span>()</code></pre></div>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Mojave 10.14.2
-## 
-## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
-## 
-## locale:
-## [1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
-## 
-## attached base packages:
-##  [1] stats4    parallel  grid      stats     graphics  grDevices utils     datasets  methods  
-## [10] base     
-## 
-## other attached packages:
-##  [1] GetoptLong_0.1.7     RColorBrewer_1.1-2   circlize_0.4.8       gtrellis_1.17.1     
-##  [5] GenomicRanges_1.36.1 GenomeInfoDb_1.20.0  IRanges_2.18.2       S4Vectors_0.22.1    
-##  [9] BiocGenerics_0.30.0  ComplexHeatmap_2.1.0 knitr_1.25           markdown_1.1        
-## 
-## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.2             XVector_0.24.0         compiler_3.6.1         zlibbioc_1.30.0       
-##  [5] bitops_1.0-6           tools_3.6.1            digest_0.6.21          evaluate_0.14         
-##  [9] memoise_1.1.0          clue_0.3-57            png_0.1-7              rlang_0.4.0           
-## [13] pkgdown_1.4.1          xfun_0.9               GenomeInfoDbData_1.2.1 stringr_1.4.0         
-## [17] cluster_2.1.0          desc_1.2.0             GlobalOptions_0.1.0    fs_1.3.1              
-## [21] rprojroot_1.3-2        R6_2.4.0               rmarkdown_1.15         magrittr_1.5          
-## [25] backports_1.1.4        htmltools_0.3.6        MASS_7.3-51.4          assertthat_0.2.1      
-## [29] shape_1.4.4            colorspace_1.4-1       stringi_1.4.3          RCurl_1.95-4.12       
-## [33] crayon_1.3.4           rjson_0.2.20</code></pre>
-</div>
-</div>
+<p>Please go to the package’s website: <a href="https://jokergoo.github.io/gtrellis" class="external-link uri">https://jokergoo.github.io/gtrellis</a>.</p>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li>
-<a href="#make-genome-level-trellis-graph">Make Genome-level Trellis Graph</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#basic-design">Basic design</a></li>
-      <li><a href="#initialize-the-layout">Initialize the layout</a></li>
-      <li><a href="#add-graphics">Add graphics</a></li>
-      <li><a href="#examples">Examples</a></li>
-      <li><a href="#get-meta-data-for-each-cell">Get meta data for each cell</a></li>
-      <li><a href="#legend">Legend</a></li>
-      <li><a href="#general-genomic-categories">General genomic categories</a></li>
-      <li><a href="#support-raster-image">Support raster image</a></li>
-      <li><a href="#session-info">Session info</a></li>
-      </ul>
-</li>
-      </ul>
-</div>
       </div>
 
 </div>
@@ -767,11 +100,13 @@ df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/da
 
 
       <footer><div class="copyright">
-  <p>Developed by Zuguang Gu.</p>
+  <p></p>
+<p>Developed by Zuguang Gu.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
@@ -780,5 +115,6 @@ df =<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/da
   
 
 
-  </body>
+  <style>nav[data-toggle='toc'] .nav .nav {display: block;}</style>
+</body>
 </html>

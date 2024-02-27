@@ -8,3 +8,5 @@ check.bat
 ^pkgdown$
 build_pkg_site.R
 ^\.github$
+vignettes/custom.css
+vignettes/gtrellis_full.Rmd

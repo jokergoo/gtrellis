@@ -1,1 +1,16 @@
 destination: docs
+
+navbar:
+  title: "gtrellis"
+  left:
+    - text: "Articles"
+      menu:
+        - text: Vignettes
+        - text: "Make Genome-level Trellis Graph"
+          href: articles/gtrellis_full.html
+    - text: "Reference"
+      href: reference/index.html
+
+template:
+  includes:
+    after_body: "<style>nav[data-toggle='toc'] .nav .nav {display: block;}</style>"
